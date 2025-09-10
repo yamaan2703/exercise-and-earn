@@ -1,14 +1,21 @@
 import { InputProps } from "@/types/interface";
 import React from "react";
 
-const Input = ({ value, setValue, id, type, placeholder }: InputProps) => {
+const Input = ({
+  label,
+  value,
+  setValue,
+  id,
+  type,
+  placeholder,
+}: InputProps) => {
   return (
     <div>
       <label
         htmlFor={id}
         className="block text-sm font-medium text-gray-300 mb-2"
       >
-        Email Address
+        {label}
       </label>
       <input
         id={id}

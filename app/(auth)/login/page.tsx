@@ -3,10 +3,10 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { toast } from "react-toastify";
 import Input from "@/components/ui/input";
 import { Routes } from "@/routes/Routes";
+import toast from "react-hot-toast";
+import FormButton from "@/components/ui/form-button";
 
 const Login = () => {
   const router = useRouter();
@@ -29,19 +29,22 @@ const Login = () => {
       setIsLoading(true);
       setError("");
 
-      if (
-        email === process.env.NEXT_PUBLIC_ADMIN_EMAIL &&
-        password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD
-      ) {
-        console.log("Login successful");
-        localStorage.setItem("token", email);
-        router.push(Routes.DASHBOARD);
-      } else {
-        console.log("Invalid login credentials");
-        setError("Invalid login credentials");
-        toast.error("Invalid login credentials");
-      }
-      setIsLoading(false);
+      setTimeout(() => {
+        if (
+          email === process.env.NEXT_PUBLIC_ADMIN_EMAIL &&
+          password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD
+        ) {
+          console.log("Login successful");
+          toast.success("Login successful");
+          localStorage.setItem("token", email);
+          router.push(Routes.DASHBOARD);
+        } else {
+          console.log("Invalid login credentials");
+          setError("Invalid login credentials");
+          toast.error("Invalid login credentials");
+        }
+        setIsLoading(false);
+      }, 1000);
     } catch (error) {
       console.log(error);
     }
@@ -60,10 +63,10 @@ const Login = () => {
               className="animate-bounce"
             />
           </div>
-          <h1 className="text-3xl font-bold text-[#58E2A4]">
-            Exercise And Earm
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#58E2A4]">
+            Exercise And Earn
           </h1>
-          <h2 className="mt-3 text-xl font-semibold text-white">
+          <h2 className="mt-3 text-lg sm:text-xl font-semibold text-white">
             Welcome Back!
           </h2>
         </div>
@@ -71,6 +74,7 @@ const Login = () => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <Input
+              label="Email Address"
               value={email}
               setValue={setEmail}
               id="email"
@@ -80,6 +84,7 @@ const Login = () => {
 
             <div className="relative">
               <Input
+                label="Password"
                 value={password}
                 setValue={setPassword}
                 id="password"
@@ -104,20 +109,7 @@ const Login = () => {
           )}
 
           <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition duration-300 transform hover:scale-105 cursor-pointer"
-            >
-              {isLoading ? (
-                <div className="flex items-center">
-                  <AiOutlineLoading3Quarters className="animate-spin -ml-1 mr-2 h-4 w-4 " />
-                  Signing in...
-                </div>
-              ) : (
-                "Sign In"
-              )}
-            </button>
+            <FormButton isLoading={isLoading} label="Sign In" />
           </div>
         </form>
       </div>
