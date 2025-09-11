@@ -8,7 +8,7 @@ const PrivacyPolicy = () => {
   const { toggleSidebar } = useContext(AuthContext)!;
   return (
     <div>
-      <div className="flex justify-between items-center gap-2">
+      <div className="flex justify-between  items-center gap-2">
         <h1 className="text-xl sm:text-2xl font-bold text-white">
           Privacy Policy
         </h1>

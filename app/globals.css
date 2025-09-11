@@ -12,6 +12,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* 031116 ,0d2b27, 06211e, 010c12,  */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0b1220;
