@@ -1,15 +1,16 @@
 "use client";
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useContext, useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import ConfirmationModal from "@/components/confirmation-modal";
 import { getCookie } from "@/lib/cookies";
 import { usePathname, useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
+import { AuthContext } from "@/context/AuthContext";
 
 const Layout = ({ children }: PropsWithChildren) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [logoutModal, setLogoutModal] = useState(false);
+  const { isSidebarOpen, setIsSidebarOpen, logoutModal, setLogoutModal } =
+    useContext(AuthContext)!;
   const router = useRouter();
   const pathname = usePathname();
 
@@ -43,14 +44,10 @@ const Layout = ({ children }: PropsWithChildren) => {
 
   return (
     <div className="flex min-h-screen overflow-hidden">
-      <Sidebar
-        isOpen={isSidebarOpen}
-        setIsOpen={setIsSidebarOpen}
-        setLogoutModal={setLogoutModal}
-      />
+      <Sidebar />
 
       <div className="flex flex-col flex-1 min-w-0">
-        {/* <Header isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} /> */}
+        {/* <Header /> */}
         <main className="flex-1 bg-[#f2f2f2]ss p-2 lg:ml-[16rem] ml-0 pt-10 transition-all duration-300">
           {children}
         </main>
@@ -65,8 +62,6 @@ const Layout = ({ children }: PropsWithChildren) => {
 
       {logoutModal && (
         <ConfirmationModal
-          logoutModal={logoutModal}
-          setLogoutModal={setLogoutModal}
           title={"Confirm Logout"}
           description={"Are you sure you want to log out?"}
         />

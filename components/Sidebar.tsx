@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -7,12 +7,7 @@ import { sidebarMenu as links } from "@/Data/Data";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { cn } from "@/lib/utils";
 import { FaSignOutAlt } from "react-icons/fa";
-
-interface SidebarProps {
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
-  setLogoutModal: (isOpen: boolean) => void;
-}
+import { AuthContext } from "@/context/AuthContext";
 
 interface MenuLink {
   to: string;
@@ -26,13 +21,11 @@ interface OpenMenus {
   [key: string]: boolean;
 }
 
-function Sidebar({ isOpen, setIsOpen, setLogoutModal }: SidebarProps) {
+function Sidebar() {
+  const { isSidebarOpen, setIsSidebarOpen, setLogoutModal } =
+    useContext(AuthContext)!;
   const pathname = usePathname();
   const [openMenus, setOpenMenus] = useState<OpenMenus>({});
-
-  const handleLinkClick = () => {
-    setIsOpen(false);
-  };
 
   const toggleMenu = (key: string) => {
     setOpenMenus((prev) => ({
@@ -77,7 +70,7 @@ function Sidebar({ isOpen, setIsOpen, setLogoutModal }: SidebarProps) {
                 renderLinks(link.children as MenuLink[])}
             </>
           ) : (
-            <Link href={link.to} onClick={handleLinkClick}>
+            <Link href={link.to} onClick={() => setIsSidebarOpen(false)}>
               <p
                 className={cn(
                   "flex items-center text-[12px] sm:text-[15px] space-x-3 px-3 py-2 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95",
@@ -100,7 +93,7 @@ function Sidebar({ isOpen, setIsOpen, setLogoutModal }: SidebarProps) {
     <aside
       className={cn(
         "fixed top-0 left-0 h-full w-[220px] sm:w-[250px] bg-[#0b1220] border-r border-gray-700 shadow-lg z-[101] transform transition-transform",
-        isOpen ? "translate-x-0" : "-translate-x-full",
+        isSidebarOpen ? "translate-x-0" : "-translate-x-full",
         "lg:translate-x-0 lg:block"
       )}
     >

@@ -2,21 +2,17 @@ import { removeCookie } from "@/lib/cookies";
 import { Routes } from "@/routes/Routes";
 import { ConfirmationModalProps } from "@/types/interface";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useContext } from "react";
 import toast from "react-hot-toast";
 import Button from "./ui/button";
+import { AuthContext } from "@/context/AuthContext";
 
-const ConfirmationModal = ({
-  logoutModal,
-  setLogoutModal,
-  title,
-  description,
-}: ConfirmationModalProps) => {
+const ConfirmationModal = ({ title, description }: ConfirmationModalProps) => {
+  const { setLogoutModal } = useContext(AuthContext)!;
   const router = useRouter();
 
   const handleLogoutClick = () => {
     toast.success("Logged out successfully!");
-    // localStorage.removeItem("token");
     removeCookie("token");
     router.push(Routes.LOGIN);
     setLogoutModal(false);

@@ -2,23 +2,18 @@
 import { FaSignOutAlt } from "react-icons/fa";
 import { AiOutlineMenu } from "react-icons/ai";
 import { IoMdNotificationsOutline } from "react-icons/io";
-import { useState } from "react";
-import ConfirmationModal from "./confirmation-modal";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
 
-const Header = ({
-  toggleSidebar,
-  isSidebarOpen,
-}: {
-  toggleSidebar: () => void;
-  isSidebarOpen: boolean;
-}) => {
-  const [logoutModal, setLogoutModal] = useState(false);
+const Header = () => {
+  const { isSidebarOpen, setIsSidebarOpen, setLogoutModal } =
+    useContext(AuthContext)!;
 
   return (
     <div className="z-[99] bg-[#0b1220] flex justify-between items-center gap-3 px-5 py-3 fixed top-0 right-0 w-full border-b border-gray-400 shadow-md">
       <div
         className="lg:hidden text-2xl p-2 cursor-pointer text-white"
-        onClick={toggleSidebar}
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
       >
         <AiOutlineMenu />
       </div>
@@ -39,14 +34,6 @@ const Header = ({
           <span className="hidden sm:block text-sm font-medium">Logout</span>
         </button>
       </div>
-      {/* {logoutModal && (
-        <ConfirmationModal
-          logoutModal={logoutModal}
-          setLogoutModal={setLogoutModal}
-          title={"Confirm Logout"}
-          description={"Are you sure you want to log out?"}
-        />
-      )} */}
     </div>
   );
 };

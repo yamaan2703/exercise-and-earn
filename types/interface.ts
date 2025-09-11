@@ -14,8 +14,6 @@ export interface InputProps {
 }
 
 export interface ConfirmationModalProps {
-  logoutModal: boolean;
-  setLogoutModal: (value: boolean) => void;
   title: string;
   description: string;
 }
