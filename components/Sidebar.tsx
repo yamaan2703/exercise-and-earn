@@ -73,7 +73,7 @@ function Sidebar() {
             <Link href={link.to} onClick={() => setIsSidebarOpen(false)}>
               <p
                 className={cn(
-                  "flex items-center text-xs space-x-3 px-3 py-2 rounded-md transition duration-300 transform hover:scale-105 active:scale-95",
+                  "flex items-center text-[12px] sm:text-[15px] space-x-3 px-3 py-2 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95",
                   pathname === link.to
                     ? "text-white bg-green-700/20 border-r-2 border-l-2"
                     : "text-gray-400 hover:bg-white hover:text-[#06211E]"
@@ -92,7 +92,7 @@ function Sidebar() {
   return (
     <aside
       className={cn(
-        "fixed top-0 left-0 h-full w-60 bg-[#06211E] shadow border-r border-gray-900 transform transition-transform",
+        "fixed top-0 left-0 h-full w-[220px] sm:w-[250px] bg-[#06211e] border-r border-gray-700 shadow-lg z-[101] transform transition-transform",
         isSidebarOpen ? "translate-x-0" : "-translate-x-full",
         "lg:translate-x-0 lg:block"
       )}

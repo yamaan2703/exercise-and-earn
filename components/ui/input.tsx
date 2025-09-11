@@ -25,7 +25,7 @@ const Input = ({
     error:
       "bg-[#0b140b] border-red-600 text-red-400 placeholder-gray-400 focus:ring-2 focus:ring-red-500",
     outline:
-      "bg-transparent border-gray-500 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500",
+      "bg-transparent border-white text-white placeholder-gray-400 focus:ring-2 focus:ring-green-400/20",
   };
 
   const sizeStyles: Record<string, string> = {

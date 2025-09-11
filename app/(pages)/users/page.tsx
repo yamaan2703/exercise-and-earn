@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import TableComponent from "@/components/ui/table";
 import { AuthContext } from "@/context/AuthContext";
@@ -12,7 +13,9 @@ const Users = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center gap-2">
-        <h1 className="text-3xl font-bold text-white">Users</h1>
+        <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-white after:rounded-full after:mt-1">
+          Users
+        </h1>
         <div
           className="lg:hidden text-2xl p-2 cursor-pointer text-white"
           onClick={toggleSidebar}
@@ -21,8 +24,8 @@ const Users = () => {
         </div>
       </div>
 
-      <div className="flex gap-4">
-        <div className="flex-1 relative">
+      <div className="">
+        <div className="max-w-[400px] w-full relative">
           <Input
             placeholder="Search users..."
             type="text"
@@ -30,13 +33,13 @@ const Users = () => {
             value={searchUsers}
             setValue={setSearchUsers}
             variant="outline"
-            size="md"
+            size="sm"
             iconLeft={<FaSearch />}
           />
         </div>
       </div>
 
-      <div className="border border-gray-800 rounded-lg mt-3">
+      <div className="">
         <TableComponent />
       </div>
     </div>

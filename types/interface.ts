@@ -22,7 +22,7 @@ export interface ButtonProps {
   isLoading?: boolean;
   label?: string;
   variant?: "primary" | "secondary" | "danger" | "outline";
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   fullWidth?: boolean;
   onClick?: () => void;
 }

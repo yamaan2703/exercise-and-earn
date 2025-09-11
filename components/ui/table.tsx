@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import type { GetProp, TableProps } from "antd";
-import { Table } from "antd";
+import { Table, Tag, Button, Space, Popconfirm } from "antd";
+import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { AnyObject } from "antd/es/_util/type";
 import type { SorterResult } from "antd/es/table/interface";
+import { Status } from "@/types/enums";
 
 type ColumnsType<T extends object = object> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<
@@ -15,6 +17,7 @@ interface DataType {
   gender: string;
   email: string;
   id: string;
+  status?: "active" | "inactive"; // Added status field
 }
 
 interface TableParams {
@@ -23,53 +26,6 @@ interface TableParams {
   sortOrder?: SorterResult<any>["order"];
   filters?: Parameters<GetProp<TableProps, "onChange">>[1];
 }
-
-const columns: ColumnsType<DataType> = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    sorter: true,
-    width: "20%",
-  },
-  {
-    title: "Gender",
-    dataIndex: "gender",
-    filters: [
-      { text: "Male", value: "male" },
-      { text: "Female", value: "female" },
-    ],
-    width: "20%",
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-  },
-  {
-    title: "Gender",
-    dataIndex: "gender",
-    filters: [
-      { text: "Male", value: "male" },
-      { text: "Female", value: "female" },
-    ],
-    width: "20%",
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-  },
-];
 
 const toURLSearchParams = <T extends AnyObject>(record: T) => {
   const params = new URLSearchParams();
@@ -122,6 +78,86 @@ const TableComponent: React.FC = () => {
     },
   });
 
+  // Handle view action
+  const handleView = (record: DataType) => {
+    console.log("View user:", record);
+  };
+
+  // Handle delete action
+  const handleDelete = (record: DataType) => {
+    console.log("Delete user:", record);
+    setData((prev) => prev?.filter((item) => item.id !== record.id));
+  };
+
+  const columns: ColumnsType<DataType> = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      sorter: true,
+      width: "20%",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      width: "25%",
+    },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+      filters: [
+        { text: "Male", value: "male" },
+        { text: "Female", value: "female" },
+      ],
+      width: "15%",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      width: "15%",
+      filters: [
+        { text: Status.ACTIVE, value: Status.ACTIVE },
+        { text: Status.INACTIVE, value: Status.INACTIVE },
+      ],
+      render: (status: Status) => {
+        const color = status === Status.ACTIVE ? "green" : "red";
+        const text = status === Status.ACTIVE ? "Active" : "Inactive";
+        return <Tag color={color}>{text}</Tag>;
+      },
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      width: "25%",
+      render: (_, record: DataType) => (
+        <div className="flex gap-1">
+          <Button
+            type="default"
+            icon={<EyeOutlined />}
+            onClick={() => handleView(record)}
+            title="View Details"
+            className="text-white bg-white"
+          />
+          <Popconfirm
+            title="Delete User"
+            description="Are you sure you want to delete this user?"
+            onConfirm={() => handleDelete(record)}
+            okText="Yes"
+            cancelText="No"
+            okButtonProps={{ danger: true }}
+          >
+            <Button
+              type="default"
+              icon={<DeleteOutlined />}
+              danger
+              title="Delete User"
+              className="!text-red-500 hover:!text-red-700"
+            />
+          </Popconfirm>
+        </div>
+      ),
+    },
+  ];
+
   const params = toURLSearchParams(getRandomuserParams(tableParams));
 
   const fetchData = () => {
@@ -131,7 +167,16 @@ const TableComponent: React.FC = () => {
     )
       .then((res) => res.json())
       .then((res) => {
-        setData(Array.isArray(res) ? res : []);
+        // Add random status to each user since API might not have it
+        const dataWithStatus = Array.isArray(res)
+          ? res.map((user: any) => ({
+              ...user,
+              status:
+                user.status || (Math.random() > 0.5 ? "active" : "inactive"),
+            }))
+          : [];
+
+        setData(dataWithStatus);
         setLoading(false);
         setTableParams({
           ...tableParams,
@@ -142,6 +187,10 @@ const TableComponent: React.FC = () => {
             // total: data.totalCount,
           },
         });
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setLoading(false);
       });
   };
 
@@ -180,6 +229,7 @@ const TableComponent: React.FC = () => {
         pagination={tableParams.pagination}
         loading={loading}
         onChange={handleTableChange}
+        scroll={{ x: 800 }} // Add horizontal scroll for better mobile experience
       />
     </div>
   );

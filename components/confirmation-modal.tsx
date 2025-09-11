@@ -20,8 +20,8 @@ const ConfirmationModal = ({ title, description }: ConfirmationModalProps) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[999]">
-      <div className="bg-[#0b1220] text-white w-[90%] max-w-sm rounded-lg shadow-lg p-6">
-        <div className="flex justify-between items-center gap-2 mb-4">
+      <div className="bg-[#06211e] text-white w-[90%] max-w-sm rounded-lg shadow-lg p-6">
+        <div className="flex justify-between items-center gap-2 mb-3">
           <h2 className="text-lg font-semibold">{title}</h2>
           <button
             onClick={() => setLogoutModal(false)}
@@ -38,13 +38,13 @@ const ConfirmationModal = ({ title, description }: ConfirmationModalProps) => {
             label="Cancel"
             onClick={() => setLogoutModal(false)}
             variant="secondary"
-            size="sm"
+            size="xs"
           />
           <Button
             onClick={handleLogoutClick}
             variant="danger"
             label="Confirm"
-            size="sm"
+            size="xs"
           />
         </div>
       </div>
