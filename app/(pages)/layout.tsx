@@ -44,11 +44,18 @@ const Layout = ({ children }: PropsWithChildren) => {
 
   return (
     <div className="flex min-h-screen overflow-hidden">
-      <Sidebar />
+      <div
+        className={`fixed inset-y-0 left-0 z-50 w-60 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <Sidebar />
+      </div>
 
       <div className="flex flex-col flex-1 min-w-0">
         {/* <Header /> */}
-        <main className="flex-1 bg-[#f2f2f2]ss p-2 lg:ml-[16rem] ml-0 pt-10 transition-all duration-300">
+        {/* bg-[#010C12] */}
+        <main className="flex-1 bg-[#06211E]/95 p-2 ml-0 pt-10 transition-all duration-300">
           {children}
         </main>
       </div>
