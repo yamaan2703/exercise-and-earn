@@ -6,18 +6,25 @@ export type CookieOptions = Cookies.CookieAttributes | undefined;
 
 const setCookie = (
   name: CookieName,
-  value: CookieValue
-  // options?: CookieOptions
+  value: CookieValue,
+  options?: CookieOptions
 ): void => {
-  Cookies.set(name, value, { secure: true });
+  const defaultOptions: CookieOptions = {
+    expires: 7,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    path: "/",
+  };
+
+  Cookies.set(name, value, { ...defaultOptions, ...options });
 };
 
-const getCookie = (name: CookieName): string | undefined | null => {
+const getCookie = (name: CookieName): string | undefined => {
   return Cookies.get(name);
 };
 
 const removeCookie = (name: CookieName): void => {
-  Cookies.remove(name);
+  Cookies.remove(name, { path: "/" });
 };
 
 export { getCookie, removeCookie, setCookie };

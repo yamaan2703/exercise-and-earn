@@ -1,5 +1,5 @@
 import { Routes } from "@/routes/Routes";
-import { FaHome, FaUsers, FaShieldAlt, FaFileContract } from "react-icons/fa";
+import { FaUsers, FaShieldAlt, FaFileContract } from "react-icons/fa";
 import { MdOutlineDashboard } from "react-icons/md";
 
 export const sidebarMenu = [

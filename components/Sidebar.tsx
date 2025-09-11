@@ -3,13 +3,15 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { sidebarMenu as links } from "@/Data/sidebarData";
+import { sidebarMenu as links } from "@/Data/Data";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { cn } from "@/lib/utils";
+import { FaSignOutAlt } from "react-icons/fa";
 
 interface SidebarProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  setLogoutModal: (isOpen: boolean) => void;
 }
 
 interface MenuLink {
@@ -24,7 +26,7 @@ interface OpenMenus {
   [key: string]: boolean;
 }
 
-function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
+function Sidebar({ isOpen, setIsOpen, setLogoutModal }: SidebarProps) {
   const pathname = usePathname();
   const [openMenus, setOpenMenus] = useState<OpenMenus>({});
 
@@ -80,12 +82,12 @@ function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 className={cn(
                   "flex items-center text-[12px] sm:text-[15px] space-x-3 px-3 py-2 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95",
                   pathname === link.to
-                    ? "bg-[#C7E5C9] text-gray-900 shadow-md"
-                    : "text-gray-600 hover:bg-[#c7f7cb] hover:text-green-900"
+                    ? "bg-[#172646] text-emerald-600 shadow-md opacity-100"
+                    : "text-gray-600 hover:bg-emerald-600 hover:text-white"
                 )}
               >
-                <span className="text-xl">{link.icon}</span>
-                <span className="font-medium">{link.label}</span>
+                <span className="text-lg">{link.icon}</span>
+                <span className="font-medium text-sm">{link.label}</span>
               </p>
             </Link>
           )}
@@ -97,23 +99,36 @@ function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   return (
     <aside
       className={cn(
-        "fixed top-0 left-0 h-full w-[270px] bg-[#0b1220] border-r border-gray-400 shadow-md z-[101] transform transition-transform rounded-r-2xl",
+        "fixed top-0 left-0 h-full w-[220px] sm:w-[250px] bg-[#0b1220] border-r border-gray-700 shadow-lg z-[101] transform transition-transform",
         isOpen ? "translate-x-0" : "-translate-x-full",
         "lg:translate-x-0 lg:block"
       )}
     >
-      <div className="flex items-center justify-center mx-auto pb-3 pt-5">
+      <div className="flex items-center justify-center gap-3 mx-auto border-b border-gray-700 py-4">
         <Image
           src="/Icons/logo.png"
           width={1000}
           height={1000}
           alt="Logo"
-          className="w-28 h-28"
+          className="size-10"
         />
+        <h1 className="text-white text-sm sm:text-base font-bold">
+          Exercise & Earn
+        </h1>
       </div>
 
-      <div className="flex-1 px-4 space-y-2 h-[calc(100vh-140px)] overflow-y-auto scrollbar-custom">
+      <div className="flex-1 px-4 py-6 space-y-2 h-[calc(100vh-140px)] overflow-y-auto scrollbar-custom">
         <nav className="flex flex-col space-y-2">{renderLinks(links)}</nav>
+      </div>
+
+      <div className="border-t border-gray-700 mt-2">
+        <button
+          onClick={() => setLogoutModal(true)}
+          className="absolute bottom-3 left-2 flex items-center gap-2 px-3 py-2 text-gray-300 hover:text-red-400 rounded-lg transition-colors duration-200 cursor-pointer"
+        >
+          <FaSignOutAlt className="size-5" />
+          <span className="text-sm font-sans font-medium">Logout</span>
+        </button>
       </div>
     </aside>
   );

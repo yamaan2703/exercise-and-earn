@@ -6,7 +6,8 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Input from "@/components/ui/input";
 import { Routes } from "@/routes/Routes";
 import toast from "react-hot-toast";
-import FormButton from "@/components/ui/form-button";
+import Button from "@/components/ui/button";
+import { getCookie, setCookie } from "@/lib/cookies";
 
 const Login = () => {
   const router = useRouter();
@@ -15,9 +16,11 @@ const Login = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+  const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = getCookie("token");
     if (token) {
       router.replace(Routes.DASHBOARD);
     }
@@ -30,13 +33,11 @@ const Login = () => {
       setError("");
 
       setTimeout(() => {
-        if (
-          email === process.env.NEXT_PUBLIC_ADMIN_EMAIL &&
-          password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD
-        ) {
+        if (email === adminEmail && password === adminPassword) {
           console.log("Login successful");
           toast.success("Login successful");
-          localStorage.setItem("token", email);
+          // localStorage.setItem("token", email);
+          setCookie("token", email);
           router.push(Routes.DASHBOARD);
         } else {
           console.log("Invalid login credentials");
@@ -80,6 +81,8 @@ const Login = () => {
               id="email"
               type="email"
               placeholder="Enter your email"
+              variant="default"
+              size="md"
             />
 
             <div className="relative">
@@ -90,15 +93,22 @@ const Login = () => {
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
+                variant="default"
+                size="md"
+                iconRight={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="focus:outline-none"
+                  >
+                    {showPassword ? (
+                      <FaEyeSlash size={20} />
+                    ) : (
+                      <FaEye size={20} />
+                    )}
+                  </button>
+                }
               />
-
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-3 top-7 flex items-center text-gray-400 hover:text-white focus:outline-none cursor-pointer"
-              >
-                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
-              </button>
             </div>
           </div>
 
@@ -108,8 +118,8 @@ const Login = () => {
             </div>
           )}
 
-          <div>
-            <FormButton isLoading={isLoading} label="Sign In" />
+          <div className="">
+            <Button isLoading={isLoading} label="Sign In" fullWidth />
           </div>
         </form>
       </div>

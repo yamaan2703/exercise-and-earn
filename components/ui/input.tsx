@@ -1,4 +1,5 @@
 import { InputProps } from "@/types/interface";
+import clsx from "clsx";
 import React from "react";
 
 const Input = ({
@@ -8,7 +9,30 @@ const Input = ({
   id,
   type,
   placeholder,
+  variant,
+  size,
+  iconLeft,
+  iconRight,
 }: InputProps) => {
+  const baseStyles =
+    "appearance-none block w-full border rounded-lg focus:outline-none transition duration-200";
+
+  const variantStyles: Record<string, string> = {
+    default:
+      "bg-[#0b140b] border-green-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent",
+    success:
+      "bg-[#0b140b] border-green-600 text-green-400 placeholder-gray-400 focus:ring-2 focus:ring-green-500",
+    error:
+      "bg-[#0b140b] border-red-600 text-red-400 placeholder-gray-400 focus:ring-2 focus:ring-red-500",
+    outline:
+      "bg-transparent border-gray-500 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500",
+  };
+
+  const sizeStyles: Record<string, string> = {
+    sm: "px-3 py-2 text-sm",
+    md: "px-4 py-3 text-base",
+    lg: "px-5 py-4 text-lg",
+  };
   return (
     <div>
       <label
@@ -17,15 +41,31 @@ const Input = ({
       >
         {label}
       </label>
-      <input
-        id={id}
-        type={type}
-        required
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        className="appearance-none block w-full px-4 py-3 border border-green-600 placeholder-gray-400 text-white bg-[#0b140b] rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
-        placeholder={placeholder}
-      />
+      <div className="relative flex items-center">
+        {iconLeft && (
+          <span className="absolute left-3 text-gray-400">{iconLeft}</span>
+        )}
+        <input
+          id={id}
+          type={type}
+          required
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder={placeholder}
+          className={clsx(
+            baseStyles,
+            variantStyles[variant],
+            sizeStyles[size],
+            iconLeft ? "pl-10" : "",
+            iconRight ? "pr-10" : ""
+          )}
+        />
+        {iconRight && (
+          <span className="absolute right-3 text-gray-400 cursor-pointer">
+            {iconRight}
+          </span>
+        )}
+      </div>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { FaSignOutAlt } from "react-icons/fa";
 import { AiOutlineMenu } from "react-icons/ai";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { useState } from "react";
-import LogoutModal from "./logout-modal";
+import ConfirmationModal from "./confirmation-modal";
 
 const Header = ({
   toggleSidebar,
@@ -39,12 +39,14 @@ const Header = ({
           <span className="hidden sm:block text-sm font-medium">Logout</span>
         </button>
       </div>
-      {logoutModal && (
-        <LogoutModal
+      {/* {logoutModal && (
+        <ConfirmationModal
           logoutModal={logoutModal}
           setLogoutModal={setLogoutModal}
+          title={"Confirm Logout"}
+          description={"Are you sure you want to log out?"}
         />
-      )}
+      )} */}
     </div>
   );
 };
