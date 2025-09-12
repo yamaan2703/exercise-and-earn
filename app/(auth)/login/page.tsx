@@ -99,7 +99,7 @@ const Login = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="focus:outline-none"
+                    className="focus:outline-none cursor-pointer"
                   >
                     {showPassword ? (
                       <FaEyeSlash size={20} />

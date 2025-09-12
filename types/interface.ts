@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Gender, Status } from "./enums";
 
 export interface InputProps {
   label?: string;
@@ -25,4 +26,12 @@ export interface ButtonProps {
   size?: "xs" | "sm" | "md" | "lg";
   fullWidth?: boolean;
   onClick?: () => void;
+}
+
+export interface DataType {
+  name: string;
+  gender: Gender;
+  email: string;
+  id: string;
+  status: Status;
 }

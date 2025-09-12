@@ -1,24 +1,18 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import type { GetProp, TableProps } from "antd";
-import { Table, Tag, Button, Space, Popconfirm } from "antd";
+import { Table, Popconfirm } from "antd";
 import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
-import type { AnyObject } from "antd/es/_util/type";
 import type { SorterResult } from "antd/es/table/interface";
-import { Status } from "@/types/enums";
+import { Gender, Status } from "@/types/enums";
+import { dummyUsers } from "@/Data/Data";
+import { DataType } from "@/types/interface";
 
 type ColumnsType<T extends object = object> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<
   GetProp<TableProps, "pagination">,
   boolean
 >;
-
-interface DataType {
-  name: string;
-  gender: string;
-  email: string;
-  id: string;
-  status?: "active" | "inactive"; // Added status field
-}
 
 interface TableParams {
   pagination?: TablePaginationConfig;
@@ -27,86 +21,31 @@ interface TableParams {
   filters?: Parameters<GetProp<TableProps, "onChange">>[1];
 }
 
-const toURLSearchParams = <T extends AnyObject>(record: T) => {
-  const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(record)) {
-    params.append(key, value);
-  }
-  return params;
-};
-
-const getRandomuserParams = (params: TableParams) => {
-  const { pagination, filters, sortField, sortOrder, ...restParams } = params;
-  const result: Record<string, any> = {};
-
-  // https://github.com/mockapi-io/docs/wiki/Code-examples#pagination
-  result.limit = pagination?.pageSize;
-  result.page = pagination?.current;
-
-  // https://github.com/mockapi-io/docs/wiki/Code-examples#filtering
-  if (filters) {
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        result[key] = value;
-      }
-    });
-  }
-
-  // https://github.com/mockapi-io/docs/wiki/Code-examples#sorting
-  if (sortField) {
-    result.orderby = sortField;
-    result.order = sortOrder === "ascend" ? "asc" : "desc";
-  }
-
-  // 处理其他参数
-  Object.entries(restParams).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      result[key] = value;
-    }
-  });
-
-  return result;
-};
-
-const TableComponent: React.FC = () => {
-  const [data, setData] = useState<DataType[]>();
+const TableComponent = ({ searchUsers }: { searchUsers: string }) => {
+  const [data, setData] = useState<DataType[]>([]);
   const [loading, setLoading] = useState(false);
   const [tableParams, setTableParams] = useState<TableParams>({
-    pagination: {
-      current: 1,
-      pageSize: 10,
-    },
+    pagination: { current: 1, pageSize: 10 },
   });
 
-  // Handle view action
   const handleView = (record: DataType) => {
     console.log("View user:", record);
   };
 
-  // Handle delete action
   const handleDelete = (record: DataType) => {
-    console.log("Delete user:", record);
-    setData((prev) => prev?.filter((item) => item.id !== record.id));
+    console.log("Deleted user:", record);
+    setData((prev) => prev.filter((item) => item.id !== record.id));
   };
 
   const columns: ColumnsType<DataType> = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      sorter: true,
-      width: "20%",
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      width: "25%",
-    },
+    { title: "Name", dataIndex: "name", sorter: true, width: "20%" },
+    { title: "Email", dataIndex: "email", width: "25%" },
     {
       title: "Gender",
       dataIndex: "gender",
       filters: [
-        { text: "Male", value: "male" },
-        { text: "Female", value: "female" },
+        { text: Gender.MALE, value: Gender.MALE },
+        { text: Gender.FEMALE, value: Gender.FEMALE },
       ],
       width: "15%",
     },
@@ -119,24 +58,24 @@ const TableComponent: React.FC = () => {
         { text: Status.INACTIVE, value: Status.INACTIVE },
       ],
       render: (status: Status) => {
-        const color = status === Status.ACTIVE ? "green" : "red";
-        const text = status === Status.ACTIVE ? "Active" : "Inactive";
-        return <Tag color={color}>{text}</Tag>;
+        const color =
+          status === Status.ACTIVE ? "text-green-500" : "text-red-500";
+        return <p className={color}>{status}</p>;
       },
     },
     {
       title: "Actions",
       key: "actions",
-      width: "25%",
+      width: "15%",
       render: (_, record: DataType) => (
-        <div className="flex gap-1">
-          <Button
-            type="default"
-            icon={<EyeOutlined />}
+        <div className="flex gap-2">
+          <button
             onClick={() => handleView(record)}
             title="View Details"
-            className="text-white bg-white"
-          />
+            className="p-1 text-teal-400 hover:text-teal-600 transition"
+          >
+            <EyeOutlined />
+          </button>
           <Popconfirm
             title="Delete User"
             description="Are you sure you want to delete this user?"
@@ -145,91 +84,83 @@ const TableComponent: React.FC = () => {
             cancelText="No"
             okButtonProps={{ danger: true }}
           >
-            <Button
-              type="default"
-              icon={<DeleteOutlined />}
-              danger
+            <button
               title="Delete User"
-              className="!text-red-500 hover:!text-red-700"
-            />
+              className="p-1 text-red-400 hover:text-red-600 transition"
+            >
+              <DeleteOutlined />
+            </button>
           </Popconfirm>
         </div>
       ),
     },
   ];
 
-  const params = toURLSearchParams(getRandomuserParams(tableParams));
-
-  const fetchData = () => {
+  useEffect(() => {
     setLoading(true);
-    fetch(
-      `https://660d2bd96ddfa2943b33731c.mockapi.io/api/users?${params.toString()}`
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        // Add random status to each user since API might not have it
-        const dataWithStatus = Array.isArray(res)
-          ? res.map((user: any) => ({
-              ...user,
-              status:
-                user.status || (Math.random() > 0.5 ? "active" : "inactive"),
-            }))
-          : [];
+    setTimeout(() => {
+      setData(dummyUsers);
+      setLoading(false);
+      setTableParams((prev) => ({
+        ...prev,
+        pagination: { ...prev.pagination, total: data.length },
+      }));
+    }, 300);
+  }, []);
 
-        setData(dataWithStatus);
-        setLoading(false);
-        setTableParams({
-          ...tableParams,
-          pagination: {
-            ...tableParams.pagination,
-            total: 100,
-            // 100 is mock data, you should read it from server
-            // total: data.totalCount,
-          },
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      });
-  };
-
-  useEffect(fetchData, [
-    tableParams.pagination?.current,
-    tableParams.pagination?.pageSize,
-    tableParams?.sortOrder,
-    tableParams?.sortField,
-    JSON.stringify(tableParams.filters),
-  ]);
-
+  // Local filtering + sorting
   const handleTableChange: TableProps<DataType>["onChange"] = (
     pagination,
     filters,
     sorter
   ) => {
+    let filteredData = [...dummyUsers];
+
+    // filter by Gender
+    if (filters.gender) {
+      filteredData = filteredData.filter((item) =>
+        (filters.gender as string[]).includes(item.gender)
+      );
+    }
+
+    // filter by Status
+    if (filters.status) {
+      filteredData = filteredData.filter((item) =>
+        (filters.status as string[]).includes(item.status)
+      );
+    }
+
+    // sort by name (ascend or descend)
+    if (!Array.isArray(sorter) && sorter.order && sorter.field) {
+      filteredData.sort((a, b) => {
+        const field = sorter.field as keyof DataType;
+        if (a[field] < b[field]) return sorter.order === "ascend" ? -1 : 1;
+        if (a[field] > b[field]) return sorter.order === "ascend" ? 1 : -1;
+        return 0;
+      });
+    }
+
+    setData(filteredData);
     setTableParams({
       pagination,
       filters,
-      sortOrder: Array.isArray(sorter) ? undefined : sorter.order,
       sortField: Array.isArray(sorter) ? undefined : sorter.field,
+      sortOrder: Array.isArray(sorter) ? undefined : sorter.order,
     });
-
-    // `dataSource` is useless since `pageSize` changed
-    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-      setData([]);
-    }
   };
 
   return (
-    <div className="overflow-auto">
+    <div className="overflow-auto border border-gray-400 rounded-lg">
       <Table<DataType>
         columns={columns}
         rowKey={(record) => record.id}
-        dataSource={data}
+        dataSource={data.filter((item) =>
+          item.name.toLowerCase().includes(searchUsers.toLowerCase())
+        )}
         pagination={tableParams.pagination}
         loading={loading}
         onChange={handleTableChange}
-        scroll={{ x: 800 }} // Add horizontal scroll for better mobile experience
+        scroll={{ x: 800 }}
       />
     </div>
   );

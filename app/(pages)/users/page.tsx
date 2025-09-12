@@ -1,5 +1,4 @@
 "use client";
-import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import TableComponent from "@/components/ui/table";
 import { AuthContext } from "@/context/AuthContext";
@@ -13,7 +12,7 @@ const Users = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center gap-2">
-        <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-white after:rounded-full after:mt-1">
+        <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-700 after:rounded-full after:mt-1">
           Users
         </h1>
         <div
@@ -24,23 +23,21 @@ const Users = () => {
         </div>
       </div>
 
-      <div className="">
-        <div className="max-w-[400px] w-full relative">
-          <Input
-            placeholder="Search users..."
-            type="text"
-            id="search"
-            value={searchUsers}
-            setValue={setSearchUsers}
-            variant="outline"
-            size="sm"
-            iconLeft={<FaSearch />}
-          />
-        </div>
+      <div className="max-w-[400px] w-full relative">
+        <Input
+          placeholder="Search users by name..."
+          type="text"
+          id="search"
+          value={searchUsers}
+          setValue={setSearchUsers}
+          variant="outline"
+          size="sm"
+          iconLeft={<FaSearch />}
+        />
       </div>
 
       <div className="">
-        <TableComponent />
+        <TableComponent searchUsers={searchUsers} />
       </div>
     </div>
   );

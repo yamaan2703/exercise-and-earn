@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { sidebarMenu as links } from "@/Data/Data";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { cn } from "@/lib/utils";
-import { FaSignOutAlt } from "react-icons/fa";
 import { AuthContext } from "@/context/AuthContext";
 
 interface MenuLink {
@@ -22,8 +21,7 @@ interface OpenMenus {
 }
 
 function Sidebar() {
-  const { isSidebarOpen, setIsSidebarOpen, setLogoutModal } =
-    useContext(AuthContext)!;
+  const { isSidebarOpen, setIsSidebarOpen } = useContext(AuthContext)!;
   const pathname = usePathname();
   const [openMenus, setOpenMenus] = useState<OpenMenus>({});
 
@@ -110,18 +108,8 @@ function Sidebar() {
         </h1>
       </div>
 
-      <div className="flex-1 px-4 py-6 space-y-2 h-[calc(100vh-140px)] overflow-y-auto scrollbar-custom">
+      <div className="flex-1 px-4 py-6 space-y-2 h-[calc(100vh-100px)] overflow-y-auto scrollbar-custom">
         <nav className="flex flex-col space-y-2">{renderLinks(links)}</nav>
-      </div>
-
-      <div className="border-t border-gray-700 mt-2">
-        <button
-          onClick={() => setLogoutModal(true)}
-          className="absolute bottom-3 left-2 flex items-center gap-2 px-3 py-2 text-gray-300 hover:text-red-400 rounded-lg transition-colors duration-200 cursor-pointer"
-        >
-          <FaSignOutAlt className="size-5" />
-          <span className="text-sm font-sans font-medium">Logout</span>
-        </button>
       </div>
     </aside>
   );
