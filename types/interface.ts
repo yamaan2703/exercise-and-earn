@@ -29,9 +29,9 @@ export interface ButtonProps {
 }
 
 export interface DataType {
+  id: string;
   name: string;
   gender: Gender;
   email: string;
-  id: string;
   status: Status;
 }

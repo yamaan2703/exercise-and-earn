@@ -7,6 +7,7 @@ import type { SorterResult } from "antd/es/table/interface";
 import { Gender, Status } from "@/types/enums";
 import { dummyUsers } from "@/Data/Data";
 import { DataType } from "@/types/interface";
+import { useRouter } from "next/navigation";
 
 type ColumnsType<T extends object = object> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<
@@ -22,6 +23,7 @@ interface TableParams {
 }
 
 const TableComponent = ({ searchUsers }: { searchUsers: string }) => {
+  const router = useRouter();
   const [data, setData] = useState<DataType[]>([]);
   const [loading, setLoading] = useState(false);
   const [tableParams, setTableParams] = useState<TableParams>({
@@ -29,7 +31,7 @@ const TableComponent = ({ searchUsers }: { searchUsers: string }) => {
   });
 
   const handleView = (record: DataType) => {
-    console.log("View user:", record);
+    router.push(`/user-detail/${record.id}`);
   };
 
   const handleDelete = (record: DataType) => {
@@ -72,7 +74,7 @@ const TableComponent = ({ searchUsers }: { searchUsers: string }) => {
           <button
             onClick={() => handleView(record)}
             title="View Details"
-            className="p-1 text-teal-400 hover:text-teal-600 transition"
+            className="p-1 text-teal-400 hover:text-teal-600 transition cursor-pointer"
           >
             <EyeOutlined />
           </button>
@@ -86,7 +88,7 @@ const TableComponent = ({ searchUsers }: { searchUsers: string }) => {
           >
             <button
               title="Delete User"
-              className="p-1 text-red-400 hover:text-red-600 transition"
+              className="p-1 text-red-400 hover:text-red-600 transition cursor-pointer"
             >
               <DeleteOutlined />
             </button>
