@@ -66,3 +66,22 @@ body {
 .ant-empty-description {
   color: #fff !important;
 }
+
+.ant-table-column-sorter {
+  color: #d1d5db !important;
+}
+
+.custom-quill .ql-toolbar {
+  background-color: white !important;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.custom-quill .ql-editor {
+  color: white !important;
+  min-height: 150px;
+}
+
+.custom-quill .ql-editor.ql-blank::before {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-style: italic;
+}

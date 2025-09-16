@@ -4,10 +4,10 @@ import type { GetProp, TableProps } from "antd";
 import { Table, Popconfirm } from "antd";
 import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { SorterResult } from "antd/es/table/interface";
-import { Gender, Status } from "@/types/enums";
-import { dummyUsers } from "@/Data/Data";
-import { DataType } from "@/types/interface";
+import { dummyProducts } from "@/Data/Data";
+import { ProductType } from "@/types/interface";
 import { useRouter } from "next/navigation";
+import { Routes } from "@/routes/Routes";
 
 type ColumnsType<T extends object = object> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<
@@ -22,54 +22,37 @@ interface TableParams {
   filters?: Parameters<GetProp<TableProps, "onChange">>[1];
 }
 
-const TableComponent = ({ searchUsers }: { searchUsers: string }) => {
+const TableProductsComponent = ({
+  searchProducts,
+}: {
+  searchProducts: string;
+}) => {
   const router = useRouter();
-  const [data, setData] = useState<DataType[]>([]);
+  const [data, setData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(false);
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: { current: 1, pageSize: 10 },
   });
 
-  const handleView = (record: DataType) => {
-    router.push(`/user-detail/${record.id}`);
+  const handleView = (record: ProductType) => {
+    router.push(Routes.PRODUCTS_DETAIL(record.id));
   };
 
-  const handleDelete = (record: DataType) => {
-    console.log("Deleted user:", record);
+  const handleDelete = (record: ProductType) => {
+    console.log("Deleted product:", record);
     setData((prev) => prev.filter((item) => item.id !== record.id));
   };
 
-  const columns: ColumnsType<DataType> = [
-    { title: "Name", dataIndex: "name", sorter: true, width: "20%" },
-    { title: "Email", dataIndex: "email", width: "25%" },
-    {
-      title: "Gender",
-      dataIndex: "gender",
-      filters: [
-        { text: Gender.MALE, value: Gender.MALE },
-        { text: Gender.FEMALE, value: Gender.FEMALE },
-      ],
-      width: "15%",
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      width: "15%",
-      filters: [
-        { text: Status.ACTIVE, value: Status.ACTIVE },
-        { text: Status.INACTIVE, value: Status.INACTIVE },
-      ],
-      render: (status: Status) => {
-        const color =
-          status === Status.ACTIVE ? "text-green-500" : "text-red-500";
-        return <p className={color}>{status}</p>;
-      },
-    },
+  const columns: ColumnsType<ProductType> = [
+    { title: "Name", dataIndex: "name", sorter: true, width: "25%" },
+    { title: "Category", dataIndex: "category", width: "25%" },
+    { title: "Price ($)", dataIndex: "price", sorter: true, width: "15%" },
+    { title: "Stock", dataIndex: "stock", sorter: true, width: "15%" },
     {
       title: "Actions",
       key: "actions",
       width: "15%",
-      render: (_, record: DataType) => (
+      render: (_, record: ProductType) => (
         <div className="flex gap-2">
           <button
             onClick={() => handleView(record)}
@@ -101,7 +84,7 @@ const TableComponent = ({ searchUsers }: { searchUsers: string }) => {
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
-      setData(dummyUsers);
+      setData(dummyProducts);
       setLoading(false);
       setTableParams((prev) => ({
         ...prev,
@@ -111,31 +94,30 @@ const TableComponent = ({ searchUsers }: { searchUsers: string }) => {
   }, []);
 
   // Local filtering + sorting
-  const handleTableChange: TableProps<DataType>["onChange"] = (
+  const handleTableChange: TableProps<ProductType>["onChange"] = (
     pagination,
     filters,
     sorter
   ) => {
-    let filteredData = [...dummyUsers];
+    let filteredData = [...dummyProducts];
 
     // filter by Gender
-    if (filters.gender) {
-      filteredData = filteredData.filter((item) =>
-        (filters.gender as string[]).includes(item.gender)
-      );
-    }
+    // if (filters.gender) {
+    //   filteredData = filteredData.filter((item) =>
+    //     (filters.gender as string[]).includes(item.gender)
+    //   );
+    // }
 
-    // filter by Status
-    if (filters.status) {
-      filteredData = filteredData.filter((item) =>
-        (filters.status as string[]).includes(item.status)
-      );
-    }
+    // // filter by Status
+    // if (filters.status) {
+    //   filteredData = filteredData.filter((item) =>
+    //     (filters.status as string[]).includes(item.status)
+    //   );
+    // }
 
-    // sort by name (ascend or descend)
     if (!Array.isArray(sorter) && sorter.order && sorter.field) {
       filteredData.sort((a, b) => {
-        const field = sorter.field as keyof DataType;
+        const field = sorter.field as keyof ProductType;
         if (a[field] < b[field]) return sorter.order === "ascend" ? -1 : 1;
         if (a[field] > b[field]) return sorter.order === "ascend" ? 1 : -1;
         return 0;
@@ -153,11 +135,11 @@ const TableComponent = ({ searchUsers }: { searchUsers: string }) => {
 
   return (
     <div className="overflow-auto border border-gray-400 rounded-lg">
-      <Table<DataType>
+      <Table<ProductType>
         columns={columns}
         rowKey={(record) => record.id}
         dataSource={data.filter((item) =>
-          item.name.toLowerCase().includes(searchUsers.toLowerCase())
+          item.name.toLowerCase().includes(searchProducts.toLowerCase())
         )}
         pagination={tableParams.pagination}
         loading={loading}
@@ -168,4 +150,4 @@ const TableComponent = ({ searchUsers }: { searchUsers: string }) => {
   );
 };
 
-export default TableComponent;
+export default TableProductsComponent;

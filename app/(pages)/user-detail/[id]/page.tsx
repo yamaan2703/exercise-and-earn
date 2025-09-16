@@ -2,17 +2,13 @@
 import { useState } from "react";
 import { dummyUsers } from "@/Data/Data";
 import { Routes } from "@/routes/Routes";
-import { Status } from "@/types/enums";
+import { Status, UserDetailTab } from "@/types/enums";
 import { useParams, useRouter } from "next/navigation";
 import {
-  FaEnvelope,
-  FaToggleOn,
   FaUser,
-  FaVenusMars,
   FaArrowLeft,
   FaMapMarkerAlt,
   FaCalendarAlt,
-  FaBell,
   FaCrown,
   FaCreditCard,
   FaHistory,
@@ -21,11 +17,12 @@ import {
   FaStar,
 } from "react-icons/fa";
 import { cn } from "@/lib/utils";
+import Button from "@/components/ui/button";
 
 const UserDetailPage = () => {
   const { id } = useParams();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState("profile");
+  const [activeTab, setActiveTab] = useState(UserDetailTab.PROFILE);
 
   const user = dummyUsers.find((user) => user.id === id);
 
@@ -103,44 +100,42 @@ const UserDetailPage = () => {
           </div>
 
           {/* Tab Navigation */}
-          <div className="flex items-center gap-4 mb-6 border-b border-teal-500/20">
-            <button
-              onClick={() => setActiveTab("profile")}
-              className={cn(
-                "px-4 py-2 cursor-pointer transition-all duration-200",
-                activeTab === "profile"
-                  ? "text-teal-400 bg-teal-500/10 border-b-2 border-teal-400"
-                  : "text-teal-500 hover:text-teal-400 hover:bg-teal-500/5"
-              )}
-            >
-              Profile
-            </button>
-            <button
-              onClick={() => setActiveTab("favorites")}
-              className={cn(
-                "px-4 py-2 cursor-pointer transition-all duration-200 ",
-                activeTab === "favorites"
-                  ? "text-teal-400 bg-teal-500/10 border-b-2 border-teal-400"
-                  : "text-teal-500 hover:text-teal-400 hover:bg-teal-500/5"
-              )}
-            >
-              Favorites
-            </button>
-            <button
-              onClick={() => setActiveTab("reviews")}
-              className={cn(
-                "px-4 py-2 cursor-pointer transition-all duration-200",
-                activeTab === "reviews"
-                  ? "text-teal-400 bg-teal-500/10 border-b-2 border-teal-400"
-                  : "text-teal-500 hover:text-teal-400 hover:bg-teal-500/5"
-              )}
-            >
-              Reviews
-            </button>
+          <div className="flex items-center mb-6 bg-[#0d332e] p-2 rounded-lg border border-teal-500/20">
+            {[
+              {
+                key: UserDetailTab.PROFILE,
+                label: "Profile",
+                icon: <FaUser />,
+              },
+              {
+                key: UserDetailTab.FAVORITES,
+                label: "Favorites",
+                icon: <FaHeart />,
+              },
+              {
+                key: UserDetailTab.REVIEWS,
+                label: "Reviews",
+                icon: <FaStar />,
+              },
+            ].map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all duration-300 mx-1 cursor-pointer",
+                  activeTab === tab.key
+                    ? "bg-teal-600 text-white shadow-md"
+                    : "text-gray-300 hover:bg-teal-700/40 hover:text-white"
+                )}
+              >
+                {tab.icon}
+                {tab.label}
+              </button>
+            ))}
           </div>
 
           {/* Tab Content */}
-          {activeTab === "profile" && (
+          {activeTab === UserDetailTab.PROFILE && (
             <>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20">
@@ -296,7 +291,7 @@ const UserDetailPage = () => {
           )}
 
           {/* Favorites Tab Content */}
-          {activeTab === "favorites" && (
+          {activeTab === UserDetailTab.FAVORITES && (
             <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20">
               <h2 className="text-xl font-bold text-teal-400 mb-6">
                 Favorite Items
@@ -338,7 +333,7 @@ const UserDetailPage = () => {
           )}
 
           {/* Reviews Tab Content */}
-          {activeTab === "reviews" && (
+          {activeTab === UserDetailTab.REVIEWS && (
             <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20">
               <h2 className="text-xl font-bold text-teal-400 mb-6">
                 User Reviews
@@ -357,12 +352,12 @@ const UserDetailPage = () => {
                             {review.product}
                           </h3>
                           <div className="flex items-center gap-1 mt-1">
-                            {[...Array(5)].map((_, i) => (
+                            {[...Array(5)].map((_, index) => (
                               <FaStar
-                                key={i}
+                                key={index}
                                 className={cn(
                                   "text-sm",
-                                  i < review.rating
+                                  index < review.rating
                                     ? "text-yellow-400"
                                     : "text-gray-600"
                                 )}
@@ -392,18 +387,18 @@ const UserDetailPage = () => {
         </div>
       ) : (
         <div className="flex justify-center ">
-          <div className="text-center">
+          <div className="flex flex-col items-center">
             <div className="text-6xl mb-4">⚠️</div>
             <p className="text-red-400 text-2xl font-bold mb-2">
               User not found
             </p>
-            <button
-              onClick={() => router.push(Routes.USERS)}
-              className="flex items-center gap-2 px-6 py-3 bg-teal-600 hover:bg-teal-700 transition-all duration-200 rounded-lg text-white font-semibold mx-auto cursor-pointer"
-            >
-              <FaArrowLeft />
-              Back to Users
-            </button>
+            <Button
+              label="Back"
+              icon={FaArrowLeft}
+              variant="theme"
+              onClick={() => router.back()}
+              size="md"
+            />
           </div>
         </div>
       )}

@@ -1,19 +1,19 @@
 "use client";
 import Input from "@/components/ui/input";
-import TableUsersComponent from "@/components/ui/table/table-users";
+import TableProductsComponent from "@/components/ui/table/table-products";
 import { AuthContext } from "@/context/AuthContext";
 import { useContext, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { FaSearch } from "react-icons/fa";
 
-const Users = () => {
+const Products = () => {
   const { toggleSidebar } = useContext(AuthContext)!;
-  const [searchUsers, setSearchUsers] = useState("");
+  const [searchProducts, setSearchProducts] = useState("");
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center gap-2">
         <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-700 after:rounded-full after:mt-1">
-          Users
+          Products
         </h1>
         <div
           className="lg:hidden text-2xl p-2 cursor-pointer text-white"
@@ -25,11 +25,11 @@ const Users = () => {
 
       <div className="max-w-[400px] w-full relative">
         <Input
-          placeholder="Search users by name..."
+          placeholder="Search products by name..."
           type="text"
           id="search"
-          value={searchUsers}
-          setValue={setSearchUsers}
+          value={searchProducts}
+          setValue={setSearchProducts}
           variant="outline"
           size="sm"
           iconLeft={<FaSearch />}
@@ -37,10 +37,10 @@ const Users = () => {
       </div>
 
       <div className="">
-        <TableUsersComponent searchUsers={searchUsers} />
+        <TableProductsComponent searchProducts={searchProducts} />
       </div>
     </div>
   );
 };
 
-export default Users;
+export default Products;

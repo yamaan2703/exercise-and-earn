@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { Gender, Status } from "./enums";
+import { IconType } from "react-icons/lib";
 
 export interface InputProps {
   label?: string;
@@ -22,8 +23,9 @@ export interface ConfirmationModalProps {
 export interface ButtonProps {
   isLoading?: boolean;
   label?: string;
-  variant?: "primary" | "secondary" | "danger" | "outline";
+  variant?: "primary" | "secondary" | "danger" | "outline" | "theme";
   size?: "xs" | "sm" | "md" | "lg";
+  icon?: IconType;
   fullWidth?: boolean;
   onClick?: () => void;
 }
@@ -34,4 +36,19 @@ export interface DataType {
   gender: Gender;
   email: string;
   status: Status;
+}
+
+export interface ProductType {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  stock: number;
+}
+
+export interface GiftType {
+  id: string;
+  name: string;
+  type: string;
+  points: number;
 }

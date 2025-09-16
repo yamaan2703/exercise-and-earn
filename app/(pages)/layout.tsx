@@ -1,5 +1,5 @@
 "use client";
-import { PropsWithChildren, useContext, useEffect, useState } from "react";
+import { PropsWithChildren, useContext, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import ConfirmationModal from "@/components/confirmation-modal";
@@ -9,7 +9,7 @@ import { Routes } from "@/routes/Routes";
 import { AuthContext } from "@/context/AuthContext";
 
 const Layout = ({ children }: PropsWithChildren) => {
-  const { isSidebarOpen, setIsSidebarOpen, logoutModal, setLogoutModal } =
+  const { isSidebarOpen, setIsSidebarOpen, logoutModal } =
     useContext(AuthContext)!;
   const router = useRouter();
   const pathname = usePathname();

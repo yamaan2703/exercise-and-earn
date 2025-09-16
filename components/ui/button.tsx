@@ -7,6 +7,7 @@ const Button = ({
   label,
   variant,
   size,
+  icon: Icon,
   fullWidth = false,
   onClick,
 }: ButtonProps) => {
@@ -19,6 +20,8 @@ const Button = ({
     secondary: "text-gray-800 bg-gray-200 hover:bg-gray-300",
     danger: "text-white bg-red-600 hover:bg-red-700",
     outline: "text-green-600 border border-green-600 hover:bg-green-50",
+    theme:
+      "bg-teal-600 hover:bg-teal-700 rounded-lg text-white font-semibold transition-all duration-200 shadow-md",
   };
 
   const sizeStyles: Record<string, string> = {
@@ -49,7 +52,10 @@ const Button = ({
           {label ? label : "Loading..."}
         </span>
       ) : (
-        label
+        <span className="flex items-center gap-2">
+          {Icon && <Icon />}
+          {label}
+        </span>
       )}
     </button>
   );
