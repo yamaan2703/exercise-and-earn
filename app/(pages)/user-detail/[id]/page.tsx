@@ -1,23 +1,21 @@
 "use client";
 import { useState } from "react";
 import { dummyUsers } from "@/Data/Data";
-import { Routes } from "@/routes/Routes";
 import { Status, UserDetailTab } from "@/types/enums";
 import { useParams, useRouter } from "next/navigation";
 import {
   FaUser,
   FaArrowLeft,
   FaMapMarkerAlt,
-  FaCalendarAlt,
-  FaCrown,
-  FaCreditCard,
-  FaHistory,
-  FaDollarSign,
   FaHeart,
   FaStar,
+  FaFire,
+  FaStore,
+  FaBox,
 } from "react-icons/fa";
 import { cn } from "@/lib/utils";
 import Button from "@/components/ui/button";
+import Image from "next/image";
 
 const UserDetailPage = () => {
   const { id } = useParams();
@@ -78,7 +76,14 @@ const UserDetailPage = () => {
             <div className="flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
               <div className="flex flex-col sm:flex-row items-center gap-6">
                 <div className="size-20 bg-white/20 rounded-full flex items-center justify-center">
-                  <FaUser className="text-white text-3xl" />
+                  {/* <FaUser className="text-white text-3xl" /> */}
+                  <Image
+                    src={user.photoUrl}
+                    alt={user.name}
+                    width={80}
+                    height={80}
+                    className="rounded-full"
+                  />
                 </div>
                 <div>
                   <h1 className="text-3xl font-bold text-white mb-1">
@@ -90,8 +95,8 @@ const UserDetailPage = () => {
               <span
                 className={`px-4 py-2 rounded-full text-sm font-semibold ${
                   user.status === Status.ACTIVE
-                    ? "bg-green-500/20 text-green-300 border border-green-500/30"
-                    : "bg-red-200 text-red-500 border border-red-500/30"
+                    ? "bg-green-500/20 text-green-300 border border-green-500"
+                    : "bg-red-200 text-red-500 border border-red-500/50"
                 }`}
               >
                 {user.status}
@@ -108,14 +113,14 @@ const UserDetailPage = () => {
                 icon: <FaUser />,
               },
               {
-                key: UserDetailTab.FAVORITES,
-                label: "Favorites",
-                icon: <FaHeart />,
+                key: UserDetailTab.CALORIES,
+                label: "Calories",
+                icon: <FaFire />,
               },
               {
-                key: UserDetailTab.REVIEWS,
-                label: "Reviews",
-                icon: <FaStar />,
+                key: UserDetailTab.PRODUCTS,
+                label: "Products",
+                icon: <FaStore />,
               },
             ].map((tab) => (
               <button
@@ -139,150 +144,67 @@ const UserDetailPage = () => {
             <>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20">
-                  <h2 className="text-xl font-bold text-teal-400 mb-6 flex items-center gap-2">
+                  <h2 className="text-xl font-bold text-teal-400 mb-4 flex items-center gap-2">
                     <FaUser className="text-lg" />
                     Profile Details
                   </h2>
 
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
                       <span className="text-gray-300 font-medium">Name</span>
-                      <span className="text-white font-semibold">
-                        {user.name}
-                      </span>
+                      <span>{user.name}</span>
                     </div>
 
                     <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
                       <span className="text-gray-300 font-medium flex items-center gap-2">
                         Email
                       </span>
-                      <span className="text-white font-semibold">
-                        {user.email}
-                      </span>
+                      <span>{user.email}</span>
                     </div>
 
                     <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
                       <span className="text-gray-300 font-medium flex items-center gap-2">
-                        Newsletter
+                        Phone
                       </span>
-                      <span className="text-green-400 font-semibold">
-                        Subscribed
-                      </span>
+                      <span>{user.phone}</span>
                     </div>
 
-                    <div className="flex justify-between items-center py-3">
+                    <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
                       <span className="text-gray-300 font-medium flex items-center gap-2">
-                        Joined Date
+                        Created At
                       </span>
-                      <span className="text-white font-semibold">
-                        Aug 27, 2025
-                      </span>
+                      <span>{user.createdAt}</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20">
-                  <h2 className="text-xl font-bold text-teal-400 mb-6 flex items-center gap-2">
+                  <h2 className="text-xl font-bold text-teal-400 mb-4 flex items-center gap-2">
                     <FaMapMarkerAlt className="text-lg" />
-                    Location Details
+                    Extra Details
                   </h2>
 
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
                       <span className="text-gray-300 font-medium">City</span>
-                      <span className="text-white font-semibold">Karachi</span>
+                      <span>Karachi</span>
                     </div>
 
                     <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
                       <span className="text-gray-300 font-medium">Country</span>
-                      <span className="text-white font-semibold">Pakistan</span>
+                      <span>Pakistan</span>
+                    </div>
+
+                    <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
+                      <span className="text-gray-300 font-medium">Gender</span>
+                      <span>{user.gender}</span>
                     </div>
 
                     <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
                       <span className="text-gray-300 font-medium">
-                        Latitude
+                        Birthday
                       </span>
-                      <span className="text-white font-semibold font-mono text-sm">
-                        24.8339376
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between items-center py-3">
-                      <span className="text-gray-300 font-medium">
-                        Longitude
-                      </span>
-                      <span className="text-white font-semibold font-mono text-sm">
-                        67.0022785
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20">
-                <h2 className="text-xl font-bold text-teal-400 mb-6 flex items-center gap-2">
-                  <FaCrown className="text-lg" />
-                  Subscription Details
-                </h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
-                    <div className="flex items-center gap-3 mb-2">
-                      <FaCrown className="text-teal-400 hidden sm:block" />
-                      <span className="text-gray-300 font-medium">Premium</span>
-                    </div>
-                    <span className="text-red-400 font-semibold">
-                      Not Subscribed
-                    </span>
-                  </div>
-
-                  <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
-                    <div className="flex items-center gap-3 mb-2">
-                      <FaCreditCard className="text-teal-400 hidden sm:block" />
-                      <span className="text-gray-300 font-medium">
-                        Subscription Type
-                      </span>
-                    </div>
-                    <span className="text-gray-400 font-semibold">
-                      Not provided
-                    </span>
-                  </div>
-
-                  <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
-                    <div className="flex items-center gap-3 mb-2">
-                      <FaCalendarAlt className="text-teal-400 hidden sm:block" />
-                      <span className="text-gray-300 font-medium">
-                        Subscription Expiry
-                      </span>
-                    </div>
-                    <span className="text-gray-400 font-semibold">
-                      Not provided
-                    </span>
-                  </div>
-
-                  <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
-                    <div className="flex items-center gap-3 mb-2">
-                      <FaHistory className="text-teal-400 hidden sm:block" />
-                      <span className="text-gray-300 font-medium">
-                        Last Purchase Date
-                      </span>
-                    </div>
-                    <span className="text-gray-400 font-semibold">
-                      Not provided
-                    </span>
-                  </div>
-                </div>
-
-                <div className="mt-6 pt-6 border-t border-teal-500/10">
-                  <div className="bg-gradient-to-r from-teal-500/10 to-teal-600/10 p-4 rounded-lg border border-teal-500/20">
-                    <div className="flex items-center gap-3">
-                      <FaDollarSign className="text-teal-400 text-lg" />
-                      <span className="text-gray-300 font-medium">
-                        Revenue Generated
-                      </span>
-                      <span className="text-gray-400 font-semibold ml-auto">
-                        Not provided
-                      </span>
+                      <span>{user.birthday}</span>
                     </div>
                   </div>
                 </div>
@@ -291,97 +213,85 @@ const UserDetailPage = () => {
           )}
 
           {/* Favorites Tab Content */}
-          {activeTab === UserDetailTab.FAVORITES && (
-            <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20">
+          {activeTab === UserDetailTab.CALORIES && (
+            <div className="bg-[#0d332e] rounded-xl p-4 border border-teal-500/20">
               <h2 className="text-xl font-bold text-teal-400 mb-6">
-                Favorite Items
+                Calories Details
               </h2>
 
-              {mockFavorites.length > 0 ? (
-                <div className="space-y-4">
-                  {mockFavorites.map((favorite) => (
-                    <div
-                      key={favorite.id}
-                      className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10"
-                    >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="text-white font-semibold mb-1">
-                            {favorite.title}
-                          </h3>
-                          <p className="text-gray-400 text-sm mb-2">
-                            {favorite.category}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-gray-300 text-xs">Added on</p>
-                          <p className="text-teal-400 text-sm font-medium">
-                            {favorite.dateAdded}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+              <div className="space-y-4">
+                <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-white font-semibold">
+                      Total Calories Burnt
+                    </h3>
+                    <p className="text-teal-400 font-medium">22,000</p>
+                  </div>
                 </div>
-              ) : (
-                <div className="text-center py-12">
-                  <FaHeart className="text-gray-500 text-4xl mx-auto mb-4" />
-                  <p className="text-gray-400 text-lg">No favorites yet</p>
+
+                <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-white font-semibold">
+                      Available Calories
+                    </h3>
+                    <p className="text-teal-400 font-medium">2,000</p>
+                  </div>
                 </div>
-              )}
+
+                <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-white font-semibold">
+                      Calories Used to Redeem Gifts
+                    </h3>
+                    <p className="text-teal-400 font-medium">20,000</p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
           {/* Reviews Tab Content */}
-          {activeTab === UserDetailTab.REVIEWS && (
-            <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20">
-              <h2 className="text-xl font-bold text-teal-400 mb-6">
-                User Reviews
+          {activeTab === UserDetailTab.PRODUCTS && (
+            <div className="bg-[#0d332e] rounded-xl p-4 border border-teal-500/20">
+              <h2 className="text-xl font-bold text-teal-400 mb-4">
+                Redeemed Products
               </h2>
 
-              {mockReviews.length > 0 ? (
-                <div className="space-y-6">
-                  {mockReviews.map((review) => (
-                    <div
-                      key={review.id}
-                      className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10"
-                    >
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <h3 className="text-white font-semibold">
-                            {review.product}
-                          </h3>
-                          <div className="flex items-center gap-1 mt-1">
-                            {[...Array(5)].map((_, index) => (
-                              <FaStar
-                                key={index}
-                                className={cn(
-                                  "text-sm",
-                                  index < review.rating
-                                    ? "text-yellow-400"
-                                    : "text-gray-600"
-                                )}
-                              />
-                            ))}
-                            <span className="text-gray-400 text-sm ml-2">
-                              ({review.rating}/5)
-                            </span>
-                          </div>
-                        </div>
-                        <span className="text-gray-400 text-sm">
-                          {review.date}
-                        </span>
-                      </div>
-                      <p className="text-gray-300">{review.comment}</p>
-                    </div>
-                  ))}
+              <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10 mb-3">
+                <h3 className="text-white mb-3 font-semibold">Skipping Rope</h3>
+
+                <div className="text-gray-300 text-sm space-y-1">
+                  <p>
+                    <span className="text-gray-300">Calorie Required: </span>
+                    100cal
+                  </p>
+                  <p>
+                    <span className="text-gray-300">Size:</span> S
+                  </p>
+                  <p className="text-red-500">
+                    <span className="text-gray-300">Color:</span> red
+                  </p>
+                  <p>
+                    <span className="text-gray-300">Delivery Fee:</span> $30
+                  </p>
                 </div>
-              ) : (
-                <div className="text-center py-12">
-                  <FaStar className="text-gray-500 text-4xl mx-auto mb-4" />
-                  <p className="text-gray-400 text-lg">No reviews yet</p>
+              </div>
+              <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
+                <h3 className="text-white mb-3 font-semibold">Water Bottle</h3>
+
+                <div className="text-gray-300 text-sm space-y-1">
+                  <p>
+                    <span className="text-gray-300">Calorie Required: </span>
+                    100cal
+                  </p>
+                  <p className="text-red-500">
+                    <span className="text-gray-300">Color:</span> red
+                  </p>
+                  <p>
+                    <span className="text-gray-300">Delivery Fee:</span> $30
+                  </p>
                 </div>
-              )}
+              </div>
             </div>
           )}
         </div>

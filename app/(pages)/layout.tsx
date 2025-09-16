@@ -59,13 +59,6 @@ const Layout = ({ children }: PropsWithChildren) => {
           onClick={toggleSidebar}
         />
       )}
-
-      {logoutModal && (
-        <ConfirmationModal
-          title={"Confirm Logout"}
-          description={"Are you sure you want to log out?"}
-        />
-      )}
     </div>
   );
 };

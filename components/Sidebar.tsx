@@ -95,13 +95,13 @@ function Sidebar() {
         "lg:translate-x-0 lg:block"
       )}
     >
-      <div className="flex items-center justify-center gap-3 mx-auto border-b border-gray-700 py-4">
+      <div className="flex items-center justify-center gap-3 mx-auto border-b border-gray-700 py-3">
         <Image
           src="/Icons/logo.png"
           width={1000}
           height={1000}
           alt="Logo"
-          className="size-10"
+          className="size-9"
         />
         <h1 className="text-white text-sm sm:text-base font-bold">
           Exercise & Earn

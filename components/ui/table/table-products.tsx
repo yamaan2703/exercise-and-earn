@@ -44,10 +44,20 @@ const TableProductsComponent = ({
   };
 
   const columns: ColumnsType<ProductType> = [
-    { title: "Name", dataIndex: "name", sorter: true, width: "25%" },
-    { title: "Category", dataIndex: "category", width: "25%" },
-    { title: "Price ($)", dataIndex: "price", sorter: true, width: "15%" },
-    { title: "Stock", dataIndex: "stock", sorter: true, width: "15%" },
+    { title: "Name", dataIndex: "name", sorter: true, width: "20%" },
+    { title: "Category", dataIndex: "category", width: "20%" },
+    {
+      title: "Required Calories",
+      dataIndex: "requiredCalories",
+      sorter: true,
+      width: "15%",
+    },
+    {
+      title: "Delivery Fee ($)",
+      dataIndex: "deliveryFee",
+      sorter: true,
+      width: "15%",
+    },
     {
       title: "Actions",
       key: "actions",
@@ -57,7 +67,7 @@ const TableProductsComponent = ({
           <button
             onClick={() => handleView(record)}
             title="View Details"
-            className="p-1 text-teal-400 hover:text-teal-600 transition cursor-pointer"
+            className="p-1 text-white hover:text-gray-300 transition cursor-pointer"
           >
             <EyeOutlined />
           </button>
@@ -71,7 +81,7 @@ const TableProductsComponent = ({
           >
             <button
               title="Delete User"
-              className="p-1 text-red-400 hover:text-red-600 transition cursor-pointer"
+              className="p-1 text-white hover:text-gray-300 transition cursor-pointer"
             >
               <DeleteOutlined />
             </button>
@@ -101,13 +111,6 @@ const TableProductsComponent = ({
   ) => {
     let filteredData = [...dummyProducts];
 
-    // filter by Gender
-    // if (filters.gender) {
-    //   filteredData = filteredData.filter((item) =>
-    //     (filters.gender as string[]).includes(item.gender)
-    //   );
-    // }
-
     // // filter by Status
     // if (filters.status) {
     //   filteredData = filteredData.filter((item) =>
@@ -116,12 +119,18 @@ const TableProductsComponent = ({
     // }
 
     if (!Array.isArray(sorter) && sorter.order && sorter.field) {
-      filteredData.sort((a, b) => {
-        const field = sorter.field as keyof ProductType;
-        if (a[field] < b[field]) return sorter.order === "ascend" ? -1 : 1;
-        if (a[field] > b[field]) return sorter.order === "ascend" ? 1 : -1;
-        return 0;
-      });
+      const field = sorter.field as keyof ProductType | undefined;
+
+      if (field) {
+        filteredData.sort((a, b) => {
+          const aVal = a[field] as number | string;
+          const bVal = b[field] as number | string;
+
+          if (aVal < bVal) return sorter.order === "ascend" ? -1 : 1;
+          if (aVal > bVal) return sorter.order === "ascend" ? 1 : -1;
+          return 0;
+        });
+      }
     }
 
     setData(filteredData);

@@ -34,106 +34,93 @@ const ProductDetailPage = () => {
                 </h1>
                 <p className="text-teal-100 text-lg">{product.category}</p>
               </div>
-              <span className="px-4 py-2 rounded-full text-sm font-semibold bg-white/20 text-white border border-white/30">
-                ID: {product.id}
-              </span>
+              <div className="flex flesx-col gap-2">
+                <Button
+                  size="sm"
+                  variant="danger"
+                  icon={FaTrash}
+                  label="Delete"
+                />
+              </div>
             </div>
           </div>
 
           {/* Product Details */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div className="flex flex-col gap-6 mb-6">
             {/* Info Section */}
-            <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20 shadow-md">
-              <h2 className="text-xl font-bold text-teal-400 mb-6 flex items-center gap-2">
+            <div className="bg-[#0d332e] rounded-xl p-5 border border-teal-500/20 shadow-md">
+              <h2 className="text-xl font-bold text-teal-400 mb-4 flex items-center gap-2">
                 <FaBox className="text-lg" />
                 Product Information
               </h2>
 
-              <div className="space-y-4">
+              <div className="space-y-2">
                 <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
-                  <span className="text-gray-300 font-medium flex items-center gap-2">
-                    <FaTag className="text-teal-400" /> Category
-                  </span>
-                  <span className="text-white font-semibold">
-                    {product.category}
-                  </span>
+                  <p className="text-gray-300 font-medium flex items-center gap-2">
+                    Category
+                  </p>
+                  <p>{product.category}</p>
                 </div>
 
                 <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
-                  <span className="text-gray-300 font-medium flex items-center gap-2">
-                    <FaDollarSign className="text-teal-400" /> Price
-                  </span>
-                  <span className="text-green-400 font-semibold">
-                    ${product.price}
-                  </span>
+                  <p className="text-gray-300 font-medium flex items-center gap-2">
+                    Required Calories
+                  </p>
+                  <p>{product.requiredCalories}</p>
                 </div>
 
-                <div className="flex justify-between items-center py-3">
-                  <span className="text-gray-300 font-medium flex items-center gap-2">
-                    Stock
-                  </span>
-                  <span
-                    className={`flex items-center gap-2 font-semibold ${
-                      product.stock > 0 ? "text-green-400" : "text-red-400"
-                    }`}
-                  >
-                    {product.stock > 0 ? (
-                      <>
-                        <FaCheck /> In Stock ({product.stock})
-                      </>
-                    ) : (
-                      <>
-                        <FaTimes /> Out of Stock
-                      </>
-                    )}
-                  </span>
+                {product.size && product.size.length > 0 && (
+                  <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
+                    <p className="text-gray-300 font-medium flex items-center gap-2">
+                      Size
+                    </p>
+                    <p className="space-x-2">
+                      {product.size?.map((size, index) => (
+                        <span className="space-x-2" key={index}>
+                          {size}
+                          {index < product.size!.length - 1 ? "," : ""}
+                        </span>
+                      ))}
+                    </p>
+                  </div>
+                )}
+
+                {product.color && product.color.length > 0 && (
+                  <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
+                    <span className="text-gray-300 font-medium flex items-center gap-2">
+                      Color
+                    </span>
+                    <p className="space-x-2">
+                      {product.color?.map((color, index) => (
+                        <span className="space-x-2" key={index}>
+                          {color}
+                          {index < product.color!.length - 1 ? "," : ""}
+                        </span>
+                      ))}
+                    </p>
+                  </div>
+                )}
+                <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
+                  <p className="text-gray-300 font-medium flex items-center gap-2">
+                    Delivery Fee
+                  </p>
+                  <p>$ {product.deliveryFee}</p>
                 </div>
               </div>
             </div>
-
-            {/* Admin Actions */}
-            <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20 shadow-md flex flex-col justify-between">
-              <div>
-                <h2 className="text-xl font-bold text-teal-400 mb-3">
-                  Admin Actions
-                </h2>
-                <p>
-                  these are the actions that admin can perform. Click on any
-                  which u want to do. Lorem ipsum dolor sit amet consectetur
-                  adipisicing elit. Distinctio qui exercitationem commodi
-                  perferendis magnam amet.
-                </p>
-              </div>
-              <div className="flex gap-4">
-                <Button
-                  size="md"
-                  variant="theme"
-                  icon={FaEdit}
-                  label="Edit Product"
-                  fullWidth
-                />
-                <Button
-                  size="md"
-                  variant="danger"
-                  icon={FaTrash}
-                  label="Delete Product"
-                  fullWidth
-                />
-              </div>
+            <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20 shadow-md">
+              <h2 className="text-xl font-bold text-teal-400 mb-4 flex items-center gap-2">
+                <FaInfoCircle /> Product Description
+              </h2>
+              <p className="text-gray-300 leading-relaxed">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae,
+                autem! Doloremque, veniam iste. Quisquam animi magnam libero ad
+                tempora incidunt. Lorem ipsum dolor sit, amet consectetur
+                adipisicing elit. Accusantium, velit nihil. Totam ad voluptate
+                inventore? Lorem ipsum dolor sit amet consectetur adipisicing
+                elit. Et, optio accusamus! aliquam voluptate.
+              </p>
             </div>
-          </div>
-          <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20 shadow-md">
-            <h2 className="text-xl font-bold text-teal-400 mb-4 flex items-center gap-2">
-              <FaInfoCircle /> Product Description
-            </h2>
-            <p className="text-gray-300 leading-relaxed">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae,
-              autem! Doloremque, veniam iste. Quisquam animi magnam libero ad
-              tempora incidunt. Lorem ipsum dolor sit, amet consectetur
-              adipisicing elit. Accusantium, velit nihil. Totam ad voluptate
-              inventore? Lorem ipsum dolor sit amet consectetur adipisicing
-              elit. Et, optio accusamus! aliquam voluptate.
-            </p>
           </div>
         </div>
       ) : (

@@ -67,6 +67,14 @@ export default function PrivacyPolicy() {
           Privacy Policy
         </h1>
       </div>
+      <div className="flex justify-end mb-2 mr-2">
+        <Button
+          onClick={handleUpdate}
+          label="Update"
+          variant="theme"
+          size="md"
+        />
+      </div>
 
       <div className="bg-[#0d332e] p-2 space-y-2 rounded-xl shadow-lg">
         <ReactQuill
@@ -77,12 +85,6 @@ export default function PrivacyPolicy() {
           modules={modules}
           formats={formats}
           className="custom-quill"
-        />
-        <Button
-          onClick={handleUpdate}
-          label="Update"
-          variant="primary"
-          size="sm"
         />
       </div>
     </div>

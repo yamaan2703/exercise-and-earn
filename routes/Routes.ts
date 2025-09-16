@@ -5,8 +5,7 @@ export const Routes = {
   USERS_DETAIL: (id: string) => `/user-detail/${id}`,
   PRODUCTS: "/products",
   PRODUCTS_DETAIL: (id: string) => `/product-detail/${id}`,
-  GIFTS: "/gifts",
-  GIFTS_DETAIL: (id: string) => `/gift-detail/${id}`,
+  ORDER_HISTORY: "/order-history",
   PRIVACY_POLICY: "/privacy-policy",
   TERMS_AND_CONDITIONS: "/terms-and-conditions",
 };

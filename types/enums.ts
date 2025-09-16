@@ -10,6 +10,6 @@ export enum Gender {
 
 export enum UserDetailTab {
   PROFILE = "profile",
-  FAVORITES = "favorites",
-  REVIEWS = "reviews",
+  CALORIES = "calories",
+  PRODUCTS = "products",
 }

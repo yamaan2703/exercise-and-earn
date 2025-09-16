@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import type { GetProp, TableProps } from "antd";
 import { Table, Popconfirm } from "antd";
 import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
@@ -9,6 +9,9 @@ import { dummyUsers } from "@/Data/Data";
 import { DataType } from "@/types/interface";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
+import { AuthContext } from "@/context/AuthContext";
+import { cn } from "@/lib/utils";
+import ConfirmationModal from "@/components/confirmation-modal";
 
 type ColumnsType<T extends object = object> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<
@@ -25,8 +28,10 @@ interface TableParams {
 
 const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
   const router = useRouter();
+  const { logoutModal, setLogoutModal } = useContext(AuthContext)!;
   const [data, setData] = useState<DataType[]>([]);
   const [loading, setLoading] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<DataType | null>(null);
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: { current: 1, pageSize: 10 },
   });
@@ -35,14 +40,11 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
     router.push(Routes.USERS_DETAIL(record.id));
   };
 
-  const handleDelete = (record: DataType) => {
-    console.log("Deleted user:", record);
-    setData((prev) => prev.filter((item) => item.id !== record.id));
-  };
-
   const columns: ColumnsType<DataType> = [
-    { title: "Name", dataIndex: "name", sorter: true, width: "20%" },
-    { title: "Email", dataIndex: "email", width: "25%" },
+    { title: "Name", dataIndex: "name", sorter: true, width: "10%" },
+    { title: "Email", dataIndex: "email", width: "15%" },
+    { title: "Phone", dataIndex: "phone", width: "15%" },
+    { title: "Created At", dataIndex: "createdAt", width: "15%" },
     {
       title: "Gender",
       dataIndex: "gender",
@@ -50,12 +52,12 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
         { text: Gender.MALE, value: Gender.MALE },
         { text: Gender.FEMALE, value: Gender.FEMALE },
       ],
-      width: "15%",
+      width: "10%",
     },
     {
       title: "Status",
       dataIndex: "status",
-      width: "15%",
+      width: "10%",
       filters: [
         { text: Status.ACTIVE, value: Status.ACTIVE },
         { text: Status.INACTIVE, value: Status.INACTIVE },
@@ -69,31 +71,31 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
     {
       title: "Actions",
       key: "actions",
-      width: "15%",
+      width: "10%",
       render: (_, record: DataType) => (
         <div className="flex gap-2">
           <button
             onClick={() => handleView(record)}
             title="View Details"
-            className="p-1 text-teal-400 hover:text-teal-600 transition cursor-pointer"
+            className="p-1 text-white hover:text-gray-300 transition cursor-pointer"
           >
             <EyeOutlined />
           </button>
-          <Popconfirm
+          <button
+            onClick={() => {
+              setLogoutModal(true);
+              setSelectedUser(record);
+            }}
+            disabled={record.status === Status.INACTIVE}
             title="Delete User"
-            description="Are you sure you want to delete this user?"
-            onConfirm={() => handleDelete(record)}
-            okText="Yes"
-            cancelText="No"
-            okButtonProps={{ danger: true }}
+            className={cn(
+              "p-1 text-white hover:text-gray-300 transition cursor-pointer",
+              record.status === Status.INACTIVE &&
+                "opacity-50 cursor-not-allowed"
+            )}
           >
-            <button
-              title="Delete User"
-              className="p-1 text-red-400 hover:text-red-600 transition cursor-pointer"
-            >
-              <DeleteOutlined />
-            </button>
-          </Popconfirm>
+            <DeleteOutlined />
+          </button>
         </div>
       ),
     },
@@ -110,6 +112,12 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
       }));
     }, 300);
   }, []);
+
+  const handleUpdateUserStatus = (id: string, status: Status) => {
+    setData((prev) =>
+      prev.map((user) => (user.id === id ? { ...user, status } : user))
+    );
+  };
 
   // Local filtering + sorting
   const handleTableChange: TableProps<DataType>["onChange"] = (
@@ -157,14 +165,29 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
       <Table<DataType>
         columns={columns}
         rowKey={(record) => record.id}
-        dataSource={data.filter((item) =>
-          item.name.toLowerCase().includes(searchUsers.toLowerCase())
+        dataSource={data.filter(
+          (item) =>
+            item.name.toLowerCase().includes(searchUsers.toLowerCase()) ||
+            item.email.toLowerCase().includes(searchUsers.toLowerCase()) ||
+            item.phone.includes(searchUsers)
         )}
         pagination={tableParams.pagination}
         loading={loading}
         onChange={handleTableChange}
         scroll={{ x: 800 }}
       />
+      {logoutModal && (
+        <ConfirmationModal
+          title={"Confirm Inactive User"}
+          description={"Are you sure you want to make this user inactive?"}
+          onClick={() => {
+            if (selectedUser) {
+              handleUpdateUserStatus(selectedUser.id, Status.INACTIVE);
+            }
+            setLogoutModal(false);
+          }}
+        />
+      )}
     </div>
   );
 };

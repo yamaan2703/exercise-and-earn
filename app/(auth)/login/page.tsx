@@ -119,7 +119,12 @@ const Login = () => {
           )}
 
           <div className="">
-            <Button isLoading={isLoading} label="Sign In" fullWidth />
+            <Button
+              isLoading={isLoading}
+              label="Sign In"
+              variant="primary"
+              fullWidth
+            />
           </div>
         </form>
       </div>

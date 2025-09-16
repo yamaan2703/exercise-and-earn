@@ -1,7 +1,7 @@
 "use client";
 import { FaUser } from "react-icons/fa";
 import { AiOutlineMenu } from "react-icons/ai";
-import { IoMdNotificationsOutline } from "react-icons/io";
+import { IoIosNotifications } from "react-icons/io";
 import { useContext, useState, useRef, useEffect } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import Button from "./ui/button";
@@ -51,8 +51,8 @@ const Header = () => {
 
       <div className="flex items-center gap-4 ml-auto">
         <div className="relative cursor-pointer text-gray-300 hover:text-white transition">
-          <IoMdNotificationsOutline className="size-6" />
-          <span className="absolute -top-[3px] -right-[2px] bg-red-600 text-white text-xs font-bold rounded-full size-3 flex items-center justify-center"></span>
+          <IoIosNotifications className="size-6" />
+          <span className="absolute -top-[2px] -right-0 bg-red-600 text-white text-xs font-bold rounded-full size-[10px] flex items-center justify-center"></span>
         </div>
 
         <div className="relative" ref={dropdownRef}>

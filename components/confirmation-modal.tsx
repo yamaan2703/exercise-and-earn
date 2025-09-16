@@ -7,7 +7,11 @@ import toast from "react-hot-toast";
 import Button from "./ui/button";
 import { AuthContext } from "@/context/AuthContext";
 
-const ConfirmationModal = ({ title, description }: ConfirmationModalProps) => {
+const ConfirmationModal = ({
+  title,
+  description,
+  onClick,
+}: ConfirmationModalProps) => {
   const { setLogoutModal } = useContext(AuthContext)!;
   const router = useRouter();
 
@@ -41,7 +45,7 @@ const ConfirmationModal = ({ title, description }: ConfirmationModalProps) => {
             size="xs"
           />
           <Button
-            onClick={handleLogoutClick}
+            onClick={onClick}
             variant="danger"
             label="Confirm"
             size="xs"

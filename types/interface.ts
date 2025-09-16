@@ -18,6 +18,7 @@ export interface InputProps {
 export interface ConfirmationModalProps {
   title: string;
   description: string;
+  onClick: () => void;
 }
 
 export interface ButtonProps {
@@ -36,19 +37,19 @@ export interface DataType {
   gender: Gender;
   email: string;
   status: Status;
+  phone: string;
+  createdAt: string;
+  birthday: string;
+  photoUrl: string;
 }
 
 export interface ProductType {
   id: string;
   name: string;
   category: string;
-  price: number;
-  stock: number;
-}
-
-export interface GiftType {
-  id: string;
-  name: string;
-  type: string;
-  points: number;
+  description?: string;
+  requiredCalories: number;
+  size?: string[];
+  color?: string[];
+  deliveryFee: number;
 }
