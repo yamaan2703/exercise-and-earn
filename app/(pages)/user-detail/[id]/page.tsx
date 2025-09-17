@@ -1,73 +1,123 @@
 "use client";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { dummyUsers } from "@/Data/Data";
-import { Status, UserDetailTab } from "@/types/enums";
+import { StatusUser, UserDetailTab } from "@/types/enums";
 import { useParams, useRouter } from "next/navigation";
-import {
-  FaUser,
-  FaArrowLeft,
-  FaMapMarkerAlt,
-  FaHeart,
-  FaStar,
-  FaFire,
-  FaStore,
-  FaBox,
-} from "react-icons/fa";
+import { FaUser, FaArrowLeft, FaFire, FaStore } from "react-icons/fa";
 import { cn } from "@/lib/utils";
 import Button from "@/components/ui/button";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+import { ApexOptions } from "apexcharts";
+import { AiOutlineMenu } from "react-icons/ai";
+import { AuthContext } from "@/context/AuthContext";
+
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const UserDetailPage = () => {
+  const { toggleSidebar } = useContext(AuthContext)!;
   const { id } = useParams();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState(UserDetailTab.PROFILE);
+  const [chartFilter, setChartFilter] = useState<
+    "daily" | "weekly" | "monthly"
+  >("daily");
 
   const user = dummyUsers.find((user) => user.id === id);
 
-  const mockFavorites = [
-    {
-      id: 1,
-      title: "Product A",
-      category: "Electronics",
-      dateAdded: "2025-01-15",
+  const chartDataSets = {
+    daily: {
+      series: [{ name: "Calories", data: [220, 180, 250, 300, 280, 260, 200] }],
+      categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
     },
-    {
-      id: 2,
-      title: "Service B",
-      category: "Software",
-      dateAdded: "2025-02-01",
+    weekly: {
+      series: [{ name: "Calories", data: [1200, 1400, 1100, 1800] }],
+      categories: ["Week 1", "Week 2", "Week 3", "Week 4"],
     },
-    { id: 3, title: "Product C", category: "Books", dateAdded: "2025-02-10" },
-  ];
+    monthly: {
+      series: [
+        {
+          name: "Calories",
+          data: [
+            5000, 6000, 4500, 7000, 6500, 7200, 8000, 7600, 6800, 7200, 7500,
+            8100,
+          ],
+        },
+      ],
+      categories: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ],
+    },
+  };
 
-  const mockReviews = [
-    {
-      id: 1,
-      product: "Product A",
-      rating: 5,
-      comment: "Excellent quality and fast delivery!",
-      date: "2025-01-20",
+  const currentData = chartDataSets[chartFilter];
+
+  const chartOptions: ApexOptions = {
+    chart: {
+      type: "area",
+      height: 350,
+      background: "transparent",
+      toolbar: { show: false },
     },
-    {
-      id: 2,
-      product: "Product B",
-      rating: 4,
-      comment: "Great service, very satisfied.",
-      date: "2025-02-05",
+    plotOptions: {
+      bar: { columnWidth: "60%", borderRadius: 6 },
     },
-    {
-      id: 3,
-      product: "Product C",
-      rating: 3,
-      comment: "Good but could be better.",
-      date: "2025-02-15",
+    dataLabels: {
+      enabled: true,
+      style: {
+        fontSize: "12px",
+        colors: ["#14B8A6"],
+      },
+      offsetY: -10,
     },
-  ];
+    colors: ["#14B8A6"],
+    xaxis: {
+      categories: currentData.categories,
+      labels: { style: { colors: "#fff", fontSize: "11px" } },
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+    },
+    yaxis: {
+      labels: { style: { colors: "#fff", fontSize: "11px" } },
+    },
+    grid: {
+      borderColor: "#374151",
+      strokeDashArray: 3,
+      yaxis: { lines: { show: true } },
+      xaxis: { lines: { show: false } },
+    },
+    tooltip: {
+      theme: "dark",
+      y: { formatter: (val: number) => val + " kcal" },
+    },
+  };
 
   return (
-    <div className="min-h-screen bg-[#06211e] p-3">
+    <div className="min-h-screen p-1">
       {user ? (
-        <div className="max-w-6xl mx-auto">
+        <div className="">
+          <div className="flex justify-between items-center gap-2 mb-6">
+            <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-700 after:rounded-full after:mt-1">
+              User Detail
+            </h1>
+            <div
+              onClick={() => toggleSidebar()}
+              className="lg:hidden p-2 text-lg text-white hover:text-gray-400 cursor-pointer"
+            >
+              <AiOutlineMenu className="size-5 sm:size-6" />
+            </div>
+          </div>
           {/* Header Section */}
           <div className="bg-gradient-to-r from-teal-600 to-teal-700 rounded-xl p-8 mb-6 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
@@ -76,7 +126,6 @@ const UserDetailPage = () => {
             <div className="flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
               <div className="flex flex-col sm:flex-row items-center gap-6">
                 <div className="size-20 bg-white/20 rounded-full flex items-center justify-center">
-                  {/* <FaUser className="text-white text-3xl" /> */}
                   <Image
                     src={user.photoUrl}
                     alt={user.name}
@@ -94,7 +143,7 @@ const UserDetailPage = () => {
               </div>
               <span
                 className={`px-4 py-2 rounded-full text-sm font-semibold ${
-                  user.status === Status.ACTIVE
+                  user.status === StatusUser.ACTIVE
                     ? "bg-green-500/20 text-green-300 border border-green-500"
                     : "bg-red-200 text-red-500 border border-red-500/50"
                 }`}
@@ -119,7 +168,7 @@ const UserDetailPage = () => {
               },
               {
                 key: UserDetailTab.PRODUCTS,
-                label: "Products",
+                label: "Claimed Products",
                 icon: <FaStore />,
               },
             ].map((tab) => (
@@ -144,8 +193,7 @@ const UserDetailPage = () => {
             <>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20">
-                  <h2 className="text-xl font-bold text-teal-400 mb-4 flex items-center gap-2">
-                    <FaUser className="text-lg" />
+                  <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                     Profile Details
                   </h2>
 
@@ -179,8 +227,7 @@ const UserDetailPage = () => {
                 </div>
 
                 <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20">
-                  <h2 className="text-xl font-bold text-teal-400 mb-4 flex items-center gap-2">
-                    <FaMapMarkerAlt className="text-lg" />
+                  <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                     Extra Details
                   </h2>
 
@@ -214,47 +261,83 @@ const UserDetailPage = () => {
 
           {/* Favorites Tab Content */}
           {activeTab === UserDetailTab.CALORIES && (
-            <div className="bg-[#0d332e] rounded-xl p-4 border border-teal-500/20">
-              <h2 className="text-xl font-bold text-teal-400 mb-6">
-                Calories Details
-              </h2>
+            <>
+              <div className="bg-[#0d332e] rounded-xl p-4 border border-teal-500/20">
+                <h2 className="text-xl font-bold text-white mb-6">
+                  Calories Details
+                </h2>
 
-              <div className="space-y-4">
-                <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-white font-semibold">
-                      Total Calories Burnt
-                    </h3>
-                    <p className="text-teal-400 font-medium">22,000</p>
+                <div className="space-y-4">
+                  <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-white font-semibold">
+                        Total Calories Burnt
+                      </h3>
+                      <p className="text-teal-400 font-medium">22,000</p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-white font-semibold">
-                      Available Calories
-                    </h3>
-                    <p className="text-teal-400 font-medium">2,000</p>
+                  <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-white font-semibold">
+                        Available Calories
+                      </h3>
+                      <p className="text-teal-400 font-medium">2,000</p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-white font-semibold">
-                      Calories Used to Redeem Gifts
-                    </h3>
-                    <p className="text-teal-400 font-medium">20,000</p>
+                  <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-white font-semibold">
+                        Calories Used to Redeem Gifts
+                      </h3>
+                      <p className="text-teal-400 font-medium">20,000</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+
+              <div>
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mx-3 mb-4 mt-8">
+                  <h1 className="text-xl font-medium">Chart Analytics</h1>
+                  <div className="flex justify-end gap-2">
+                    {["daily", "weekly", "monthly"].map((filter) => (
+                      <button
+                        key={filter}
+                        onClick={() =>
+                          setChartFilter(
+                            filter as "daily" | "weekly" | "monthly"
+                          )
+                        }
+                        className={cn(
+                          "px-3 py-1 rounded-md text-sm cursor-pointer transition",
+                          chartFilter === filter
+                            ? "bg-teal-600 text-white"
+                            : "bg-[#11413a] text-gray-300 hover:bg-teal-700/40 hover:text-white"
+                        )}
+                      >
+                        {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Chart */}
+                <Chart
+                  options={chartOptions}
+                  series={currentData.series}
+                  type="area"
+                  height={350}
+                />
+              </div>
+            </>
           )}
 
           {/* Reviews Tab Content */}
           {activeTab === UserDetailTab.PRODUCTS && (
             <div className="bg-[#0d332e] rounded-xl p-4 border border-teal-500/20">
-              <h2 className="text-xl font-bold text-teal-400 mb-4">
-                Redeemed Products
+              <h2 className="text-xl font-bold text-white mb-4">
+                Claimed Products
               </h2>
 
               <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10 mb-3">

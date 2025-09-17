@@ -9,8 +9,13 @@ import { Routes } from "@/routes/Routes";
 import { AuthContext } from "@/context/AuthContext";
 
 const Layout = ({ children }: PropsWithChildren) => {
-  const { isSidebarOpen, setIsSidebarOpen, logoutModal } =
-    useContext(AuthContext)!;
+  const {
+    isSidebarOpen,
+    setIsSidebarOpen,
+    logoutModal,
+    setLogoutModal,
+    handleLogoutClick,
+  } = useContext(AuthContext)!;
   const router = useRouter();
   const pathname = usePathname();
 
@@ -47,8 +52,8 @@ const Layout = ({ children }: PropsWithChildren) => {
       <Sidebar />
 
       <div className="flex flex-col flex-1 min-w-0">
-        <Header />
-        <main className="flex-1 bg-[#06211E]/95 p-2 lg:ml-[16rem] ml-0 pt-20 transition-all duration-300">
+        {/* <Header /> */}
+        <main className="flex-1 bg-[#06211E]/95 p-2 lg:ml-[16rem] ml-0 pt-8 transition-all duration-300">
           {children}
         </main>
       </div>
@@ -57,6 +62,15 @@ const Layout = ({ children }: PropsWithChildren) => {
         <div
           className="fixed inset-0 bg-black/50 bg-opacity-50 lg:hidden"
           onClick={toggleSidebar}
+        />
+      )}
+
+      {logoutModal && (
+        <ConfirmationModal
+          title={"Confirm Logout"}
+          description={"Are you sure you want to logout?"}
+          onClick={() => handleLogoutClick()}
+          onCancel={() => setLogoutModal(false)}
         />
       )}
     </div>

@@ -1,84 +1,31 @@
 "use client";
-import { AuthContext } from "@/context/AuthContext";
-import { dummyProducts, dummyUsers } from "@/Data/Data";
-import { OrderType } from "@/types/interface";
-import { useRouter } from "next/navigation";
 import { useContext } from "react";
-import { AiOutlineMenu } from "react-icons/ai";
+import { AuthContext } from "@/context/AuthContext";
 import { FaBoxOpen } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import Button from "@/components/ui/button";
+import { AiOutlineMenu } from "react-icons/ai";
 
-export const initialOrders: OrderType[] = [
-  {
-    product: dummyProducts[0],
-    user: dummyUsers[0],
-    orderStatus: "Delivered",
-    date: "2025-09-10",
-  },
-  {
-    product: dummyProducts[1],
-    user: dummyUsers[1],
-    orderStatus: "Pending",
-    date: "2025-09-12",
-  },
-  {
-    product: dummyProducts[2],
-    user: dummyUsers[2],
-    orderStatus: "Shipped",
-    date: "2025-07-16",
-  },
-  {
-    product: dummyProducts[3],
-    user: dummyUsers[3],
-    orderStatus: "Delivered",
-    date: "2025-08-22",
-  },
-  {
-    product: dummyProducts[4],
-    user: dummyUsers[4],
-    orderStatus: "Shipped",
-    date: "2025-09-01",
-  },
-  {
-    product: dummyProducts[5],
-    user: dummyUsers[5],
-    orderStatus: "Pending",
-    date: "2025-03-12",
-  },
-  {
-    product: dummyProducts[6],
-    user: dummyUsers[6],
-    orderStatus: "Shipped",
-    date: "2025-11-22",
-  },
-  {
-    product: dummyProducts[7],
-    user: dummyUsers[7],
-    orderStatus: "Pending",
-    date: "2025-10-16",
-  },
-  {
-    product: dummyProducts[8],
-    user: dummyUsers[8],
-    orderStatus: "Delivered",
-    date: "2025-05-28",
-  },
-  {
-    product: dummyProducts[9],
-    user: dummyUsers[9],
-    orderStatus: "Pending",
-    date: "2025-07-10",
-  },
-];
-
-const OrderHistory = () => {
+const Orders = () => {
+  const { orders, setOrders, toggleSidebar } = useContext(AuthContext)!;
   const router = useRouter();
-  const { orders, toggleSidebar } = useContext(AuthContext)!;
 
+  const handleApprove = (id: string) => {
+    setOrders((prev) =>
+      prev.map((o) =>
+        o.product.id === id ? { ...o, orderStatus: "Shipped" } : o
+      )
+    );
+  };
+
+  const handleReject = (id: string) => {
+    setOrders((prev) => prev.filter((o) => o.product.id !== id));
+  };
   return (
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
-        <h1 className="inline-block text-xl sm:text-3xl font-bold text-white after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-700 after:rounded-full after:mt-1">
-          Order History
+        <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-700 after:rounded-full after:mt-1">
+          Orders
         </h1>
         <div
           onClick={() => toggleSidebar()}
@@ -87,11 +34,9 @@ const OrderHistory = () => {
           <AiOutlineMenu className="size-5 sm:size-6" />
         </div>
       </div>
-
-      {/* Orders */}
       <div className="space-y-4">
         {orders
-          .filter((order) => order.orderStatus !== "Pending")
+          .filter((order) => order.orderStatus === "Pending")
           .map((order) => (
             <div
               key={order.product.id}
@@ -168,13 +113,18 @@ const OrderHistory = () => {
               <div className="border-t border-teal-500/10 my-4"></div>
 
               <div className="flex gap-4 items-center">
-                <p className="text-gray-300 text-sm">
-                  <span className="text-white">Order Status:</span>
-                </p>
-
-                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-400 border border-green-500/40">
-                  {order.orderStatus}
-                </span>
+                <Button
+                  variant="theme"
+                  size="sm"
+                  label="Approve Order"
+                  onClick={() => handleApprove(order.product.id)}
+                />
+                <Button
+                  variant="danger"
+                  size="sm"
+                  label="Reject Order"
+                  onClick={() => handleReject(order.product.id)}
+                />
               </div>
             </div>
           ))}
@@ -183,4 +133,4 @@ const OrderHistory = () => {
   );
 };
 
-export default OrderHistory;
+export default Orders;

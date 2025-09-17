@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import type { GetProp, TableProps } from "antd";
 import { Table, Popconfirm } from "antd";
 import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
@@ -8,6 +8,9 @@ import { dummyProducts } from "@/Data/Data";
 import { ProductType } from "@/types/interface";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
+import { StatusProduct } from "@/types/enums";
+import ConfirmationModal from "@/components/confirmation-modal";
+import { AuthContext } from "@/context/AuthContext";
 
 type ColumnsType<T extends object = object> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<
@@ -28,8 +31,12 @@ const TableProductsComponent = ({
   searchProducts: string;
 }) => {
   const router = useRouter();
+  const { activeModal, setActiveModal, products } = useContext(AuthContext)!;
   const [data, setData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(
+    null
+  );
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: { current: 1, pageSize: 10 },
   });
@@ -38,25 +45,28 @@ const TableProductsComponent = ({
     router.push(Routes.PRODUCTS_DETAIL(record.id));
   };
 
-  const handleDelete = (record: ProductType) => {
-    console.log("Deleted product:", record);
-    setData((prev) => prev.filter((item) => item.id !== record.id));
-  };
-
   const columns: ColumnsType<ProductType> = [
-    { title: "Name", dataIndex: "name", sorter: true, width: "20%" },
-    { title: "Category", dataIndex: "category", width: "20%" },
+    { title: "Name", dataIndex: "name", sorter: true, width: "18%" },
+    { title: "Category", dataIndex: "category", width: "18%" },
     {
       title: "Required Calories",
       dataIndex: "requiredCalories",
-      sorter: true,
-      width: "15%",
+      width: "18%",
     },
+    { title: "Created At", dataIndex: "createdAt", width: "18%" },
     {
-      title: "Delivery Fee ($)",
-      dataIndex: "deliveryFee",
-      sorter: true,
+      title: "Status",
+      dataIndex: "status",
       width: "15%",
+      filters: [
+        { text: StatusProduct.ACTIVE, value: StatusProduct.ACTIVE },
+        { text: StatusProduct.INACTIVE, value: StatusProduct.INACTIVE },
+      ],
+      render: (status: StatusProduct) => {
+        const color =
+          status === StatusProduct.ACTIVE ? "text-green-500" : "text-red-500";
+        return <p className={color}>{status}</p>;
+      },
     },
     {
       title: "Actions",
@@ -71,21 +81,16 @@ const TableProductsComponent = ({
           >
             <EyeOutlined />
           </button>
-          <Popconfirm
+          <button
+            onClick={() => {
+              setActiveModal(true);
+              setSelectedProduct(record);
+            }}
             title="Delete User"
-            description="Are you sure you want to delete this user?"
-            onConfirm={() => handleDelete(record)}
-            okText="Yes"
-            cancelText="No"
-            okButtonProps={{ danger: true }}
+            className="p-1 text-white hover:text-gray-300 transition cursor-pointer"
           >
-            <button
-              title="Delete User"
-              className="p-1 text-white hover:text-gray-300 transition cursor-pointer"
-            >
-              <DeleteOutlined />
-            </button>
-          </Popconfirm>
+            <DeleteOutlined />
+          </button>
         </div>
       ),
     },
@@ -94,14 +99,22 @@ const TableProductsComponent = ({
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
-      setData(dummyProducts);
+      setData(products);
       setLoading(false);
       setTableParams((prev) => ({
         ...prev,
         pagination: { ...prev.pagination, total: data.length },
       }));
     }, 300);
-  }, []);
+  }, [products]);
+
+  const handleUpdateProductStatus = (id: string, status: StatusProduct) => {
+    setData((prev) =>
+      prev.map((product) =>
+        product.id === id ? { ...product, status } : product
+      )
+    );
+  };
 
   // Local filtering + sorting
   const handleTableChange: TableProps<ProductType>["onChange"] = (
@@ -109,14 +122,13 @@ const TableProductsComponent = ({
     filters,
     sorter
   ) => {
-    let filteredData = [...dummyProducts];
+    let filteredData = [...products];
 
-    // // filter by Status
-    // if (filters.status) {
-    //   filteredData = filteredData.filter((item) =>
-    //     (filters.status as string[]).includes(item.status)
-    //   );
-    // }
+    if (filters.status) {
+      filteredData = filteredData.filter((item) =>
+        (filters.status as string[]).includes(item.status)
+      );
+    }
 
     if (!Array.isArray(sorter) && sorter.order && sorter.field) {
       const field = sorter.field as keyof ProductType | undefined;
@@ -147,14 +159,33 @@ const TableProductsComponent = ({
       <Table<ProductType>
         columns={columns}
         rowKey={(record) => record.id}
-        dataSource={data.filter((item) =>
-          item.name.toLowerCase().includes(searchProducts.toLowerCase())
+        dataSource={data.filter(
+          (item) =>
+            item.name.toLowerCase().includes(searchProducts.toLowerCase()) ||
+            item.category.toLowerCase().includes(searchProducts.toLowerCase())
         )}
         pagination={tableParams.pagination}
         loading={loading}
         onChange={handleTableChange}
         scroll={{ x: 800 }}
       />
+
+      {activeModal && (
+        <ConfirmationModal
+          title={"Confirm Inactive Product"}
+          description={"Are you sure you want to make this product inactive?"}
+          onClick={() => {
+            if (selectedProduct) {
+              handleUpdateProductStatus(
+                selectedProduct.id,
+                StatusProduct.INACTIVE
+              );
+            }
+            setActiveModal(false);
+          }}
+          onCancel={() => setActiveModal(false)}
+        />
+      )}
     </div>
   );
 };

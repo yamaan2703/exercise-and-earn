@@ -25,7 +25,7 @@ const Input = ({
     error:
       "bg-[#0b140b] border-red-600 text-red-400 placeholder-gray-400 focus:ring-2 focus:ring-red-500",
     outline:
-      "bg-transparent border-white text-white placeholder-gray-400 focus:ring-2 focus:ring-green-400/20",
+      "bg-transparent text-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500",
   };
 
   const sizeStyles: Record<string, string> = {
@@ -35,10 +35,7 @@ const Input = ({
   };
   return (
     <div>
-      <label
-        htmlFor={id}
-        className="block text-sm font-medium text-gray-300 mb-2"
-      >
+      <label htmlFor={id} className="block text-sm font-medium text-gray-300">
         {label}
       </label>
       <div className="relative flex items-center">

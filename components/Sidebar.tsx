@@ -7,6 +7,8 @@ import { sidebarMenu as links } from "@/Data/Data";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { cn } from "@/lib/utils";
 import { AuthContext } from "@/context/AuthContext";
+import { IoIosLogOut } from "react-icons/io";
+import ConfirmationModal from "./confirmation-modal";
 
 interface MenuLink {
   to: string;
@@ -21,7 +23,8 @@ interface OpenMenus {
 }
 
 function Sidebar() {
-  const { isSidebarOpen, setIsSidebarOpen } = useContext(AuthContext)!;
+  const { isSidebarOpen, setIsSidebarOpen, logoutModal, setLogoutModal } =
+    useContext(AuthContext)!;
   const pathname = usePathname();
   const [openMenus, setOpenMenus] = useState<OpenMenus>({});
 
@@ -95,7 +98,7 @@ function Sidebar() {
         "lg:translate-x-0 lg:block"
       )}
     >
-      <div className="flex items-center justify-center gap-3 mx-auto border-b border-gray-700 py-3">
+      <div className="flex items-center justify-center gap-3 border-b border-gray-700 py-4">
         <Image
           src="/Icons/logo.png"
           width={1000}
@@ -110,6 +113,16 @@ function Sidebar() {
 
       <div className="flex-1 px-4 py-6 space-y-2 h-[calc(100vh-100px)] overflow-y-auto scrollbar-custom">
         <nav className="flex flex-col space-y-2">{renderLinks(links)}</nav>
+      </div>
+
+      <div className="border-t border-gray-700 px-3">
+        <button
+          onClick={() => setLogoutModal(true)}
+          className="flex items-center gap-2 w-full hover:text-red-700 text-white font-medium m-2 mb-2 rounded-lg transition duration-300 cursor-pointer"
+        >
+          <IoIosLogOut className="text-lg" />
+          <span>Logout</span>
+        </button>
       </div>
     </aside>
   );

@@ -21,7 +21,7 @@ const Button = ({
     danger: "text-white bg-red-600 hover:bg-red-700",
     outline: "text-green-600 border border-green-600 hover:bg-green-50",
     theme:
-      "bg-teal-600 hover:bg-teal-700 rounded-lg text-white font-semibold transition-all duration-200 shadow-md",
+      "bg-teal-600 hover:bg-teal-700 rounded-lg text-white transition-all duration-200 shadow-md",
   };
 
   const sizeStyles: Record<string, string> = {

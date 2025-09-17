@@ -1,8 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
 import Button from "@/components/ui/button";
+import { AiOutlineMenu } from "react-icons/ai";
+import { AuthContext } from "@/context/AuthContext";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -47,6 +49,7 @@ const formats = [
 
 export default function PrivacyPolicy() {
   const [editorContent, setEditorContent] = useState("");
+  const { toggleSidebar } = useContext(AuthContext)!;
 
   useEffect(() => {
     const savedPolicy = localStorage.getItem("privacyPolicy");
@@ -61,18 +64,24 @@ export default function PrivacyPolicy() {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="mb-6">
+    <div className="p-1">
+      <div className="flex justify-between items-center gap-2 mb-6">
         <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-700 after:rounded-full after:mt-1">
           Privacy Policy
         </h1>
+        <div
+          onClick={() => toggleSidebar()}
+          className="lg:hidden p-2 text-lg text-white hover:text-gray-400 cursor-pointer"
+        >
+          <AiOutlineMenu className="size-5 sm:size-6" />
+        </div>
       </div>
       <div className="flex justify-end mb-2 mr-2">
         <Button
           onClick={handleUpdate}
           label="Update"
           variant="theme"
-          size="md"
+          size="sm"
         />
       </div>
 

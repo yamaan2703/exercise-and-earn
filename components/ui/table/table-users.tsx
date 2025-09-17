@@ -1,10 +1,10 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import type { GetProp, TableProps } from "antd";
-import { Table, Popconfirm } from "antd";
+import { Table } from "antd";
 import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { SorterResult } from "antd/es/table/interface";
-import { Gender, Status } from "@/types/enums";
+import { Gender, StatusUser } from "@/types/enums";
 import { dummyUsers } from "@/Data/Data";
 import { DataType } from "@/types/interface";
 import { useRouter } from "next/navigation";
@@ -28,7 +28,7 @@ interface TableParams {
 
 const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
   const router = useRouter();
-  const { logoutModal, setLogoutModal } = useContext(AuthContext)!;
+  const { activeModal, setActiveModal } = useContext(AuthContext)!;
   const [data, setData] = useState<DataType[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState<DataType | null>(null);
@@ -59,12 +59,12 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
       dataIndex: "status",
       width: "10%",
       filters: [
-        { text: Status.ACTIVE, value: Status.ACTIVE },
-        { text: Status.INACTIVE, value: Status.INACTIVE },
+        { text: StatusUser.ACTIVE, value: StatusUser.ACTIVE },
+        { text: StatusUser.INACTIVE, value: StatusUser.INACTIVE },
       ],
-      render: (status: Status) => {
+      render: (status: StatusUser) => {
         const color =
-          status === Status.ACTIVE ? "text-green-500" : "text-red-500";
+          status === StatusUser.ACTIVE ? "text-green-500" : "text-red-500";
         return <p className={color}>{status}</p>;
       },
     },
@@ -83,14 +83,14 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
           </button>
           <button
             onClick={() => {
-              setLogoutModal(true);
+              setActiveModal(true);
               setSelectedUser(record);
             }}
-            disabled={record.status === Status.INACTIVE}
+            disabled={record.status === StatusUser.INACTIVE}
             title="Delete User"
             className={cn(
               "p-1 text-white hover:text-gray-300 transition cursor-pointer",
-              record.status === Status.INACTIVE &&
+              record.status === StatusUser.INACTIVE &&
                 "opacity-50 cursor-not-allowed"
             )}
           >
@@ -113,7 +113,7 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
     }, 300);
   }, []);
 
-  const handleUpdateUserStatus = (id: string, status: Status) => {
+  const handleUpdateUserStatus = (id: string, status: StatusUser) => {
     setData((prev) =>
       prev.map((user) => (user.id === id ? { ...user, status } : user))
     );
@@ -176,16 +176,18 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
         onChange={handleTableChange}
         scroll={{ x: 800 }}
       />
-      {logoutModal && (
+
+      {activeModal && (
         <ConfirmationModal
           title={"Confirm Inactive User"}
           description={"Are you sure you want to make this user inactive?"}
           onClick={() => {
             if (selectedUser) {
-              handleUpdateUserStatus(selectedUser.id, Status.INACTIVE);
+              handleUpdateUserStatus(selectedUser.id, StatusUser.INACTIVE);
             }
-            setLogoutModal(false);
+            setActiveModal(false);
           }}
+          onCancel={() => setActiveModal(false)}
         />
       )}
     </div>

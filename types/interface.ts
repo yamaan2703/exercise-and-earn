@@ -1,10 +1,10 @@
 import { ReactNode } from "react";
-import { Gender, Status } from "./enums";
+import { Gender, StatusProduct, StatusUser } from "./enums";
 import { IconType } from "react-icons/lib";
 
 export interface InputProps {
   label?: string;
-  value: string;
+  value?: string;
   setValue: (value: string) => void;
   id: string;
   type: string;
@@ -19,6 +19,7 @@ export interface ConfirmationModalProps {
   title: string;
   description: string;
   onClick: () => void;
+  onCancel: () => void;
 }
 
 export interface ButtonProps {
@@ -36,7 +37,7 @@ export interface DataType {
   name: string;
   gender: Gender;
   email: string;
-  status: Status;
+  status: StatusUser;
   phone: string;
   createdAt: string;
   birthday: string;
@@ -52,4 +53,13 @@ export interface ProductType {
   size?: string[];
   color?: string[];
   deliveryFee: number;
+  createdAt: string;
+  status: StatusProduct;
+}
+
+export interface OrderType {
+  product: ProductType;
+  user: DataType;
+  orderStatus: "Pending" | "Delivered" | "Shipped";
+  date: string;
 }

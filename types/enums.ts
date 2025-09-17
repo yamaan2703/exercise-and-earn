@@ -1,4 +1,9 @@
-export enum Status {
+export enum StatusUser {
+  ACTIVE = "Active",
+  INACTIVE = "Inactive",
+}
+
+export enum StatusProduct {
   ACTIVE = "Active",
   INACTIVE = "Inactive",
 }
