@@ -1,7 +1,7 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 import { dummyProducts } from "@/Data/Data";
-import { FaArrowLeft, FaBox, FaTrash, FaInfoCircle } from "react-icons/fa";
+import { FaArrowLeft, FaBox, FaInfoCircle } from "react-icons/fa";
 import Button from "@/components/ui/button";
 import { StatusProduct } from "@/types/enums";
 import Image from "next/image";

@@ -21,8 +21,8 @@ type TablePaginationConfig = Exclude<
 
 interface TableParams {
   pagination?: TablePaginationConfig;
-  sortField?: SorterResult<any>["field"];
-  sortOrder?: SorterResult<any>["order"];
+  sortField?: SorterResult<DataType>["field"];
+  sortOrder?: SorterResult<DataType>["order"];
   filters?: Parameters<GetProp<TableProps, "onChange">>[1];
 }
 
@@ -108,7 +108,7 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
       setLoading(false);
       setTableParams((prev) => ({
         ...prev,
-        pagination: { ...prev.pagination, total: data.length },
+        pagination: { ...prev.pagination, total: dummyUsers.length },
       }));
     }, 300);
   }, []);

@@ -1,7 +1,6 @@
 "use client";
 import { PropsWithChildren, useContext, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
-import Header from "@/components/Header";
 import ConfirmationModal from "@/components/confirmation-modal";
 import { getCookie } from "@/lib/cookies";
 import { usePathname, useRouter } from "next/navigation";

@@ -8,69 +8,6 @@ import { useContext } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { FaBoxOpen } from "react-icons/fa";
 
-export const initialOrders: OrderType[] = [
-  {
-    product: dummyProducts[0],
-    user: dummyUsers[0],
-    orderStatus: "Delivered",
-    date: "2025-09-10",
-  },
-  {
-    product: dummyProducts[1],
-    user: dummyUsers[1],
-    orderStatus: "Pending",
-    date: "2025-09-12",
-  },
-  {
-    product: dummyProducts[2],
-    user: dummyUsers[2],
-    orderStatus: "Shipped",
-    date: "2025-07-16",
-  },
-  {
-    product: dummyProducts[3],
-    user: dummyUsers[3],
-    orderStatus: "Delivered",
-    date: "2025-08-22",
-  },
-  {
-    product: dummyProducts[4],
-    user: dummyUsers[4],
-    orderStatus: "Shipped",
-    date: "2025-09-01",
-  },
-  {
-    product: dummyProducts[5],
-    user: dummyUsers[5],
-    orderStatus: "Pending",
-    date: "2025-03-12",
-  },
-  {
-    product: dummyProducts[6],
-    user: dummyUsers[6],
-    orderStatus: "Shipped",
-    date: "2025-11-22",
-  },
-  {
-    product: dummyProducts[7],
-    user: dummyUsers[7],
-    orderStatus: "Pending",
-    date: "2025-10-16",
-  },
-  {
-    product: dummyProducts[8],
-    user: dummyUsers[8],
-    orderStatus: "Delivered",
-    date: "2025-05-28",
-  },
-  {
-    product: dummyProducts[9],
-    user: dummyUsers[9],
-    orderStatus: "Pending",
-    date: "2025-07-10",
-  },
-];
-
 const OrderHistory = () => {
   const router = useRouter();
   const { orders, toggleSidebar } = useContext(AuthContext)!;

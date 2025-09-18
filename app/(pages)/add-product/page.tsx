@@ -17,7 +17,7 @@ const AddProduct = () => {
   const [deliveryFee, setDeliveryFee] = useState("");
   const [size, setSize] = useState<string[]>([]);
   const [color, setColor] = useState<string[]>([]);
-  const [status, setStatus] = useState(StatusProduct.ACTIVE);
+  const [status] = useState(StatusProduct.ACTIVE);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

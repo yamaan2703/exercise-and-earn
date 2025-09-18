@@ -8,7 +8,6 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { cn } from "@/lib/utils";
 import { AuthContext } from "@/context/AuthContext";
 import { IoIosLogOut } from "react-icons/io";
-import ConfirmationModal from "./confirmation-modal";
 
 interface MenuLink {
   to: string;
@@ -23,7 +22,7 @@ interface OpenMenus {
 }
 
 function Sidebar() {
-  const { isSidebarOpen, setIsSidebarOpen, logoutModal, setLogoutModal } =
+  const { isSidebarOpen, setIsSidebarOpen, setLogoutModal } =
     useContext(AuthContext)!;
   const pathname = usePathname();
   const [openMenus, setOpenMenus] = useState<OpenMenus>({});
