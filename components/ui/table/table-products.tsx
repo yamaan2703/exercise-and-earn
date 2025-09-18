@@ -1,10 +1,9 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import type { GetProp, TableProps } from "antd";
-import { Table, Popconfirm } from "antd";
+import { Table } from "antd";
 import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { SorterResult } from "antd/es/table/interface";
-import { dummyProducts } from "@/Data/Data";
 import { ProductType } from "@/types/interface";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
@@ -20,8 +19,8 @@ type TablePaginationConfig = Exclude<
 
 interface TableParams {
   pagination?: TablePaginationConfig;
-  sortField?: SorterResult<any>["field"];
-  sortOrder?: SorterResult<any>["order"];
+  sortField?: SorterResult<ProductType>["field"];
+  sortOrder?: SorterResult<ProductType>["order"];
   filters?: Parameters<GetProp<TableProps, "onChange">>[1];
 }
 
@@ -103,7 +102,7 @@ const TableProductsComponent = ({
       setLoading(false);
       setTableParams((prev) => ({
         ...prev,
-        pagination: { ...prev.pagination, total: data.length },
+        pagination: { ...prev.pagination, total: products.length },
       }));
     }, 300);
   }, [products]);

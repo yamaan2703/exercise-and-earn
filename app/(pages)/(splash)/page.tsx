@@ -17,7 +17,7 @@ const Splash = () => {
         router.push(Routes.DASHBOARD);
       }
     }, 2000);
-  }, []);
+  }, [router]);
 
   return (
     <div className="flex justify-center items-center h-screen">

@@ -3,7 +3,6 @@ import Card from "@/components/ui/card";
 import { FaBoxOpen, FaClock, FaShoppingBag, FaUsers } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
-import ConfirmationModal from "@/components/confirmation-modal";
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { AiOutlineMenu } from "react-icons/ai";
