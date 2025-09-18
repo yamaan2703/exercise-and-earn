@@ -6,9 +6,8 @@ import {
   Dispatch,
   SetStateAction,
 } from "react";
-import { initialOrders } from "@/app/(pages)/order-history/page";
 import { OrderType, ProductType } from "@/types/interface";
-import { dummyProducts } from "@/Data/Data";
+import { dummyProducts, initialOrders } from "@/Data/Data";
 import toast from "react-hot-toast";
 import { removeCookie } from "@/lib/cookies";
 import { Routes } from "@/routes/Routes";
