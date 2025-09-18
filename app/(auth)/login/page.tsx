@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -8,6 +8,7 @@ import { Routes } from "@/routes/Routes";
 import toast from "react-hot-toast";
 import Button from "@/components/ui/button";
 import { getCookie, setCookie } from "@/lib/cookies";
+import { AuthContext } from "@/context/AuthContext";
 
 const Login = () => {
   const router = useRouter();
@@ -15,8 +16,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
-  const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
+  const { adminEmail, adminPassword } = useContext(AuthContext)!;
 
   useEffect(() => {
     const token = getCookie("token");
