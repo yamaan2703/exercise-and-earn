@@ -1,4 +1,4 @@
-import { getCookie } from "../../utils/cookies";
+import { getCookie } from "../../lib/cookies";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const loginSlice = createApi({

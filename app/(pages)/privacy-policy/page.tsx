@@ -1,12 +1,101 @@
-import React from "react";
+"use client";
+import { useContext, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import "react-quill-new/dist/quill.snow.css";
+import Button from "@/components/ui/button";
+import { AiOutlineMenu } from "react-icons/ai";
+import { AuthContext } from "@/context/AuthContext";
 
-const PrivacyPolicy = () => {
-  return (
-    <div>
-      <h1 className="text-3xl font-bold text-[#58E2A4]">Privacy Policy</h1>
-      <p className="text-gray-400 mt-2">This is the privacy policy</p>
-    </div>
-  );
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
+
+const modules = {
+  toolbar: [
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    [{ font: [] }],
+    [{ size: [] }],
+    ["bold", "italic", "underline", "strike", "blockquote", "code-block"],
+    [{ color: [] }, { background: [] }],
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+    [{ align: [] }],
+    ["link", "image", "video"],
+    ["clean"],
+  ],
 };
 
-export default PrivacyPolicy;
+const formats = [
+  "header",
+  "font",
+  "size",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "blockquote",
+  "code-block",
+  "color",
+  "background",
+  "list",
+  "indent",
+  "align",
+  "link",
+  "image",
+  "video",
+];
+
+export default function PrivacyPolicy() {
+  const [editorContent, setEditorContent] = useState("");
+  const { toggleSidebar } = useContext(AuthContext)!;
+
+  useEffect(() => {
+    const savedPolicy = localStorage.getItem("privacyPolicy");
+    if (savedPolicy) {
+      setEditorContent(savedPolicy);
+    }
+  }, []);
+
+  const handleUpdate = () => {
+    localStorage.setItem("privacyPolicy", editorContent);
+    console.log("Updated Policy:", editorContent);
+  };
+
+  return (
+    <div className="p-1">
+      <div className="flex justify-between items-center gap-2 mb-6">
+        <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-700 after:rounded-full after:mt-1">
+          Privacy Policy
+        </h1>
+        <div
+          onClick={() => toggleSidebar()}
+          className="lg:hidden p-2 text-lg text-white hover:text-gray-400 cursor-pointer"
+        >
+          <AiOutlineMenu className="size-5 sm:size-6" />
+        </div>
+      </div>
+      <div className="flex justify-end mb-2 mr-2">
+        <Button
+          onClick={handleUpdate}
+          label="Update"
+          variant="theme"
+          size="sm"
+        />
+      </div>
+
+      <div className="bg-[#0d332e] p-2 space-y-2 rounded-xl shadow-lg">
+        <ReactQuill
+          theme="snow"
+          value={editorContent}
+          onChange={setEditorContent}
+          placeholder="Write your Privacy Policy here..."
+          modules={modules}
+          formats={formats}
+          className="custom-quill"
+        />
+      </div>
+    </div>
+  );
+}

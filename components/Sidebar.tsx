@@ -1,90 +1,131 @@
 "use client";
-
-import React from "react";
+import { useContext, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Image from "next/image";
-import {
-  FaHome,
-  FaUsers,
-  FaShieldAlt,
-  FaFileContract,
-  FaSignOutAlt,
-} from "react-icons/fa";
-import { Routes } from "@/routes/Routes";
+import { sidebarMenu as links } from "@/Data/Data";
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { cn } from "@/lib/utils";
+import { AuthContext } from "@/context/AuthContext";
+import { IoIosLogOut } from "react-icons/io";
+import ConfirmationModal from "./confirmation-modal";
 
-const Sidebar = () => {
+interface MenuLink {
+  to: string;
+  label: string;
+  icon: React.ReactElement;
+  children?: MenuLink[];
+  ml?: number;
+}
+
+interface OpenMenus {
+  [key: string]: boolean;
+}
+
+function Sidebar() {
+  const { isSidebarOpen, setIsSidebarOpen, logoutModal, setLogoutModal } =
+    useContext(AuthContext)!;
   const pathname = usePathname();
+  const [openMenus, setOpenMenus] = useState<OpenMenus>({});
 
-  const menuItems = [
-    {
-      name: "Dashboard",
-      href: Routes.DASHBOARD,
-      icon: FaHome,
-    },
-    {
-      name: "Users",
-      href: Routes.USERS,
-      icon: FaUsers,
-    },
-    {
-      name: "Privacy Policy",
-      href: Routes.PRIVACY_POLICY,
-      icon: FaShieldAlt,
-    },
-    {
-      name: "Terms & Conditions",
-      href: Routes.TERMS_AND_CONDITIONS,
-      icon: FaFileContract,
-    },
-  ];
+  const toggleMenu = (key: string) => {
+    setOpenMenus((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  const renderLinks = (menuLinks: MenuLink[]) => {
+    if (!menuLinks || menuLinks.length === 0) return null;
+
+    return menuLinks.map((link, index) => {
+      const key = `${link.to}-${index}`;
+      const isMenuOpen = openMenus[key];
+      const hasChildren = link.children && link.children.length > 0;
+
+      const marginLeftClass = link.ml ? `ml-${link.ml}` : "";
+
+      return (
+        <div key={key} className={`space-y-1 ${marginLeftClass}`}>
+          {hasChildren ? (
+            <>
+              <button
+                onClick={() => toggleMenu(key)}
+                className={cn(
+                  "flex items-center justify-between w-full text-[12px] sm:text-[15px] px-3 py-2 rounded-lg transition duration-300",
+                  pathname.startsWith(link.to)
+                    ? "bg-[#C7E5C9] text-gray-900 shadow-md"
+                    : "text-gray-600 hover:bg-[#EDF8ED] hover:text-green-900"
+                )}
+              >
+                <span className="flex items-center space-x-3">
+                  <span className="text-xl">{link.icon}</span>
+                  <span className="font-medium">{link.label}</span>
+                </span>
+                <span>
+                  {isMenuOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
+                </span>
+              </button>
+              {isMenuOpen &&
+                link.children &&
+                renderLinks(link.children as MenuLink[])}
+            </>
+          ) : (
+            <Link href={link.to} onClick={() => setIsSidebarOpen(false)}>
+              <p
+                className={cn(
+                  "flex items-center text-[12px] sm:text-[15px] space-x-3 px-3 py-2 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95",
+                  pathname === link.to
+                    ? "text-white bg-green-700/20 border-r-2 border-l-2"
+                    : "text-gray-400 hover:bg-white hover:text-[#06211E]"
+                )}
+              >
+                <span className="text-lg">{link.icon}</span>
+                <span className="font-medium text-sm">{link.label}</span>
+              </p>
+            </Link>
+          )}
+        </div>
+      );
+    });
+  };
 
   return (
-    <div className="max-w-64 min-h-screen border-r border-green-800 shadow-2xl flex flex-col">
-      <div className="p-[22px] border-b border-green-800">
-        <div className="flex items-center gap-3 ">
-          <div className="size-10">
-            <Image
-              src="/Icons/logo.png"
-              alt="Exercise and Earn Logo"
-              width={40}
-              height={40}
-              className="object-contain"
-            />
-          </div>
-          <h1 className="text-[#58E2A4] font-bold text-base">
-            Exercise & Earn
-          </h1>
-        </div>
+    <aside
+      className={cn(
+        "fixed top-0 left-0 h-full w-[220px] sm:w-[250px] bg-[#06211e] border-r border-gray-700 shadow-lg z-[101] transform transition-transform",
+        isSidebarOpen ? "translate-x-0" : "-translate-x-full",
+        "lg:translate-x-0 lg:block"
+      )}
+    >
+      <div className="flex items-center justify-center gap-3 border-b border-gray-700 py-4">
+        <Image
+          src="/Icons/logo.png"
+          width={1000}
+          height={1000}
+          alt="Logo"
+          className="size-9"
+        />
+        <h1 className="text-white text-sm sm:text-base font-bold">
+          Exercise & Earn
+        </h1>
       </div>
 
-      <nav className="flex-1 p-4 space-y-2">
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.href;
+      <div className="flex-1 px-4 py-6 space-y-2 h-[calc(100vh-100px)] overflow-y-auto scrollbar-custom">
+        <nav className="flex flex-col space-y-2">{renderLinks(links)}</nav>
+      </div>
 
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-200 cursor-pointer group",
-                isActive
-                  ? "bg-green-800/30 text-[#58E2A4] border-l-4 border-[#58E2A4]"
-                  : "text-gray-300 hover:bg-green-800/20 hover:text-[#58E2A4]"
-              )}
-            >
-              <Icon className="w-5 h-5 group-hover:translate-x-2 transition-all duration-300" />
-              <span className="font-medium group-hover:translate-x-2 transition-all duration-300">
-                {item.name}
-              </span>
-            </Link>
-          );
-        })}
-      </nav>
-    </div>
+      <div className="border-t border-gray-700 px-3">
+        <button
+          onClick={() => setLogoutModal(true)}
+          className="flex items-center gap-2 w-full hover:text-red-700 text-white font-medium m-2 mb-2 rounded-lg transition duration-300 cursor-pointer"
+        >
+          <IoIosLogOut className="text-lg" />
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
   );
-};
+}
 
 export default Sidebar;

@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #010c12;
-  --foreground: #171717;
+  --background: #06211e;
+  --foreground: #e5e7eb;
 }
 
 @theme inline {
@@ -14,8 +14,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #010c12;
-    --foreground: #ededed;
+    --background: #06211e;
+    --foreground: #e5e7eb;
   }
 }
 
@@ -23,4 +23,102 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.ant-table {
+  background-color: #06211e !important;
+  color: #e5e7eb !important;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ant-table-thead > tr > th {
+  background-color: #06211e !important;
+  color: #e5e7eb !important;
+  border-bottom: 1px solid #9ca3af !important;
+}
+
+.ant-table-tbody > tr > td {
+  background-color: #0d332e !important;
+  color: #e5e7eb !important;
+  border-bottom: 1px solid #374151 !important;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background-color: #11413a !important;
+  color: #f9fafb !important;
+}
+
+.ant-pagination-item:hover {
+  background-color: #d1d5db !important;
+  border-color: #15803d !important;
+}
+
+.ant-pagination-prev .ant-pagination-item-link,
+.ant-pagination-next .ant-pagination-item-link {
+  color: #d1d5db !important;
+}
+
+.ant-pagination-item {
+  border-color: #06211e !important;
+}
+
+.ant-pagination-item a {
+  color: #06211e !important;
+}
+
+.ant-table-filter-trigger {
+  color: #d1d5db !important;
+}
+
+.ant-empty-description {
+  color: #fff !important;
+}
+
+.ant-table-column-sorter {
+  color: #d1d5db !important;
+}
+
+.ant-table-filter-dropdown {
+  background-color: #0d332e !important;
+  color: #e5e7eb !important;
+}
+
+.ant-dropdown-menu {
+  background-color: #0d332e !important;
+  color: #e5e7eb !important;
+}
+
+.ant-dropdown-menu-item-selected {
+  background-color: #0d332e !important;
+  color: #e5e7eb !important;
+}
+
+.ant-btn {
+  color: #e5e7eb !important;
+}
+
+.ant-btn-color-primary {
+  background-color: #0d9488 !important;
+  border-color: #10b981 !important;
+  color: #ffffff !important;
+}
+
+.ant-dropdown-menu-title-content span {
+  color: #e5e7eb !important;
+}
+
+.custom-quill .ql-toolbar {
+  background-color: white !important;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.custom-quill .ql-editor {
+  color: white !important;
+  min-height: 150px;
+}
+
+.custom-quill .ql-editor.ql-blank::before {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-style: italic;
 }

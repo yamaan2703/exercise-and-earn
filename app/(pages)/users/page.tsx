@@ -1,29 +1,43 @@
-import Table from "@/components/ui/table";
-import React from "react";
+"use client";
+import Input from "@/components/ui/input";
+import TableUsersComponent from "@/components/ui/table/table-users";
+import { AuthContext } from "@/context/AuthContext";
+import { useContext, useState } from "react";
+import { AiOutlineMenu } from "react-icons/ai";
 import { FaSearch } from "react-icons/fa";
 
 const Users = () => {
+  const [searchUsers, setSearchUsers] = useState("");
+  const { toggleSidebar } = useContext(AuthContext)!;
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-[#58E2A4]">Users</h1>
-      </div>
-
-      <div className="flex gap-4">
-        <div className="flex-1 relative">
-          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search users..."
-            className="w-full pl-10 pr-4 py-2 bg-[#0b140b] border border-green-800 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
+    <div className="space-y-2 p-1">
+      <div className="flex justify-between items-center gap-2 mb-6">
+        <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-700 after:rounded-full after:mt-1">
+          Users
+        </h1>
+        <div
+          onClick={() => toggleSidebar()}
+          className="lg:hidden p-2 text-lg text-white hover:text-gray-400 cursor-pointer"
+        >
+          <AiOutlineMenu className="size-5 sm:size-6" />
         </div>
       </div>
 
-      <div className="bg-[#0b140b] border border-green-800 rounded-lg overflow-hidden">
-        <div className="overflow-x-auto">
-          <Table />
-        </div>
+      <div className="max-w-[400px] w-full relative">
+        <Input
+          placeholder="Search users by name, email or phone..."
+          type="text"
+          id="search"
+          value={searchUsers}
+          setValue={setSearchUsers}
+          variant="outline"
+          size="sm"
+          iconLeft={<FaSearch />}
+        />
+      </div>
+
+      <div className="">
+        <TableUsersComponent searchUsers={searchUsers} />
       </div>
     </div>
   );

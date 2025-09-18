@@ -1,4 +1,5 @@
 "use client";
+import { getCookie } from "@/lib/cookies";
 import { Routes } from "@/routes/Routes";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -8,7 +9,7 @@ const Splash = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = getCookie("token");
     setTimeout(() => {
       if (!token) {
         router.push(Routes.LOGIN);
