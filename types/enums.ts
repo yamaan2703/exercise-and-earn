@@ -18,3 +18,14 @@ export enum UserDetailTab {
   CALORIES = "calories",
   PRODUCTS = "products",
 }
+
+export enum ProductDetailTab {
+  INFO = "info",
+  STOCK = "stock",
+}
+
+export enum ChartFilter {
+  DAILY = "daily",
+  WEEKLY = "weekly",
+  MONTHLY = "monthly",
+}

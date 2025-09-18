@@ -11,7 +11,7 @@ import { FaPlus, FaSearch } from "react-icons/fa";
 
 const Products = () => {
   const router = useRouter();
-  const { toggleSidebar } = useContext(AuthContext)!;
+  const { setIsSidebarOpen } = useContext(AuthContext)!;
   const [searchProducts, setSearchProducts] = useState("");
 
   return (
@@ -21,7 +21,7 @@ const Products = () => {
           Products
         </h1>
         <div
-          onClick={() => toggleSidebar()}
+          onClick={() => setIsSidebarOpen(true)}
           className="lg:hidden p-2 text-lg text-white hover:text-gray-400 cursor-pointer"
         >
           <AiOutlineMenu className="size-5 sm:size-6" />

@@ -1,5 +1,5 @@
 import { ConfirmationModalProps } from "@/types/interface";
-import Button from "./ui/button";
+import Button from "./button";
 
 const ConfirmationModal = ({
   title,

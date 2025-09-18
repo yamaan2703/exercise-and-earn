@@ -10,6 +10,7 @@ const Button = ({
   icon: Icon,
   fullWidth = false,
   onClick,
+  externalStyles,
 }: ButtonProps) => {
   const baseStyles =
     "group relative flex justify-center items-center font-medium rounded-lg focus:outline-none transition duration-300 transform disabled:opacity-50 disabled:cursor-not-allowed";
@@ -35,6 +36,7 @@ const Button = ({
       onClick={onClick}
       className={clsx(
         baseStyles,
+        externalStyles,
         variant ? variantStyles[variant] : variantStyles["primary"],
         size ? sizeStyles[size] : sizeStyles["md"],
         fullWidth ? "w-full" : "",

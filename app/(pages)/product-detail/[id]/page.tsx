@@ -1,16 +1,20 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
-import { dummyProducts } from "@/Data/Data";
-import { FaArrowLeft, FaBox, FaInfoCircle } from "react-icons/fa";
+import { dummyProducts, ProductTabs } from "@/Data/Data";
+import { FaArrowLeft } from "react-icons/fa";
 import Button from "@/components/ui/button";
-import { StatusProduct } from "@/types/enums";
+import { ProductDetailTab, StatusProduct } from "@/types/enums";
 import Image from "next/image";
 import { AiOutlineMenu } from "react-icons/ai";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
+import { cn } from "@/lib/utils";
+import ProductInfo from "@/components/product-detail-component/product-info";
+import ProductStock from "@/components/product-detail-component/product-stock";
 
 const ProductDetailPage = () => {
-  const { toggleSidebar } = useContext(AuthContext)!;
+  const { setIsSidebarOpen } = useContext(AuthContext)!;
+  const [activeTab, setActiveTab] = useState(ProductDetailTab.INFO);
   const { id } = useParams();
   const router = useRouter();
   const product = dummyProducts.find((product) => product.id === id);
@@ -24,14 +28,14 @@ const ProductDetailPage = () => {
               Product Detail
             </h1>
             <div
-              onClick={() => toggleSidebar()}
+              onClick={() => setIsSidebarOpen(true)}
               className="lg:hidden p-2 text-lg text-white hover:text-gray-400 cursor-pointer"
             >
               <AiOutlineMenu className="size-5 sm:size-6" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-teal-600 to-teal-700 rounded-xl p-8 mb-6 relative overflow-hidden shadow-lg">
+          <div className="bg-gradient-to-r from-teal-600 to-teal-700 rounded-xl p-8 mb-4 relative overflow-hidden shadow-lg">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
 
@@ -73,83 +77,31 @@ const ProductDetailPage = () => {
             </div>
           </div>
 
-          {/* Product Details */}
-          <div className="flex flex-col gap-6 mb-6">
-            {/* Info Section */}
-            <div className="bg-[#0d332e] rounded-xl p-5 border border-teal-500/20 shadow-md">
-              <h2 className="text-xl font-bold text-teal-400 mb-4 flex items-center gap-2">
-                <FaBox className="text-lg" />
-                Product Information
-              </h2>
-
-              <div className="space-y-2">
-                <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
-                  <p className="text-gray-300 font-medium flex items-center gap-2">
-                    Category
-                  </p>
-                  <p>{product.category}</p>
-                </div>
-
-                <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
-                  <p className="text-gray-300 font-medium flex items-center gap-2">
-                    Required Calories
-                  </p>
-                  <p>{product.requiredCalories}</p>
-                </div>
-
-                {product.size && product.size.length > 0 && (
-                  <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
-                    <p className="text-gray-300 font-medium flex items-center gap-2">
-                      Size
-                    </p>
-                    <p className="space-x-2">
-                      {product.size?.map((size, index) => (
-                        <span className="space-x-2" key={index}>
-                          {size}
-                          {index < product.size!.length - 1 ? "," : ""}
-                        </span>
-                      ))}
-                    </p>
-                  </div>
+          {/* Tabs */}
+          <div className="flex items-center mb-4 bg-[#0d332e] p-2 rounded-lg border border-teal-500/20">
+            {ProductTabs.map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all duration-300 mx-1 cursor-pointer",
+                  activeTab === tab.key
+                    ? "bg-teal-600 text-white shadow-md"
+                    : "text-gray-300 hover:bg-teal-700/40 hover:text-white"
                 )}
-
-                {product.color && product.color.length > 0 && (
-                  <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
-                    <span className="text-gray-300 font-medium flex items-center gap-2">
-                      Color
-                    </span>
-                    <p className="space-x-2">
-                      {product.color?.map((color, index) => (
-                        <span className="space-x-2" key={index}>
-                          {color}
-                          {index < product.color!.length - 1 ? "," : ""}
-                        </span>
-                      ))}
-                    </p>
-                  </div>
-                )}
-                <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
-                  <p className="text-gray-300 font-medium flex items-center gap-2">
-                    Created At
-                  </p>
-                  <p>{product.createdAt}</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20 shadow-md">
-              <h2 className="text-xl font-bold text-teal-400 mb-4 flex items-center gap-2">
-                <FaInfoCircle /> Product Description
-              </h2>
-              <p className="text-gray-300 leading-relaxed">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae,
-                autem! Doloremque, veniam iste. Quisquam animi magnam libero ad
-                tempora incidunt. Lorem ipsum dolor sit, amet consectetur
-                adipisicing elit. Accusantium, velit nihil. Totam ad voluptate
-                inventore? Lorem ipsum dolor sit amet consectetur adipisicing
-                elit. Et, optio accusamus! aliquam voluptate.
-              </p>
-            </div>
+              >
+                {tab.icon}
+                {tab.label}
+              </button>
+            ))}
           </div>
+
+          {activeTab === ProductDetailTab.INFO && (
+            <ProductInfo product={product} />
+          )}
+          {activeTab === ProductDetailTab.STOCK && (
+            <ProductStock product={product} />
+          )}
         </div>
       ) : (
         <div className="flex justify-center mt-10">

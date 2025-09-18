@@ -7,7 +7,7 @@ import { sidebarMenu as links } from "@/Data/Data";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { cn } from "@/lib/utils";
 import { AuthContext } from "@/context/AuthContext";
-import { IoIosLogOut } from "react-icons/io";
+import Button from "./button";
 
 interface MenuLink {
   to: string;
@@ -99,7 +99,7 @@ function Sidebar() {
     >
       <div className="flex items-center justify-center gap-3 border-b border-gray-700 py-4">
         <Image
-          src="/Icons/logo.png"
+          src="/Icons/logo2.svg"
           width={1000}
           height={1000}
           alt="Logo"
@@ -114,14 +114,15 @@ function Sidebar() {
         <nav className="flex flex-col space-y-2">{renderLinks(links)}</nav>
       </div>
 
-      <div className="border-t border-gray-700 px-3">
-        <button
+      <div className="px-3 py-2 mt-[-20px]">
+        <Button
+          variant="secondary"
+          size="sm"
+          label="Logout"
           onClick={() => setLogoutModal(true)}
-          className="flex items-center gap-2 w-full hover:text-red-700 text-white font-medium m-2 mb-2 rounded-lg transition duration-300 cursor-pointer"
-        >
-          <IoIosLogOut className="text-lg" />
-          <span>Logout</span>
-        </button>
+          externalStyles="font-semibold"
+          fullWidth
+        />
       </div>
     </aside>
   );

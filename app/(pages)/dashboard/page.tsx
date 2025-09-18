@@ -3,18 +3,57 @@ import Card from "@/components/ui/card";
 import { FaBoxOpen, FaClock, FaShoppingBag, FaUsers } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { AiOutlineMenu } from "react-icons/ai";
+import { cn } from "@/lib/utils";
+import { ChartFilter } from "@/types/enums";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const Dashboard = () => {
-  const { toggleSidebar } = useContext(AuthContext)!;
+  const { setIsSidebarOpen } = useContext(AuthContext)!;
+  const [chartFilter, setChartFilter] = useState(ChartFilter.DAILY);
+
+  const chartDataSets = {
+    [ChartFilter.DAILY]: {
+      series: [{ name: "Users", data: [22, 18, 25, 8, 28, 21, 14] }],
+      categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    },
+    [ChartFilter.WEEKLY]: {
+      series: [{ name: "Users", data: [120, 140, 90, 165] }],
+      categories: ["Week 1", "Week 2", "Week 3", "Week 4"],
+    },
+    [ChartFilter.MONTHLY]: {
+      series: [
+        {
+          name: "Users",
+          data: [500, 600, 450, 700, 650, 720, 800, 670, 680, 720, 400, 810],
+        },
+      ],
+      categories: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ],
+    },
+  };
+
+  const currentData = chartDataSets[chartFilter];
+
   const chartData = {
     series: [
       {
-        name: "Monthly User Registrations",
+        name: `${chartFilter} User Registrations`,
         data: [0, 0, 0, 0, 33, 25, 54, 81, 0, 0, 0, 0],
       },
     ],
@@ -44,32 +83,10 @@ const Dashboard = () => {
       },
       colors: ["#14B8A6"],
       xaxis: {
-        categories: [
-          "Jan 2025",
-          "Feb 2025",
-          "Mar 2025",
-          "Apr 2025",
-          "May 2025",
-          "Jun 2025",
-          "Jul 2025",
-          "Aug 2025",
-          "Sep 2025",
-          "Oct 2025",
-          "Nov 2025",
-          "Dec 2025",
-        ],
-        labels: {
-          style: {
-            colors: "#fff",
-            fontSize: "11px",
-          },
-        },
-        axisBorder: {
-          show: false,
-        },
-        axisTicks: {
-          show: false,
-        },
+        categories: currentData.categories,
+        labels: { style: { colors: "#fff", fontSize: "11px" } },
+        axisBorder: { show: false },
+        axisTicks: { show: false },
       },
       yaxis: {
         labels: {
@@ -96,15 +113,6 @@ const Dashboard = () => {
           },
         },
       },
-      title: {
-        text: "Monthly User Registrations 2025",
-        align: "center",
-        style: {
-          fontSize: "16px",
-          color: "#fff",
-          fontWeight: "bold",
-        },
-      },
       tooltip: {
         theme: "dark",
         y: {
@@ -123,7 +131,7 @@ const Dashboard = () => {
           Dashboard
         </h1>
         <div
-          onClick={() => toggleSidebar()}
+          onClick={() => setIsSidebarOpen(true)}
           className="lg:hidden p-2 text-lg text-white hover:text-gray-400 cursor-pointer"
         >
           <AiOutlineMenu className="size-5 sm:size-6" />
@@ -137,21 +145,36 @@ const Dashboard = () => {
         <Card title="Orders Pending" value={2} Icon={FaClock} />
       </div>
 
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mx-3 mb-4 mt-8">
+        <h1 className="text-xl font-medium">
+          <span className="capitalize">{chartFilter}</span> User Registrations
+          2025
+        </h1>
+        <div className="flex justify-end gap-2">
+          {["daily", "weekly", "monthly"].map((filter) => (
+            <button
+              key={filter}
+              onClick={() => setChartFilter(filter as ChartFilter)}
+              className={cn(
+                "px-3 py-1 rounded-md text-sm cursor-pointer transition",
+                chartFilter === filter
+                  ? "bg-teal-600 text-white"
+                  : "bg-[#11413a] text-gray-300 hover:bg-teal-700/40 hover:text-white"
+              )}
+            >
+              {filter.charAt(0).toUpperCase() + filter.slice(1)}
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="bg-[#06211e] p-2">
         <Chart
           options={chartData.options}
-          series={chartData.series}
+          series={currentData.series}
           type="bar"
           height={350}
         />
       </div>
-      {/* {logoutModal && (
-        <ConfirmationModal
-          title={"Confirm Logout"}
-          description={"Are you sure you want to logout?"}
-          onClick={() => handleLogoutClick()}
-        />
-      )} */}
     </div>
   );
 };

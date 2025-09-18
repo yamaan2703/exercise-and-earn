@@ -8,7 +8,7 @@ import { FaSearch } from "react-icons/fa";
 
 const Users = () => {
   const [searchUsers, setSearchUsers] = useState("");
-  const { toggleSidebar } = useContext(AuthContext)!;
+  const { setIsSidebarOpen } = useContext(AuthContext)!;
   return (
     <div className="space-y-2 p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
@@ -16,7 +16,7 @@ const Users = () => {
           Users
         </h1>
         <div
-          onClick={() => toggleSidebar()}
+          onClick={() => setIsSidebarOpen(true)}
           className="lg:hidden p-2 text-lg text-white hover:text-gray-400 cursor-pointer"
         >
           <AiOutlineMenu className="size-5 sm:size-6" />
