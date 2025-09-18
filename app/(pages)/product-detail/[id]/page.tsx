@@ -37,16 +37,16 @@ const ProductDetailPage = () => {
 
             <div className="relative z-10 flex flex-col sm:flex-row justify-between items-center gap-6">
               <div className="flex flex-col sm:flex-row items-center gap-6">
-                <div className="size-16 bg-white/20 rounded-full flex items-center justify-center">
+                <div className="bg-white/20 rounded-full">
                   <Image
                     src="/images/watch.png"
                     alt={product.name}
                     width={150}
                     height={150}
-                    className="rounded-full"
+                    className="size-20 sm:size-24"
                   />
                 </div>
-                <div>
+                <div className="flex flex-col items-center sm:items-start">
                   <h1 className="text-3xl font-bold text-white mb-1">
                     {product.name}
                   </h1>

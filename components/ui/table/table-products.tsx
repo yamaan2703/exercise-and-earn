@@ -1,10 +1,9 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import type { GetProp, TableProps } from "antd";
-import { Table, Popconfirm } from "antd";
+import { Table } from "antd";
 import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { SorterResult } from "antd/es/table/interface";
-import { dummyProducts } from "@/Data/Data";
 import { ProductType } from "@/types/interface";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
@@ -46,14 +45,14 @@ const TableProductsComponent = ({
   };
 
   const columns: ColumnsType<ProductType> = [
-    { title: "Name", dataIndex: "name", sorter: true, width: "18%" },
+    { title: "Product Name", dataIndex: "name", sorter: true, width: "18%" },
     { title: "Category", dataIndex: "category", width: "18%" },
     {
       title: "Required Calories",
       dataIndex: "requiredCalories",
       width: "18%",
     },
-    { title: "Created At", dataIndex: "createdAt", width: "18%" },
+    { title: "Created At", dataIndex: "createdAt", sorter: true, width: "18%" },
     {
       title: "Status",
       dataIndex: "status",

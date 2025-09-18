@@ -2,6 +2,7 @@
 import { AuthContext } from "@/context/AuthContext";
 import { dummyProducts, dummyUsers } from "@/Data/Data";
 import { OrderType } from "@/types/interface";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
@@ -104,8 +105,14 @@ const OrderHistory = () => {
                     router.push(`/product-detail/${order.product.id}`)
                   }
                 >
-                  <div className="p-2 bg-teal-600/20 rounded-lg">
-                    <FaBoxOpen className="text-teal-400 text-xl" />
+                  <div className="size-12 bg-teal-600/20 rounded-lg">
+                    <Image
+                      src="/images/watch.png"
+                      alt={order.product.name}
+                      width={150}
+                      height={150}
+                      className="size-12 object-contains"
+                    />
                   </div>
                   <h3 className="font-semibold text-white text-lg group-hover:underline transition">
                     {order.product.name}

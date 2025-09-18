@@ -8,7 +8,7 @@ const ConfirmationModal = ({
   onCancel,
 }: ConfirmationModalProps) => {
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[999]">
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[999]">
       <div className="bg-[#06211e] text-white w-[90%] max-w-sm rounded-lg shadow-lg p-6">
         <div className="flex justify-between items-center gap-2 mb-3">
           <h2 className="text-lg font-semibold">{title}</h2>

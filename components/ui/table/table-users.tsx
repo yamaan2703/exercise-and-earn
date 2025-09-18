@@ -44,7 +44,7 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
     { title: "Name", dataIndex: "name", sorter: true, width: "10%" },
     { title: "Email", dataIndex: "email", width: "15%" },
     { title: "Phone", dataIndex: "phone", width: "15%" },
-    { title: "Created At", dataIndex: "createdAt", width: "15%" },
+    { title: "Created At", dataIndex: "createdAt", sorter: true, width: "15%" },
     {
       title: "Gender",
       dataIndex: "gender",

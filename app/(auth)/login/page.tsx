@@ -13,7 +13,6 @@ const Login = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
@@ -30,18 +29,15 @@ const Login = () => {
     e.preventDefault();
     try {
       setIsLoading(true);
-      setError("");
 
       setTimeout(() => {
         if (email === adminEmail && password === adminPassword) {
           console.log("Login successful");
           toast.success("Login successful");
-          // localStorage.setItem("token", email);
           setCookie("token", email);
           router.push(Routes.DASHBOARD);
         } else {
           console.log("Invalid login credentials");
-          setError("Invalid login credentials");
           toast.error("Invalid login credentials");
         }
         setIsLoading(false);
@@ -111,12 +107,6 @@ const Login = () => {
               />
             </div>
           </div>
-
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
-              <p className="text-red-400 text-sm text-center">{error}</p>
-            </div>
-          )}
 
           <div className="">
             <Button

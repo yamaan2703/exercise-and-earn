@@ -53,7 +53,7 @@ const Layout = ({ children }: PropsWithChildren) => {
 
       <div className="flex flex-col flex-1 min-w-0">
         {/* <Header /> */}
-        <main className="flex-1 bg-[#06211E]/95 p-2 lg:ml-[16rem] ml-0 pt-8 transition-all duration-300">
+        <main className="flex-1 bg-[#06211E]/95 p-2 lg:ml-[16rem] ml-0 pt-4 transition-all duration-300">
           {children}
         </main>
       </div>
