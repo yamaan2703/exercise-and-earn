@@ -1,18 +1,23 @@
 "use client";
+import Input from "@/components/ui/input";
 import { AuthContext } from "@/context/AuthContext";
+import { Routes } from "@/routes/Routes";
+import { InputSize, InputVariant, OrderStatus } from "@/types/enums";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
+import { FaSearch } from "react-icons/fa";
 
 const OrderHistory = () => {
   const router = useRouter();
   const { orders, setIsSidebarOpen } = useContext(AuthContext)!;
+  const [orderSearch, setOrderSearch] = useState("");
 
   return (
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
-        <h1 className="inline-block text-xl sm:text-3xl font-bold text-white after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-700 after:rounded-full after:mt-1">
+        <h1 className="inline-block text-xl sm:text-3xl font-bold text-white after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-500 after:rounded-full after:mt-1">
           Order History
         </h1>
         <div
@@ -23,10 +28,25 @@ const OrderHistory = () => {
         </div>
       </div>
 
-      {/* Orders */}
+      <div className="max-w-[400px] w-full mb-3">
+        <Input
+          placeholder="Search order by order status..."
+          type="text"
+          id="search"
+          value={orderSearch}
+          setValue={setOrderSearch}
+          variant={InputVariant.OUTLINE}
+          size={InputSize.SMALL}
+          iconLeft={<FaSearch />}
+        />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {orders
-          .filter((order) => order.orderStatus !== "Pending")
+          .filter((order) => order.orderStatus !== OrderStatus.PENDING)
+          .filter((order) =>
+            order.orderStatus.toLowerCase().includes(orderSearch.toLowerCase())
+          )
           .map((order) => (
             <div
               key={order.product.id}
@@ -36,7 +56,7 @@ const OrderHistory = () => {
                 <div
                   className="flex items-center gap-3 cursor-pointer group"
                   onClick={() =>
-                    router.push(`/product-detail/${order.product.id}`)
+                    router.push(Routes.PRODUCTS_DETAIL(order.product.id))
                   }
                 >
                   <div className="size-12 bg-teal-600/20 rounded-lg">
@@ -58,14 +78,21 @@ const OrderHistory = () => {
 
               <div className="border-t border-teal-500/10 my-4"></div>
 
-              {/* User + Order Details */}
               <div className="flex flex-col sm:flex-row justify-between gap-4 text-sm">
                 <div className="space-y-1">
                   <h4 className="text-teal-400 font-semibold mb-2">
                     Customer Details
                   </h4>
-                  <p className="text-gray-300">
-                    <span className="text-white">Name:</span> {order.user.name}
+                  <p className="text-white">
+                    Name:{" "}
+                    <span
+                      className="text-gray-300 cursor-pointer hover:underline"
+                      onClick={() =>
+                        router.push(Routes.USERS_DETAIL(order.user.id))
+                      }
+                    >
+                      {order.user.name}
+                    </span>
                   </p>
                   <p className="text-gray-300">
                     <span className="text-white">Email:</span>{" "}
@@ -77,7 +104,6 @@ const OrderHistory = () => {
                   </p>
                 </div>
 
-                {/* Product Info */}
                 <div className="space-y-1">
                   <h4 className="text-teal-400 font-semibold mb-2">
                     Order Details

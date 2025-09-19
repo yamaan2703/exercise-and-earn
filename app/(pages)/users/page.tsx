@@ -2,6 +2,7 @@
 import Input from "@/components/ui/input";
 import TableUsersComponent from "@/components/ui/table/table-users";
 import { AuthContext } from "@/context/AuthContext";
+import { InputSize, InputVariant } from "@/types/enums";
 import { useContext, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { FaSearch } from "react-icons/fa";
@@ -12,7 +13,7 @@ const Users = () => {
   return (
     <div className="space-y-2 p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
-        <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-700 after:rounded-full after:mt-1">
+        <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-500 after:rounded-full after:mt-1">
           Users
         </h1>
         <div
@@ -30,8 +31,8 @@ const Users = () => {
           id="search"
           value={searchUsers}
           setValue={setSearchUsers}
-          variant="outline"
-          size="sm"
+          variant={InputVariant.OUTLINE}
+          size={InputSize.SMALL}
           iconLeft={<FaSearch />}
         />
       </div>

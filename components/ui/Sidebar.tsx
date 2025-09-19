@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useState } from "react";
+import { ReactElement, useContext, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -8,11 +8,12 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { cn } from "@/lib/utils";
 import { AuthContext } from "@/context/AuthContext";
 import Button from "./button";
+import { ButtonSize, ButtonVariant } from "@/types/enums";
 
 interface MenuLink {
   to: string;
   label: string;
-  icon: React.ReactElement;
+  icon: ReactElement;
   children?: MenuLink[];
   ml?: number;
 }
@@ -116,8 +117,8 @@ function Sidebar() {
 
       <div className="px-3 py-2 mt-[-20px]">
         <Button
-          variant="secondary"
-          size="sm"
+          variant={ButtonVariant.THEME}
+          size={ButtonSize.SMALL}
           label="Logout"
           onClick={() => setLogoutModal(true)}
           externalStyles="font-semibold"

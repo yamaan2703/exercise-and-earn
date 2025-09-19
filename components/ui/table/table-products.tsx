@@ -45,18 +45,19 @@ const TableProductsComponent = ({
   };
 
   const columns: ColumnsType<ProductType> = [
-    { title: "Product Name", dataIndex: "name", sorter: true, width: "18%" },
-    { title: "Category", dataIndex: "category", width: "18%" },
+    { title: "Product Name", dataIndex: "name", sorter: true, width: "15%" },
+    { title: "Category", dataIndex: "category", width: "15%" },
+    { title: "Brand", dataIndex: "brand", width: "15%" },
     {
       title: "Required Calories",
       dataIndex: "requiredCalories",
-      width: "18%",
+      width: "15%",
     },
-    { title: "Created At", dataIndex: "createdAt", sorter: true, width: "18%" },
+    { title: "Created At", dataIndex: "createdAt", sorter: true, width: "15%" },
     {
       title: "Status",
       dataIndex: "status",
-      width: "15%",
+      width: "12%",
       filters: [
         { text: StatusProduct.ACTIVE, value: StatusProduct.ACTIVE },
         { text: StatusProduct.INACTIVE, value: StatusProduct.INACTIVE },
@@ -70,7 +71,7 @@ const TableProductsComponent = ({
     {
       title: "Actions",
       key: "actions",
-      width: "15%",
+      width: "12%",
       render: (_, record: ProductType) => (
         <div className="flex gap-2">
           <button
@@ -163,7 +164,14 @@ const TableProductsComponent = ({
             item.name.toLowerCase().includes(searchProducts.toLowerCase()) ||
             item.category.toLowerCase().includes(searchProducts.toLowerCase())
         )}
-        pagination={tableParams.pagination}
+        pagination={{
+          ...tableParams.pagination,
+          total: data.filter(
+            (item) =>
+              item.name.toLowerCase().includes(searchProducts.toLowerCase()) ||
+              item.category.toLowerCase().includes(searchProducts.toLowerCase())
+          ).length,
+        }}
         loading={loading}
         onChange={handleTableChange}
         scroll={{ x: 800 }}

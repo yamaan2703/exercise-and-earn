@@ -89,14 +89,16 @@ const UserCalories = () => {
   };
   return (
     <>
-      <div className="bg-[#0d332e] rounded-xl p-4 border border-teal-500/20">
+      <div className="bg-[#0b2d29] rounded-xl p-4 border border-teal-500/20">
         <h2 className="text-xl font-bold text-white mb-4">Calories Details</h2>
 
         <div className="space-y-3">
           <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
             <div className="flex justify-between items-center">
-              <h3 className="text-white font-semibold">Total Calories Burnt</h3>
-              <p className="text-teal-400 font-medium">22,000</p>
+              <h3 className="text-white font-semibold">
+                Total Earned Calories
+              </h3>
+              <p className="text-teal-400 font-medium">12,000</p>
             </div>
           </div>
 
@@ -110,9 +112,9 @@ const UserCalories = () => {
           <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
             <div className="flex justify-between items-center">
               <h3 className="text-white font-semibold">
-                Calories Used to Redeem Gifts
+                Total Redeemed Calories
               </h3>
-              <p className="text-teal-400 font-medium">20,000</p>
+              <p className="text-teal-400 font-medium">10,000</p>
             </div>
           </div>
         </div>

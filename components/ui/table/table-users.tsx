@@ -6,7 +6,7 @@ import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { SorterResult } from "antd/es/table/interface";
 import { Gender, StatusUser } from "@/types/enums";
 import { dummyUsers } from "@/Data/Data";
-import { DataType } from "@/types/interface";
+import { UserType } from "@/types/interface";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
 import { AuthContext } from "@/context/AuthContext";
@@ -21,26 +21,26 @@ type TablePaginationConfig = Exclude<
 
 interface TableParams {
   pagination?: TablePaginationConfig;
-  sortField?: SorterResult<DataType>["field"];
-  sortOrder?: SorterResult<DataType>["order"];
+  sortField?: SorterResult<UserType>["field"];
+  sortOrder?: SorterResult<UserType>["order"];
   filters?: Parameters<GetProp<TableProps, "onChange">>[1];
 }
 
 const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
   const router = useRouter();
   const { activeModal, setActiveModal } = useContext(AuthContext)!;
-  const [data, setData] = useState<DataType[]>([]);
+  const [data, setData] = useState<UserType[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<DataType | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: { current: 1, pageSize: 10 },
   });
 
-  const handleView = (record: DataType) => {
+  const handleView = (record: UserType) => {
     router.push(Routes.USERS_DETAIL(record.id));
   };
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<UserType> = [
     { title: "Name", dataIndex: "name", sorter: true, width: "10%" },
     { title: "Email", dataIndex: "email", width: "15%" },
     { title: "Phone", dataIndex: "phone", width: "15%" },
@@ -72,7 +72,7 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
       title: "Actions",
       key: "actions",
       width: "10%",
-      render: (_, record: DataType) => (
+      render: (_, record: UserType) => (
         <div className="flex gap-2">
           <button
             onClick={() => handleView(record)}
@@ -120,7 +120,7 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
   };
 
   // Local filtering + sorting
-  const handleTableChange: TableProps<DataType>["onChange"] = (
+  const handleTableChange: TableProps<UserType>["onChange"] = (
     pagination,
     filters,
     sorter
@@ -144,7 +144,7 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
     // sort by name (ascend or descend)
     if (!Array.isArray(sorter) && sorter.order && sorter.field) {
       filteredData.sort((a, b) => {
-        const field = sorter.field as keyof DataType;
+        const field = sorter.field as keyof UserType;
         if (a[field] < b[field]) return sorter.order === "ascend" ? -1 : 1;
         if (a[field] > b[field]) return sorter.order === "ascend" ? 1 : -1;
         return 0;
@@ -162,7 +162,7 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
 
   return (
     <div className="overflow-auto border border-gray-400 rounded-lg">
-      <Table<DataType>
+      <Table<UserType>
         columns={columns}
         rowKey={(record) => record.id}
         dataSource={data.filter(
@@ -171,7 +171,15 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
             item.email.toLowerCase().includes(searchUsers.toLowerCase()) ||
             item.phone.includes(searchUsers)
         )}
-        pagination={tableParams.pagination}
+        pagination={{
+          ...tableParams.pagination,
+          total: data.filter(
+            (item) =>
+              item.name.toLowerCase().includes(searchUsers.toLowerCase()) ||
+              item.email.toLowerCase().includes(searchUsers.toLowerCase()) ||
+              item.phone.includes(searchUsers)
+          ).length,
+        }}
         loading={loading}
         onChange={handleTableChange}
         scroll={{ x: 800 }}
