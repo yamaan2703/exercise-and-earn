@@ -1,3 +1,4 @@
+import { InputSize, InputVariant } from "@/types/enums";
 import { InputProps } from "@/types/interface";
 import clsx from "clsx";
 import React from "react";
@@ -18,21 +19,21 @@ const Input = ({
   const baseStyles =
     "appearance-none block w-full border rounded-lg focus:outline-none transition duration-200";
 
-  const variantStyles: Record<string, string> = {
-    default:
+  const variantStyles: Record<InputVariant, string> = {
+    [InputVariant.DEFAULT]:
       "bg-[#0b140b] border-green-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent",
-    success:
+    [InputVariant.SUCCESS]:
       "bg-[#0b140b] border-green-600 text-green-400 placeholder-gray-400 focus:ring-2 focus:ring-green-500",
-    error:
+    [InputVariant.ERROR]:
       "bg-[#0b140b] border-red-600 text-red-400 placeholder-gray-400 focus:ring-2 focus:ring-red-500",
-    outline:
+    [InputVariant.OUTLINE]:
       "bg-transparent text-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500",
   };
 
-  const sizeStyles: Record<string, string> = {
-    sm: "px-3 py-2 text-sm",
-    md: "px-4 py-3 text-base",
-    lg: "px-5 py-4 text-lg",
+  const sizeStyles: Record<InputSize, string> = {
+    [InputSize.SMALL]: "px-3 py-2 text-sm",
+    [InputSize.MEDIUM]: "px-4 py-3 text-base",
+    [InputSize.LARGE]: "px-5 py-4 text-lg",
   };
   return (
     <div>

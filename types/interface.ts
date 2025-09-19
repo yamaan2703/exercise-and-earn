@@ -1,5 +1,14 @@
 import { ReactNode } from "react";
-import { Gender, StatusProduct, StatusUser } from "./enums";
+import {
+  ButtonSize,
+  ButtonVariant,
+  Gender,
+  InputSize,
+  InputVariant,
+  OrderStatus,
+  StatusProduct,
+  StatusUser,
+} from "./enums";
 import { IconType } from "react-icons/lib";
 
 export interface InputProps {
@@ -9,8 +18,8 @@ export interface InputProps {
   id: string;
   type: string;
   placeholder: string;
-  variant: "default" | "success" | "error" | "outline";
-  size: "sm" | "md" | "lg";
+  variant: InputVariant;
+  size: InputSize;
   required?: boolean;
   iconLeft?: ReactNode;
   iconRight?: ReactNode;
@@ -26,8 +35,8 @@ export interface ConfirmationModalProps {
 export interface ButtonProps {
   isLoading?: boolean;
   label?: string;
-  variant?: "primary" | "secondary" | "danger" | "outline" | "theme";
-  size?: "xs" | "sm" | "md" | "lg";
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   icon?: IconType;
   fullWidth?: boolean;
   onClick?: () => void;
@@ -65,6 +74,6 @@ export interface ProductType {
 export interface OrderType {
   product: ProductType;
   user: UserType;
-  orderStatus: "Pending" | "Delivered" | "Shipped";
+  orderStatus: OrderStatus;
   date: string;
 }

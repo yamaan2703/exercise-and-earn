@@ -1,6 +1,6 @@
 "use client";
 import React, { FormEvent, useContext, useState } from "react";
-import { StatusProduct } from "@/types/enums";
+import { InputSize, InputVariant, StatusProduct } from "@/types/enums";
 import Input from "@/components/ui/input";
 import { AuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -8,6 +8,7 @@ import { Routes } from "@/routes/Routes";
 import { AiOutlineMenu } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { ProductType } from "@/types/interface";
+import Image from "next/image";
 
 const AddProduct = () => {
   const { setProducts, setIsSidebarOpen } = useContext(AuthContext)!;
@@ -92,13 +93,18 @@ const AddProduct = () => {
             />
 
             {image ? (
-              <img
+              <Image
                 src={URL.createObjectURL(image as Blob)}
                 alt="image"
+                width={50}
+                height={50}
                 className="w-40 object-cover rounded-md shadow-md"
               />
             ) : (
-              <label className="text-gray-400 text-center" htmlFor="image">
+              <label
+                className="text-gray-400 text-center cursor-pointer"
+                htmlFor="image"
+              >
                 Upload an image
               </label>
             )}
@@ -112,8 +118,8 @@ const AddProduct = () => {
               label="Name"
               value={name}
               setValue={setName}
-              size="sm"
-              variant="outline"
+              variant={InputVariant.OUTLINE}
+              size={InputSize.SMALL}
               placeholder="Enter product name"
               required
             />
@@ -126,8 +132,8 @@ const AddProduct = () => {
               label="Category"
               value={category}
               setValue={setCategory}
-              size="sm"
-              variant="outline"
+              variant={InputVariant.OUTLINE}
+              size={InputSize.SMALL}
               placeholder="Enter product category"
               required
             />
@@ -142,8 +148,8 @@ const AddProduct = () => {
               label="Brand"
               value={brand}
               setValue={setBrand}
-              size="sm"
-              variant="outline"
+              variant={InputVariant.OUTLINE}
+              size={InputSize.SMALL}
               placeholder="Enter brand name"
               required
             />
@@ -156,8 +162,8 @@ const AddProduct = () => {
               label="Price"
               value={price}
               setValue={setPrice}
-              size="sm"
-              variant="outline"
+              variant={InputVariant.OUTLINE}
+              size={InputSize.SMALL}
               placeholder="Enter product price"
               required
             />
@@ -172,8 +178,8 @@ const AddProduct = () => {
               label="Required Calories"
               value={requiredCalories}
               setValue={setRequiredCalories}
-              size="sm"
-              variant="outline"
+              variant={InputVariant.OUTLINE}
+              size={InputSize.SMALL}
               placeholder="Enter required calories"
               required
             />
@@ -186,8 +192,8 @@ const AddProduct = () => {
               label="Stock"
               value={stock}
               setValue={setStock}
-              size="sm"
-              variant="outline"
+              variant={InputVariant.OUTLINE}
+              size={InputSize.SMALL}
               placeholder="Enter stock quantity"
               required
             />
@@ -202,8 +208,8 @@ const AddProduct = () => {
               label="Sizes (insert comma)"
               value={size.join(", ")}
               setValue={(val) => setSize(val.split(",").map((s) => s.trim()))}
-              size="sm"
-              variant="outline"
+              variant={InputVariant.OUTLINE}
+              size={InputSize.SMALL}
               placeholder="e.g. Small, Medium, Large"
             />
           </div>
@@ -215,8 +221,8 @@ const AddProduct = () => {
               label="Colors (insert comma)"
               value={color.join(", ")}
               setValue={(val) => setColor(val.split(",").map((c) => c.trim()))}
-              size="sm"
-              variant="outline"
+              variant={InputVariant.OUTLINE}
+              size={InputSize.SMALL}
               placeholder="e.g. Red, Blue, Black"
             />
           </div>

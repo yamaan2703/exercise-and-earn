@@ -1,5 +1,6 @@
 import { ConfirmationModalProps } from "@/types/interface";
 import Button from "./button";
+import { ButtonSize, ButtonVariant } from "@/types/enums";
 
 const ConfirmationModal = ({
   title,
@@ -26,14 +27,14 @@ const ConfirmationModal = ({
           <Button
             label="Cancel"
             onClick={onCancel}
-            variant="secondary"
-            size="xs"
+            variant={ButtonVariant.SECONDARY}
+            size={ButtonSize.EXTRASMALL}
           />
           <Button
             onClick={onClick}
-            variant="danger"
+            variant={ButtonVariant.DANGER}
             label="Confirm"
-            size="xs"
+            size={ButtonSize.EXTRASMALL}
           />
         </div>
       </div>

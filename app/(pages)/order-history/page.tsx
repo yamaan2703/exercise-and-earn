@@ -2,6 +2,7 @@
 import Input from "@/components/ui/input";
 import { AuthContext } from "@/context/AuthContext";
 import { Routes } from "@/routes/Routes";
+import { InputSize, InputVariant, OrderStatus } from "@/types/enums";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
@@ -34,15 +35,15 @@ const OrderHistory = () => {
           id="search"
           value={orderSearch}
           setValue={setOrderSearch}
-          variant="outline"
-          size="sm"
+          variant={InputVariant.OUTLINE}
+          size={InputSize.SMALL}
           iconLeft={<FaSearch />}
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {orders
-          .filter((order) => order.orderStatus !== "Pending")
+          .filter((order) => order.orderStatus !== OrderStatus.PENDING)
           .filter((order) =>
             order.orderStatus.toLowerCase().includes(orderSearch.toLowerCase())
           )
@@ -77,7 +78,6 @@ const OrderHistory = () => {
 
               <div className="border-t border-teal-500/10 my-4"></div>
 
-              {/* User + Order Details */}
               <div className="flex flex-col sm:flex-row justify-between gap-4 text-sm">
                 <div className="space-y-1">
                   <h4 className="text-teal-400 font-semibold mb-2">
@@ -104,7 +104,6 @@ const OrderHistory = () => {
                   </p>
                 </div>
 
-                {/* Product Info */}
                 <div className="space-y-1">
                   <h4 className="text-teal-400 font-semibold mb-2">
                     Order Details

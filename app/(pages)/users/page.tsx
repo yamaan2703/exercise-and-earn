@@ -2,6 +2,7 @@
 import Input from "@/components/ui/input";
 import TableUsersComponent from "@/components/ui/table/table-users";
 import { AuthContext } from "@/context/AuthContext";
+import { InputSize, InputVariant } from "@/types/enums";
 import { useContext, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { FaSearch } from "react-icons/fa";
@@ -30,8 +31,8 @@ const Users = () => {
           id="search"
           value={searchUsers}
           setValue={setSearchUsers}
-          variant="outline"
-          size="sm"
+          variant={InputVariant.OUTLINE}
+          size={InputSize.SMALL}
           iconLeft={<FaSearch />}
         />
       </div>

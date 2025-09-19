@@ -4,6 +4,12 @@ import Input from "@/components/ui/input";
 import TableProductsComponent from "@/components/ui/table/table-products";
 import { AuthContext } from "@/context/AuthContext";
 import { Routes } from "@/routes/Routes";
+import {
+  ButtonSize,
+  ButtonVariant,
+  InputSize,
+  InputVariant,
+} from "@/types/enums";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
@@ -31,19 +37,19 @@ const Products = () => {
       <div className="flex justify-between gap-2">
         <div className="max-w-[400px] w-full">
           <Input
-            placeholder="Search products by name and category..."
+            placeholder="Search products by name or category..."
             type="text"
             id="search"
             value={searchProducts}
             setValue={setSearchProducts}
-            variant="outline"
-            size="sm"
+            variant={InputVariant.OUTLINE}
+            size={InputSize.SMALL}
             iconLeft={<FaSearch />}
           />
         </div>
         <Button
-          variant="theme"
-          size="sm"
+          variant={ButtonVariant.THEME}
+          size={ButtonSize.SMALL}
           label="Add Product"
           icon={FaPlus}
           onClick={() => router.push(Routes.ADD_PRODUCT)}

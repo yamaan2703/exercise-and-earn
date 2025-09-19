@@ -5,6 +5,7 @@ import Button from "@/components/ui/button";
 import { AiOutlineMenu } from "react-icons/ai";
 import { AuthContext } from "@/context/AuthContext";
 import { formats, modules, ReactQuill } from "@/Data/Data";
+import { ButtonSize, ButtonVariant } from "@/types/enums";
 
 export default function PrivacyPolicy() {
   const [editorContent, setEditorContent] = useState("");
@@ -39,8 +40,8 @@ export default function PrivacyPolicy() {
         <Button
           onClick={handleUpdate}
           label="Update"
-          variant="theme"
-          size="sm"
+          variant={ButtonVariant.THEME}
+          size={ButtonSize.SMALL}
         />
       </div>
 

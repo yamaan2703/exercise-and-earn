@@ -35,7 +35,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
           height={3}
           crawlSpeed={200}
           showSpinner={false}
-          shadow="0 0 10px #14b8a6,0 0 5px #14b8a6"
+          shadow="5px 0 15px #14b8a6, 10px 0 25px #14b8a6"
         />
         <AuthProvider>
           <Toaster position="top-center" reverseOrder={false} />

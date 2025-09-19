@@ -7,6 +7,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 import Image from "next/image";
 import ConfirmationModal from "@/components/ui/confirmation-modal";
 import { Routes } from "@/routes/Routes";
+import { ButtonSize, ButtonVariant, OrderStatus } from "@/types/enums";
 
 const Orders = () => {
   const { orders, setOrders, setIsSidebarOpen, rejectModal, setRejectModal } =
@@ -17,7 +18,7 @@ const Orders = () => {
   const handleApprove = (id: string) => {
     setOrders((prev) =>
       prev.map((o) =>
-        o.product.id === id ? { ...o, orderStatus: "Shipped" } : o
+        o.product.id === id ? { ...o, orderStatus: OrderStatus.SHIPPED } : o
       )
     );
   };
@@ -60,7 +61,7 @@ const Orders = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {orders
-          .filter((order) => order.orderStatus === "Pending")
+          .filter((order) => order.orderStatus === OrderStatus.PENDING)
           .map((order) => (
             <div
               key={order.product.id}
@@ -149,14 +150,14 @@ const Orders = () => {
 
               <div className="flex gap-4 items-center">
                 <Button
-                  variant="theme"
-                  size="sm"
+                  variant={ButtonVariant.THEME}
+                  size={ButtonSize.SMALL}
                   label="Approve Order"
                   onClick={() => handleApprove(order.product.id)}
                 />
                 <Button
-                  variant="danger"
-                  size="sm"
+                  variant={ButtonVariant.DANGER}
+                  size={ButtonSize.SMALL}
                   label="Reject Order"
                   onClick={() => openRejectModal(order.product.id)}
                 />

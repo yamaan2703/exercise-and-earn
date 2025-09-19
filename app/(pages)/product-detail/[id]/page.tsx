@@ -3,7 +3,12 @@ import { useParams, useRouter } from "next/navigation";
 import { dummyProducts, ProductTabs } from "@/Data/Data";
 import { FaArrowLeft } from "react-icons/fa";
 import Button from "@/components/ui/button";
-import { ProductDetailTab, StatusProduct } from "@/types/enums";
+import {
+  ButtonSize,
+  ButtonVariant,
+  ProductDetailTab,
+  StatusProduct,
+} from "@/types/enums";
 import Image from "next/image";
 import { AiOutlineMenu } from "react-icons/ai";
 import { useContext, useState } from "react";
@@ -35,7 +40,7 @@ const ProductDetailPage = () => {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-teal-600 to-teal-700 rounded-xl p-8 mb-4 relative overflow-hidden shadow-lg">
+          <div className="bg-gradient-to-r from-teal-600 to-teal-700 rounded-xl p-8 mb-3 relative overflow-hidden shadow-lg">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
 
@@ -47,7 +52,7 @@ const ProductDetailPage = () => {
                     alt={product.name}
                     width={150}
                     height={150}
-                    className="size-20 sm:size-24"
+                    className="size-24 sm:size-28"
                   />
                 </div>
                 <div className="flex flex-col items-center sm:items-start">
@@ -57,14 +62,6 @@ const ProductDetailPage = () => {
                   <p className="text-teal-100 text-lg">{product.category}</p>
                 </div>
               </div>
-              {/* <div className="flex flesx-col gap-2">
-                <Button
-                  size="sm"
-                  variant="danger"
-                  icon={FaTrash}
-                  label="Delete"
-                />
-              </div> */}
               <span
                 className={`px-4 py-2 rounded-full text-sm font-semibold ${
                   product.status === StatusProduct.ACTIVE
@@ -113,9 +110,9 @@ const ProductDetailPage = () => {
             <Button
               label="Back"
               icon={FaArrowLeft}
-              variant="theme"
+              variant={ButtonVariant.THEME}
               onClick={() => router.back()}
-              size="md"
+              size={ButtonSize.MEDIUM}
             />
           </div>
         </div>

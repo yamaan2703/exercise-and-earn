@@ -124,19 +124,21 @@ const Dashboard = () => {
     } as ApexOptions,
   };
 
-  const chartOptions = {
+  const chartOptions: ApexOptions = {
     chart: {
       type: "pie",
     },
-    labels: ["Total Users", "Active Users", "Inactive Users"],
+    labels: ["Active Users", "Inactive Users"],
     legend: {
       position: "bottom",
+      labels: { colors: "#fff" },
     },
-    colors: ["#14b8a6", "#22c55e", "#ef4444"], // teal, green, red
+    colors: ["#14b8a6", "#9ca3af"],
   };
 
-  const chartSeries = [25, 15, 10];
+  const chartSeries = [15, 10];
 
+  // 8c919c
   return (
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
@@ -158,47 +160,51 @@ const Dashboard = () => {
         <Card title="Orders Pending" value={2} Icon={FaClock} />
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mx-3 mb-4 mt-8">
-        <h1 className="text-xl font-medium">
-          <span className="capitalize">{chartFilter}</span> User Registrations
-          2025
-        </h1>
-        <div className="flex justify-end gap-2">
-          {["daily", "weekly", "monthly"].map((filter) => (
-            <button
-              key={filter}
-              onClick={() => setChartFilter(filter as ChartFilter)}
-              className={cn(
-                "px-3 py-1 rounded-md text-sm cursor-pointer transition",
-                chartFilter === filter
-                  ? "bg-teal-600 text-white"
-                  : "bg-[#11413a] text-gray-300 hover:bg-teal-700/40 hover:text-white"
-              )}
-            >
-              {filter.charAt(0).toUpperCase() + filter.slice(1)}
-            </button>
-          ))}
+      <div className="flex flex-col md:flex-row gap-2 items-center">
+        <div className="w-full md:w-[70%] bg-[#0b2d29] rounded-lg">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mx-3 mb-4 mt-8">
+            <h1 className="text-xl font-medium">
+              <span className="capitalize">{chartFilter}</span> User
+              Registrations 2025
+            </h1>
+            <div className="flex justify-end gap-2">
+              {["daily", "weekly", "monthly"].map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setChartFilter(filter as ChartFilter)}
+                  className={cn(
+                    "px-3 py-1 rounded-md text-sm cursor-pointer transition",
+                    chartFilter === filter
+                      ? "bg-teal-600 text-white"
+                      : "bg-[#11413a] text-gray-300 hover:bg-teal-700/40 hover:text-white"
+                  )}
+                >
+                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="p-2">
+            <Chart
+              options={chartData.options}
+              series={currentData.series}
+              type="bar"
+              height={350}
+            />
+          </div>
+        </div>
+        <div className="w-full md:w-[30%] py-10 md:py-20 flex flex-col items-center bg-[#0b2d29] p-2 rounded-lg shadow-md text-white">
+          <h2 className="text-lg font-semibold mb-4 text-center">
+            User Statistics
+          </h2>
+          <Chart
+            options={chartOptions}
+            series={chartSeries}
+            type="pie"
+            width="100%"
+          />
         </div>
       </div>
-      <div className="bg-[#06211e] p-2">
-        <Chart
-          options={chartData.options}
-          series={currentData.series}
-          type="bar"
-          height={350}
-        />
-      </div>
-      {/* <div className="w-full flex flex-col items-center bg-[#06211e] p-4 rounded-lg shadow-md text-white">
-        <h2 className="text-lg font-semibold mb-4 text-center">
-          User Statistics
-        </h2>
-        <Chart
-          options={chartOptions}
-          series={chartSeries}
-          type="pie"
-          width="100%"
-        />
-      </div> */}
     </div>
   );
 };
