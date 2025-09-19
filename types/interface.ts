@@ -50,11 +50,13 @@ export interface ProductType {
   id: string;
   name: string;
   category: string;
+  brand: string;
   description?: string;
   requiredCalories: number;
   size?: string[];
   color?: string[];
   stock: number;
+  price: number;
   deliveryFee?: number;
   createdAt: string;
   status: StatusProduct;

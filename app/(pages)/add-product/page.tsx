@@ -14,12 +14,15 @@ const AddProduct = () => {
   const router = useRouter();
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
+  const [brand, setBrand] = useState("");
   const [description, setDescription] = useState("");
   const [requiredCalories, setRequiredCalories] = useState("");
   const [stock, setStock] = useState("");
+  const [price, setPrice] = useState("");
   const [size, setSize] = useState<string[]>([]);
   const [color, setColor] = useState<string[]>([]);
   const [status] = useState(StatusProduct.ACTIVE);
+  const [image, setImage] = useState<File | null>(null);
 
   const addProduct = (product: ProductType) => {
     setProducts((prev) => [
@@ -39,9 +42,11 @@ const AddProduct = () => {
         id: "",
         name,
         category,
+        brand,
         description,
         requiredCalories: Number(requiredCalories),
         stock: Number(stock),
+        price: Number(price),
         size,
         color,
         status,
@@ -57,7 +62,7 @@ const AddProduct = () => {
   return (
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
-        <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-700 after:rounded-full after:mt-1">
+        <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-500 after:rounded-full after:mt-1">
           Add Product
         </h1>
         <div
@@ -69,6 +74,36 @@ const AddProduct = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Product Image
+          </label>
+
+          <div className="w-40 flex flex-col items-center justify-center border-2 border-dashed border-gray-500 rounded-lg p-6 cursor-pointer hover:border-teal-500 transition">
+            <input
+              id="image"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0] || null;
+                setImage(file);
+              }}
+            />
+
+            {image ? (
+              <img
+                src={URL.createObjectURL(image as Blob)}
+                alt="image"
+                className="w-40 object-cover rounded-md shadow-md"
+              />
+            ) : (
+              <label className="text-gray-400 text-center" htmlFor="image">
+                Upload an image
+              </label>
+            )}
+          </div>
+        </div>
         <div className="flex flex-col sm:flex-row gap-6">
           <div className="flex-1">
             <Input
@@ -99,19 +134,34 @@ const AddProduct = () => {
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            Description
-          </label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter description"
-            rows={3}
-            className="bg-transparent w-full p-2 rounded-lg text-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
-            required
-          />
+        <div className="flex flex-col sm:flex-row gap-6">
+          <div className="flex-1">
+            <Input
+              type="text"
+              id="brand"
+              label="Brand"
+              value={brand}
+              setValue={setBrand}
+              size="sm"
+              variant="outline"
+              placeholder="Enter brand name"
+              required
+            />
+          </div>
+
+          <div className="flex-1">
+            <Input
+              type="number"
+              id="price"
+              label="Price"
+              value={price}
+              setValue={setPrice}
+              size="sm"
+              variant="outline"
+              placeholder="Enter product price"
+              required
+            />
+          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-6">
@@ -172,6 +222,20 @@ const AddProduct = () => {
           </div>
         </div>
 
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Description
+          </label>
+          <textarea
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Enter description"
+            rows={3}
+            className="bg-transparent w-full p-2 rounded-lg text-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            required
+          />
+        </div>
         <div className="mt-2">
           <button
             type="submit"

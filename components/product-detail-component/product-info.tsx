@@ -5,7 +5,7 @@ import { FaBox, FaInfoCircle } from "react-icons/fa";
 const ProductInfo = ({ product }: { product: ProductType }) => {
   return (
     <div className="flex flex-col gap-3 mb-6">
-      <div className="bg-[#0d332e] rounded-xl p-5 border border-teal-500/20 shadow-md">
+      <div className="bg-[#0b2d29] rounded-xl p-5 border border-teal-500/20 shadow-md">
         <h2 className="text-xl font-bold text-teal-400 mb-4 flex items-center gap-2">
           <FaBox className="text-lg" />
           Product Information
@@ -65,7 +65,7 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
           </div>
         </div>
       </div>
-      <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20 shadow-md">
+      <div className="bg-[#0b2d29] rounded-xl p-6 border border-teal-500/20 shadow-md">
         <h2 className="text-xl font-bold text-teal-400 mb-4 flex items-center gap-2">
           <FaInfoCircle /> Product Description
         </h2>

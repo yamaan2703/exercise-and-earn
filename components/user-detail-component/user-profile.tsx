@@ -4,7 +4,7 @@ import React from "react";
 const UserProfile = ({ user }: { user: DataType }) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-      <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20">
+      <div className="bg-[#0b2d29] rounded-xl p-6 border border-teal-500/20">
         <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
           Profile Details
         </h2>
@@ -38,7 +38,7 @@ const UserProfile = ({ user }: { user: DataType }) => {
         </div>
       </div>
 
-      <div className="bg-[#0d332e] rounded-xl p-6 border border-teal-500/20">
+      <div className="bg-[#0b2d29] rounded-xl p-6 border border-teal-500/20">
         <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
           Extra Details
         </h2>

@@ -116,7 +116,7 @@ function Sidebar() {
 
       <div className="px-3 py-2 mt-[-20px]">
         <Button
-          variant="secondary"
+          variant="theme"
           size="sm"
           label="Logout"
           onClick={() => setLogoutModal(true)}

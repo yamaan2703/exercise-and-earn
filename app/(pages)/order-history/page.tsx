@@ -1,5 +1,6 @@
 "use client";
 import { AuthContext } from "@/context/AuthContext";
+import { Routes } from "@/routes/Routes";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
@@ -12,7 +13,7 @@ const OrderHistory = () => {
   return (
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
-        <h1 className="inline-block text-xl sm:text-3xl font-bold text-white after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-700 after:rounded-full after:mt-1">
+        <h1 className="inline-block text-xl sm:text-3xl font-bold text-white after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-500 after:rounded-full after:mt-1">
           Order History
         </h1>
         <div
@@ -36,7 +37,7 @@ const OrderHistory = () => {
                 <div
                   className="flex items-center gap-3 cursor-pointer group"
                   onClick={() =>
-                    router.push(`/product-detail/${order.product.id}`)
+                    router.push(Routes.PRODUCTS_DETAIL(order.product.id))
                   }
                 >
                   <div className="size-12 bg-teal-600/20 rounded-lg">
@@ -64,7 +65,12 @@ const OrderHistory = () => {
                   <h4 className="text-teal-400 font-semibold mb-2">
                     Customer Details
                   </h4>
-                  <p className="text-gray-300">
+                  <p
+                    className="text-gray-300 cursor-pointer hover:underline"
+                    onClick={() =>
+                      router.push(Routes.USERS_DETAIL(order.user.id))
+                    }
+                  >
                     <span className="text-white">Name:</span> {order.user.name}
                   </p>
                   <p className="text-gray-300">

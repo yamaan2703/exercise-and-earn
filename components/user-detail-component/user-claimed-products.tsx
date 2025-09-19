@@ -2,7 +2,7 @@ import React from "react";
 
 const UserClaimedProducts = () => {
   return (
-    <div className="bg-[#0d332e] rounded-xl p-4 border border-teal-500/20">
+    <div className="bg-[#0b2d29] rounded-xl p-4 border border-teal-500/20">
       <h2 className="text-xl font-bold text-white mb-4">Claimed Products</h2>
 
       <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10 mb-3">
