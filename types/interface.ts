@@ -11,6 +11,7 @@ export interface InputProps {
   placeholder: string;
   variant: "default" | "success" | "error" | "outline";
   size: "sm" | "md" | "lg";
+  required?: boolean;
   iconLeft?: ReactNode;
   iconRight?: ReactNode;
 }
@@ -30,6 +31,7 @@ export interface ButtonProps {
   icon?: IconType;
   fullWidth?: boolean;
   onClick?: () => void;
+  externalStyles?: string;
 }
 
 export interface DataType {
@@ -52,7 +54,8 @@ export interface ProductType {
   requiredCalories: number;
   size?: string[];
   color?: string[];
-  deliveryFee: number;
+  stock: number;
+  deliveryFee?: number;
   createdAt: string;
   status: StatusProduct;
 }

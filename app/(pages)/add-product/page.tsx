@@ -1,25 +1,38 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { FormEvent, useContext, useState } from "react";
 import { StatusProduct } from "@/types/enums";
 import Input from "@/components/ui/input";
 import { AuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
 import { AiOutlineMenu } from "react-icons/ai";
+import toast from "react-hot-toast";
+import { ProductType } from "@/types/interface";
 
 const AddProduct = () => {
-  const { addProduct, toggleSidebar } = useContext(AuthContext)!;
+  const { setProducts, setIsSidebarOpen } = useContext(AuthContext)!;
   const router = useRouter();
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [requiredCalories, setRequiredCalories] = useState("");
-  const [deliveryFee, setDeliveryFee] = useState("");
+  const [stock, setStock] = useState("");
   const [size, setSize] = useState<string[]>([]);
   const [color, setColor] = useState<string[]>([]);
   const [status] = useState(StatusProduct.ACTIVE);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const addProduct = (product: ProductType) => {
+    setProducts((prev) => [
+      ...prev,
+      {
+        ...product,
+        id: String(prev.length + 1),
+        createdAt: new Date().toISOString(),
+      },
+    ]);
+  };
+
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     try {
       addProduct({
@@ -28,13 +41,14 @@ const AddProduct = () => {
         category,
         description,
         requiredCalories: Number(requiredCalories),
-        deliveryFee: Number(deliveryFee),
+        stock: Number(stock),
         size,
         color,
         status,
         createdAt: "",
       });
       router.push(Routes.PRODUCTS);
+      toast.success("Product added successfully!");
       console.log(addProduct);
     } catch (error) {
       console.log("error", error);
@@ -47,7 +61,7 @@ const AddProduct = () => {
           Add Product
         </h1>
         <div
-          onClick={() => toggleSidebar()}
+          onClick={() => setIsSidebarOpen(true)}
           className="lg:hidden p-2 text-lg text-white hover:text-gray-400 cursor-pointer"
         >
           <AiOutlineMenu className="size-5 sm:size-6" />
@@ -66,6 +80,7 @@ const AddProduct = () => {
               size="sm"
               variant="outline"
               placeholder="Enter product name"
+              required
             />
           </div>
 
@@ -79,21 +94,23 @@ const AddProduct = () => {
               size="sm"
               variant="outline"
               placeholder="Enter product category"
+              required
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-gray-200 font-medium mb-1">
+          <label className="block text-sm font-medium text-gray-300 mb-2">
             Description
           </label>
           <textarea
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter description (optional)"
+            placeholder="Enter description"
             rows={3}
-            className="w-full px-4 py-2 rounded-md border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="bg-transparent w-full p-2 rounded-lg text-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            required
           />
         </div>
 
@@ -108,19 +125,21 @@ const AddProduct = () => {
               size="sm"
               variant="outline"
               placeholder="Enter required calories"
+              required
             />
           </div>
 
           <div className="flex-1">
             <Input
               type="number"
-              id="deliveryFee"
-              label="Delivery Fee ($)"
-              value={deliveryFee}
-              setValue={setDeliveryFee}
+              id="stock"
+              label="Stock"
+              value={stock}
+              setValue={setStock}
               size="sm"
               variant="outline"
-              placeholder="Enter delivery fee"
+              placeholder="Enter stock quantity"
+              required
             />
           </div>
         </div>

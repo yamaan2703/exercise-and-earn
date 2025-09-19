@@ -18,7 +18,6 @@ interface AuthContextType {
   adminPassword: string;
   isSidebarOpen: boolean;
   setIsSidebarOpen: (value: boolean) => void;
-  toggleSidebar: () => void;
   logoutModal: boolean;
   setLogoutModal: (value: boolean) => void;
   activeModal: boolean;
@@ -26,7 +25,7 @@ interface AuthContextType {
   orders: OrderType[];
   setOrders: Dispatch<SetStateAction<OrderType[]>>;
   products: ProductType[];
-  addProduct: (product: ProductType) => void;
+  setProducts: Dispatch<SetStateAction<ProductType[]>>;
   handleLogoutClick: () => void;
 }
 
@@ -42,24 +41,11 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [orders, setOrders] = useState(initialOrders);
   const [products, setProducts] = useState(dummyProducts);
 
-  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
-
   const handleLogoutClick = () => {
     toast.success("Logged out successfully!");
     removeCookie("token");
     router.push(Routes.LOGIN);
     setLogoutModal(false);
-  };
-
-  const addProduct = (product: ProductType) => {
-    setProducts((prev) => [
-      ...prev,
-      {
-        ...product,
-        id: String(prev.length + 1),
-        createdAt: new Date().toISOString(),
-      },
-    ]);
   };
 
   return (
@@ -69,7 +55,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         adminPassword,
         isSidebarOpen,
         setIsSidebarOpen,
-        toggleSidebar,
         logoutModal,
         setLogoutModal,
         activeModal,
@@ -77,7 +62,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         orders,
         setOrders,
         products,
-        addProduct,
+        setProducts,
         handleLogoutClick,
       }}
     >

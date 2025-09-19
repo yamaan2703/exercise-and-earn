@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
 import { AuthContext } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
-import ConfirmationModal from "@/components/confirmation-modal";
+import ConfirmationModal from "../confirmation-modal";
 
 type ColumnsType<T extends object = object> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<

@@ -1,16 +1,13 @@
 "use client";
 import { AuthContext } from "@/context/AuthContext";
-import { dummyProducts, dummyUsers } from "@/Data/Data";
-import { OrderType } from "@/types/interface";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { FaBoxOpen } from "react-icons/fa";
 
 const OrderHistory = () => {
   const router = useRouter();
-  const { orders, toggleSidebar } = useContext(AuthContext)!;
+  const { orders, setIsSidebarOpen } = useContext(AuthContext)!;
 
   return (
     <div className="p-1">
@@ -19,7 +16,7 @@ const OrderHistory = () => {
           Order History
         </h1>
         <div
-          onClick={() => toggleSidebar()}
+          onClick={() => setIsSidebarOpen(true)}
           className="lg:hidden p-2 text-lg text-white hover:text-gray-400 cursor-pointer"
         >
           <AiOutlineMenu className="size-5 sm:size-6" />
@@ -27,7 +24,7 @@ const OrderHistory = () => {
       </div>
 
       {/* Orders */}
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {orders
           .filter((order) => order.orderStatus !== "Pending")
           .map((order) => (
@@ -62,8 +59,7 @@ const OrderHistory = () => {
               <div className="border-t border-teal-500/10 my-4"></div>
 
               {/* User + Order Details */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                {/* User Info */}
+              <div className="flex flex-col sm:flex-row justify-between gap-4 text-sm">
                 <div className="space-y-1">
                   <h4 className="text-teal-400 font-semibold mb-2">
                     Customer Details
@@ -75,7 +71,7 @@ const OrderHistory = () => {
                     <span className="text-white">Email:</span>{" "}
                     {order.user.email}
                   </p>
-                  <p className="text-gray-300">
+                  <p className="text-gray-300 max-w-72">
                     <span className="text-white">Address:</span> Lorem ipsum
                     dolor sit amet consectetur.
                   </p>

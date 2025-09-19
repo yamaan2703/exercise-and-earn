@@ -8,8 +8,8 @@ import { ProductType } from "@/types/interface";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
 import { StatusProduct } from "@/types/enums";
-import ConfirmationModal from "@/components/confirmation-modal";
 import { AuthContext } from "@/context/AuthContext";
+import ConfirmationModal from "../confirmation-modal";
 
 type ColumnsType<T extends object = object> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<

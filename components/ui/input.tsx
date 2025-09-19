@@ -11,6 +11,7 @@ const Input = ({
   placeholder,
   variant,
   size,
+  required,
   iconLeft,
   iconRight,
 }: InputProps) => {
@@ -35,9 +36,14 @@ const Input = ({
   };
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-300">
-        {label}
-      </label>
+      {label && (
+        <label
+          htmlFor={id}
+          className="block text-sm font-medium text-gray-300 mb-1"
+        >
+          {label}
+        </label>
+      )}
       <div className="relative flex items-center">
         {iconLeft && (
           <span className="absolute left-3 text-gray-400">{iconLeft}</span>
@@ -45,8 +51,9 @@ const Input = ({
         <input
           id={id}
           type={type}
-          required
+          required={required}
           value={value}
+          minLength={3}
           onChange={(e) => setValue(e.target.value)}
           placeholder={placeholder}
           className={clsx(

@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <div className="flex justify-center items-center h-screen">
       <Image
-        src="/Icons/logo.png"
+        src="/Icons/logo2.svg"
         alt="Logo"
         width={150}
         height={150}

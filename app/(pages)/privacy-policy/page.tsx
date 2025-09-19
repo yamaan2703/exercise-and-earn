@@ -1,55 +1,14 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
 import Button from "@/components/ui/button";
 import { AiOutlineMenu } from "react-icons/ai";
 import { AuthContext } from "@/context/AuthContext";
-
-const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
-
-const modules = {
-  toolbar: [
-    [{ header: [1, 2, 3, 4, 5, 6, false] }],
-    [{ font: [] }],
-    [{ size: [] }],
-    ["bold", "italic", "underline", "strike", "blockquote", "code-block"],
-    [{ color: [] }, { background: [] }],
-    [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
-    ],
-    [{ align: [] }],
-    ["link", "image", "video"],
-    ["clean"],
-  ],
-};
-
-const formats = [
-  "header",
-  "font",
-  "size",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "code-block",
-  "color",
-  "background",
-  "list",
-  "indent",
-  "align",
-  "link",
-  "image",
-  "video",
-];
+import { formats, modules, ReactQuill } from "@/Data/Data";
 
 export default function PrivacyPolicy() {
   const [editorContent, setEditorContent] = useState("");
-  const { toggleSidebar } = useContext(AuthContext)!;
+  const { setIsSidebarOpen } = useContext(AuthContext)!;
 
   useEffect(() => {
     const savedPolicy = localStorage.getItem("privacyPolicy");
@@ -70,7 +29,7 @@ export default function PrivacyPolicy() {
           Privacy Policy
         </h1>
         <div
-          onClick={() => toggleSidebar()}
+          onClick={() => setIsSidebarOpen(true)}
           className="lg:hidden p-2 text-lg text-white hover:text-gray-400 cursor-pointer"
         >
           <AiOutlineMenu className="size-5 sm:size-6" />

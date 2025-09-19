@@ -4,7 +4,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { IoIosNotifications } from "react-icons/io";
 import { useContext, useState, useRef, useEffect } from "react";
 import { AuthContext } from "@/context/AuthContext";
-import Button from "./ui/button";
+import Button from "./button";
 import toast from "react-hot-toast";
 import { removeCookie } from "@/lib/cookies";
 import { Routes } from "@/routes/Routes";
