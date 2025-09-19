@@ -1,5 +1,5 @@
 "use client";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
@@ -12,6 +12,7 @@ const Orders = () => {
   const { orders, setOrders, setIsSidebarOpen, rejectModal, setRejectModal } =
     useContext(AuthContext)!;
   const router = useRouter();
+  const [orderToReject, setOrderToReject] = useState<string | null>(null);
 
   const handleApprove = (id: string) => {
     setOrders((prev) =>
@@ -24,6 +25,25 @@ const Orders = () => {
   const handleReject = (id: string) => {
     setOrders((prev) => prev.filter((o) => o.product.id !== id));
   };
+
+  const openRejectModal = (orderId: string) => {
+    setOrderToReject(orderId);
+    setRejectModal(true);
+  };
+
+  const confirmReject = () => {
+    if (orderToReject) {
+      handleReject(orderToReject);
+    }
+    setRejectModal(false);
+    setOrderToReject(null);
+  };
+
+  const cancelReject = () => {
+    setRejectModal(false);
+    setOrderToReject(null);
+  };
+
   return (
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
@@ -37,6 +57,7 @@ const Orders = () => {
           <AiOutlineMenu className="size-5 sm:size-6" />
         </div>
       </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {orders
           .filter((order) => order.orderStatus === "Pending")
@@ -76,13 +97,16 @@ const Orders = () => {
                   <h4 className="text-teal-400 font-semibold mb-2">
                     Customer Details
                   </h4>
-                  <p
-                    className="text-gray-300 cursor-pointer hover:underline"
-                    onClick={() =>
-                      router.push(Routes.USERS_DETAIL(order.user.id))
-                    }
-                  >
-                    <span className="text-white">Name:</span> {order.user.name}
+                  <p className="text-white">
+                    Name:{" "}
+                    <span
+                      className="text-gray-300 cursor-pointer hover:underline"
+                      onClick={() =>
+                        router.push(Routes.USERS_DETAIL(order.user.id))
+                      }
+                    >
+                      {order.user.name}
+                    </span>
                   </p>
                   <p className="text-gray-300">
                     <span className="text-white">Email:</span>{" "}
@@ -134,23 +158,21 @@ const Orders = () => {
                   variant="danger"
                   size="sm"
                   label="Reject Order"
-                  onClick={() => setRejectModal(true)}
+                  onClick={() => openRejectModal(order.product.id)}
                 />
               </div>
-              {rejectModal && (
-                <ConfirmationModal
-                  title={"Confirm Reject Order"}
-                  description={"Are you sure you want to reject this order?"}
-                  onClick={() => {
-                    handleReject(order.product.id);
-                    setRejectModal(false);
-                  }}
-                  onCancel={() => setRejectModal(false)}
-                />
-              )}
             </div>
           ))}
       </div>
+
+      {rejectModal && (
+        <ConfirmationModal
+          title={"Confirm Reject Order"}
+          description={"Are you sure you want to reject this order?"}
+          onClick={confirmReject}
+          onCancel={cancelReject}
+        />
+      )}
     </div>
   );
 };

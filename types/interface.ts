@@ -34,7 +34,7 @@ export interface ButtonProps {
   externalStyles?: string;
 }
 
-export interface DataType {
+export interface UserType {
   id: string;
   name: string;
   gender: Gender;
@@ -64,7 +64,7 @@ export interface ProductType {
 
 export interface OrderType {
   product: ProductType;
-  user: DataType;
+  user: UserType;
   orderStatus: "Pending" | "Delivered" | "Shipped";
   date: string;
 }

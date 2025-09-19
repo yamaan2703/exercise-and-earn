@@ -163,7 +163,14 @@ const TableProductsComponent = ({
             item.name.toLowerCase().includes(searchProducts.toLowerCase()) ||
             item.category.toLowerCase().includes(searchProducts.toLowerCase())
         )}
-        pagination={tableParams.pagination}
+        pagination={{
+          ...tableParams.pagination,
+          total: data.filter(
+            (item) =>
+              item.name.toLowerCase().includes(searchProducts.toLowerCase()) ||
+              item.category.toLowerCase().includes(searchProducts.toLowerCase())
+          ).length,
+        }}
         loading={loading}
         onChange={handleTableChange}
         scroll={{ x: 800 }}

@@ -1,14 +1,17 @@
 "use client";
+import Input from "@/components/ui/input";
 import { AuthContext } from "@/context/AuthContext";
 import { Routes } from "@/routes/Routes";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
+import { FaSearch } from "react-icons/fa";
 
 const OrderHistory = () => {
   const router = useRouter();
   const { orders, setIsSidebarOpen } = useContext(AuthContext)!;
+  const [orderSearch, setOrderSearch] = useState("");
 
   return (
     <div className="p-1">
@@ -24,10 +27,25 @@ const OrderHistory = () => {
         </div>
       </div>
 
-      {/* Orders */}
+      <div className="max-w-[400px] w-full mb-3">
+        <Input
+          placeholder="Search order by order status..."
+          type="text"
+          id="search"
+          value={orderSearch}
+          setValue={setOrderSearch}
+          variant="outline"
+          size="sm"
+          iconLeft={<FaSearch />}
+        />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {orders
           .filter((order) => order.orderStatus !== "Pending")
+          .filter((order) =>
+            order.orderStatus.toLowerCase().includes(orderSearch.toLowerCase())
+          )
           .map((order) => (
             <div
               key={order.product.id}
@@ -65,13 +83,16 @@ const OrderHistory = () => {
                   <h4 className="text-teal-400 font-semibold mb-2">
                     Customer Details
                   </h4>
-                  <p
-                    className="text-gray-300 cursor-pointer hover:underline"
-                    onClick={() =>
-                      router.push(Routes.USERS_DETAIL(order.user.id))
-                    }
-                  >
-                    <span className="text-white">Name:</span> {order.user.name}
+                  <p className="text-white">
+                    Name:{" "}
+                    <span
+                      className="text-gray-300 cursor-pointer hover:underline"
+                      onClick={() =>
+                        router.push(Routes.USERS_DETAIL(order.user.id))
+                      }
+                    >
+                      {order.user.name}
+                    </span>
                   </p>
                   <p className="text-gray-300">
                     <span className="text-white">Email:</span>{" "}

@@ -124,6 +124,19 @@ const Dashboard = () => {
     } as ApexOptions,
   };
 
+  const chartOptions = {
+    chart: {
+      type: "pie",
+    },
+    labels: ["Total Users", "Active Users", "Inactive Users"],
+    legend: {
+      position: "bottom",
+    },
+    colors: ["#14b8a6", "#22c55e", "#ef4444"], // teal, green, red
+  };
+
+  const chartSeries = [25, 15, 10];
+
   return (
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
@@ -175,6 +188,17 @@ const Dashboard = () => {
           height={350}
         />
       </div>
+      {/* <div className="w-full flex flex-col items-center bg-[#06211e] p-4 rounded-lg shadow-md text-white">
+        <h2 className="text-lg font-semibold mb-4 text-center">
+          User Statistics
+        </h2>
+        <Chart
+          options={chartOptions}
+          series={chartSeries}
+          type="pie"
+          width="100%"
+        />
+      </div> */}
     </div>
   );
 };

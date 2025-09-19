@@ -1,7 +1,7 @@
-import { DataType } from "@/types/interface";
+import { UserType } from "@/types/interface";
 import React from "react";
 
-const UserProfile = ({ user }: { user: DataType }) => {
+const UserProfile = ({ user }: { user: UserType }) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
       <div className="bg-[#0b2d29] rounded-xl p-6 border border-teal-500/20">

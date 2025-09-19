@@ -6,7 +6,7 @@ import {
   StatusUser,
   UserDetailTab,
 } from "@/types/enums";
-import { DataType, ProductType, OrderType } from "@/types/interface";
+import { UserType, ProductType, OrderType } from "@/types/interface";
 import dynamic from "next/dynamic";
 import {
   FaUsers,
@@ -133,7 +133,7 @@ export const formats = [
   "video",
 ];
 
-export const dummyUsers: DataType[] = [
+export const dummyUsers: UserType[] = [
   {
     id: "1",
     name: "John Doe",
