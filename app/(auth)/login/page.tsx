@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import Button from "@/components/ui/button";
 import { getCookie, setCookie } from "@/lib/cookies";
 import { AuthContext } from "@/context/AuthContext";
+import { ButtonVariant, InputSize, InputVariant } from "@/types/enums";
 
 const Login = () => {
   const router = useRouter();
@@ -77,8 +78,8 @@ const Login = () => {
               id="email"
               type="email"
               placeholder="Enter your email"
-              variant="default"
-              size="md"
+              variant={InputVariant.DEFAULT}
+              size={InputSize.MEDIUM}
             />
 
             <div className="relative">
@@ -89,8 +90,8 @@ const Login = () => {
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
-                variant="default"
-                size="md"
+                variant={InputVariant.DEFAULT}
+                size={InputSize.MEDIUM}
                 iconRight={
                   <button
                     type="button"
@@ -108,14 +109,12 @@ const Login = () => {
             </div>
           </div>
 
-          <div className="">
-            <Button
-              isLoading={isLoading}
-              label="Sign In"
-              variant="primary"
-              fullWidth
-            />
-          </div>
+          <Button
+            isLoading={isLoading}
+            label="Sign In"
+            variant={ButtonVariant.PRIMARY}
+            fullWidth
+          />
         </form>
       </div>
     </div>

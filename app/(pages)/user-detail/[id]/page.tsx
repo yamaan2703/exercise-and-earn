@@ -1,7 +1,12 @@
 "use client";
 import { useContext, useState } from "react";
 import { dummyUsers, UserTabs } from "@/Data/Data";
-import { StatusUser, UserDetailTab } from "@/types/enums";
+import {
+  ButtonSize,
+  ButtonVariant,
+  StatusUser,
+  UserDetailTab,
+} from "@/types/enums";
 import { useParams, useRouter } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
 import { cn } from "@/lib/utils";
@@ -26,7 +31,7 @@ const UserDetailPage = () => {
       {user ? (
         <div className="">
           <div className="flex justify-between items-center gap-2 mb-6">
-            <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-700 after:rounded-full after:mt-1">
+            <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-500 after:rounded-full after:mt-1">
               User Detail
             </h1>
             <div
@@ -37,7 +42,7 @@ const UserDetailPage = () => {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-teal-600 to-teal-700 rounded-xl p-8 mb-6 relative overflow-hidden">
+          <div className="bg-gradient-to-r from-teal-600 to-teal-700 rounded-xl p-8 mb-3 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
 
@@ -72,13 +77,13 @@ const UserDetailPage = () => {
           </div>
 
           {/* Tab Navigation */}
-          <div className="flex items-center mb-6 bg-[#0d332e] p-2 rounded-lg border border-teal-500/20">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4 gap-2 bg-[#0d332e] p-2 rounded-lg border border-teal-500/20">
             {UserTabs.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all duration-300 mx-1 cursor-pointer",
+                  "flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all duration-300 cursor-pointer",
                   activeTab === tab.key
                     ? "bg-teal-600 text-white shadow-md"
                     : "text-gray-300 hover:bg-teal-700/40 hover:text-white"
@@ -106,9 +111,9 @@ const UserDetailPage = () => {
             <Button
               label="Back"
               icon={FaArrowLeft}
-              variant="theme"
+              variant={ButtonVariant.THEME}
               onClick={() => router.back()}
-              size="md"
+              size={ButtonSize.MEDIUM}
             />
           </div>
         </div>

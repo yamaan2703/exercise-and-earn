@@ -4,6 +4,7 @@ import "./globals.css";
 import { PropsWithChildren } from "react";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "@/context/AuthContext";
+import NextTopLoader from "nextjs-toploader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +30,13 @@ export default function RootLayout({ children }: PropsWithChildren) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <NextTopLoader
+          color="#14b8a6"
+          height={3}
+          crawlSpeed={200}
+          showSpinner={false}
+          shadow="5px 0 15px #14b8a6, 10px 0 25px #14b8a6"
+        />
         <AuthProvider>
           <Toaster position="top-center" reverseOrder={false} />
           {children}

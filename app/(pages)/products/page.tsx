@@ -4,6 +4,12 @@ import Input from "@/components/ui/input";
 import TableProductsComponent from "@/components/ui/table/table-products";
 import { AuthContext } from "@/context/AuthContext";
 import { Routes } from "@/routes/Routes";
+import {
+  ButtonSize,
+  ButtonVariant,
+  InputSize,
+  InputVariant,
+} from "@/types/enums";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
@@ -17,7 +23,7 @@ const Products = () => {
   return (
     <div className="space-y-2 p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
-        <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-700 after:rounded-full after:mt-1">
+        <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-500 after:rounded-full after:mt-1">
           Products
         </h1>
         <div
@@ -31,19 +37,19 @@ const Products = () => {
       <div className="flex justify-between gap-2">
         <div className="max-w-[400px] w-full">
           <Input
-            placeholder="Search products by name and category..."
+            placeholder="Search products by name or category..."
             type="text"
             id="search"
             value={searchProducts}
             setValue={setSearchProducts}
-            variant="outline"
-            size="sm"
+            variant={InputVariant.OUTLINE}
+            size={InputSize.SMALL}
             iconLeft={<FaSearch />}
           />
         </div>
         <Button
-          variant="theme"
-          size="sm"
+          variant={ButtonVariant.THEME}
+          size={ButtonSize.SMALL}
           label="Add Product"
           icon={FaPlus}
           onClick={() => router.push(Routes.ADD_PRODUCT)}

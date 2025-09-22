@@ -29,3 +29,37 @@ export enum ChartFilter {
   WEEKLY = "weekly",
   MONTHLY = "monthly",
 }
+
+export enum OrderStatus {
+  PENDING = "Pending",
+  DELIVERED = "Delivered",
+  SHIPPED = "Shipped",
+}
+
+export enum InputVariant {
+  DEFAULT = "default",
+  SUCCESS = "success",
+  ERROR = "error",
+  OUTLINE = "outline",
+}
+
+export enum InputSize {
+  SMALL = "sm",
+  MEDIUM = "md",
+  LARGE = "lg",
+}
+
+export enum ButtonVariant {
+  PRIMARY = "primary",
+  SECONDARY = "secondary",
+  DANGER = "danger",
+  OUTLINE = "outline",
+  THEME = "theme",
+}
+
+export enum ButtonSize {
+  EXTRASMALL = "xs",
+  SMALL = "sm",
+  MEDIUM = "md",
+  LARGE = "lg",
+}
