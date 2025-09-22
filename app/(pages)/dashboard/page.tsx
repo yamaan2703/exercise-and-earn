@@ -138,7 +138,6 @@ const Dashboard = () => {
 
   const chartSeries = [15, 10];
 
-  // 8c919c
   return (
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">

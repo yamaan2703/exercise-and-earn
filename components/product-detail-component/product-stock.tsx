@@ -25,9 +25,7 @@ const ProductStock = ({ product }: { product: ProductType }) => {
 
         <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
           <div className="flex justify-between items-center">
-            <h3 className="text-white font-semibold">
-              Stock used to Redeem Gifts
-            </h3>
+            <h3 className="text-white font-semibold">Redeemed Stock</h3>
             <p className="text-teal-400 font-medium">{usedStock}</p>
           </div>
         </div>

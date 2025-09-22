@@ -68,9 +68,14 @@ const OrderHistory = () => {
                       className="size-12 object-contains"
                     />
                   </div>
-                  <h3 className="font-semibold text-white text-lg group-hover:underline transition">
-                    {order.product.name}
-                  </h3>
+                  <div className="space-y-[2px]">
+                    <h3 className="font-semibold text-white text-lg group-hover:underline transition">
+                      {order.product.name}
+                    </h3>
+                    <p className="text-gray-300 text-xs">
+                      Order Number: {order.orderNumber}
+                    </p>
+                  </div>
                 </div>
 
                 <span className="text-xs text-gray-400">{order.date}</span>
@@ -99,8 +104,8 @@ const OrderHistory = () => {
                     {order.user.email}
                   </p>
                   <p className="text-gray-300 max-w-72">
-                    <span className="text-white">Address:</span> Lorem ipsum
-                    dolor sit amet consectetur.
+                    <span className="text-white">Address:</span>
+                    {order.user.address}
                   </p>
                 </div>
 
@@ -127,6 +132,10 @@ const OrderHistory = () => {
                   <p className="text-gray-300">
                     <span className="text-white">Delivery Fee:</span> $
                     {order.product.deliveryFee}
+                  </p>
+                  <p className="text-gray-300">
+                    <span className="text-white">Payment Type:</span>{" "}
+                    {order.paymentType}
                   </p>
                 </div>
               </div>
