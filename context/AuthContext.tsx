@@ -24,6 +24,8 @@ interface AuthContextType {
   setActiveModal: (value: boolean) => void;
   rejectModal: boolean;
   setRejectModal: (value: boolean) => void;
+  faqModal: boolean;
+  setFaqModal: (value: boolean) => void;
   orders: OrderType[];
   setOrders: Dispatch<SetStateAction<OrderType[]>>;
   products: ProductType[];
@@ -41,6 +43,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [logoutModal, setLogoutModal] = useState(false);
   const [activeModal, setActiveModal] = useState(false);
   const [rejectModal, setRejectModal] = useState(false);
+  const [faqModal, setFaqModal] = useState(false);
   const [orders, setOrders] = useState(initialOrders);
   const [products, setProducts] = useState(dummyProducts);
 
@@ -64,6 +67,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         setActiveModal,
         rejectModal,
         setRejectModal,
+        faqModal,
+        setFaqModal,
         orders,
         setOrders,
         products,

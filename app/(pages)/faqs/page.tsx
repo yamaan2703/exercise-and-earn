@@ -1,13 +1,18 @@
 "use client";
+import Button from "@/components/ui/button";
+import FaqModal from "@/components/ui/faq-modal";
 import { AuthContext } from "@/context/AuthContext";
-import { faqs } from "@/Data/Data";
+import { initialFaqs } from "@/Data/Data";
+import { ButtonSize, ButtonVariant } from "@/types/enums";
+import { FaqType } from "@/types/interface";
 import { useContext, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 const Faqs = () => {
-  const { setIsSidebarOpen } = useContext(AuthContext)!;
+  const { setIsSidebarOpen, faqModal, setFaqModal } = useContext(AuthContext)!;
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [faqs, setFaqs] = useState<FaqType[]>(initialFaqs);
 
   const toggleFaq = (id: number) => {
     setOpenFaq(openFaq === id ? null : id);
@@ -50,6 +55,14 @@ const Faqs = () => {
           </div>
         ))}
       </div>
+      <Button
+        externalStyles="mt-3"
+        label="Add Faq"
+        onClick={() => setFaqModal(true)}
+        variant={ButtonVariant.THEME}
+        size={ButtonSize.SMALL}
+      />
+      {faqModal && <FaqModal faqs={faqs} setFaqs={setFaqs} />}
     </div>
   );
 };

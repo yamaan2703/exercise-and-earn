@@ -140,7 +140,7 @@ export const formats = [
   "video",
 ];
 
-export const faqs: FaqType[] = [
+export const initialFaqs: FaqType[] = [
   {
     id: 1,
     question: "What is “Burn Calories & Earn Gadgets”?",
