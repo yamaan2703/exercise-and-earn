@@ -60,13 +60,10 @@ export interface UserType {
 export interface ProductType {
   id: string;
   name: string;
-  image1: File | string;
-  image2?: File | string;
-  image3?: File | string;
-  image4?: File | string;
+  images: (string | File)[];
   category: string;
   brand: string;
-  description?: string;
+  description: string;
   requiredCalories: number;
   size?: string[];
   color?: string[];

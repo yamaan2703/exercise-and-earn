@@ -80,54 +80,35 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
         </div>
         <div className="bg-[#0b2d29] flex-1 rounded-xl p-6 border border-teal-500/20 shadow-md">
           <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-            Product Images
+            Product Extra Images
           </h2>
-          <div className="flex gap-3">
-            <div className="bg-white/20 flex justify-center flex-1 rounded-md">
-              <Image
-                src={
-                  product.image2
-                    ? typeof product.image2 === "string"
-                      ? product.image2
-                      : URL.createObjectURL(product.image2)
-                    : "/images/watch.png"
-                }
-                alt="watch_image"
-                width={150}
-                height={150}
-                className="size-24 sm:size-32 rounded-md"
-              />
-            </div>
-            <div className="bg-white/20 flex justify-center flex-1 rounded-md">
-              <Image
-                src={
-                  product.image3
-                    ? typeof product.image3 === "string"
-                      ? product.image3
-                      : URL.createObjectURL(product.image3)
-                    : "/images/bottle.png"
-                }
-                alt="bottle_image"
-                width={150}
-                height={150}
-                className="size-24 sm:size-32 rounded-md"
-              />
-            </div>
-            <div className="bg-white/20 flex justify-center flex-1 rounded-md">
-              <Image
-                src={
-                  product.image4
-                    ? typeof product.image4 === "string"
-                      ? product.image4
-                      : URL.createObjectURL(product.image4)
-                    : "/images/rope.png"
-                }
-                alt="rope_image"
-                width={150}
-                height={150}
-                className="size-24 sm:size-32 rounded-md"
-              />
-            </div>
+          <div className="flex flex-wrap gap-3">
+            {product.images.length > 1 ? (
+              <>
+                {product.images.slice(1).map((image, index) => (
+                  <div
+                    key={index}
+                    className="bg-white/20 flex justify-center rounded-md"
+                  >
+                    <Image
+                      src={
+                        typeof image === "string"
+                          ? image
+                          : URL.createObjectURL(image)
+                      }
+                      alt={`image_${index}`}
+                      width={150}
+                      height={150}
+                      className="size-24 sm:size-32 rounded-md"
+                    />
+                  </div>
+                ))}
+              </>
+            ) : (
+              <p className="text-gray-300 text-sm mt-6 mx-auto">
+                No extra images!
+              </p>
+            )}
           </div>
         </div>
       </div>

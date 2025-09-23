@@ -1,5 +1,5 @@
 "use client";
-import React, { FormEvent, useContext, useState } from "react";
+import React, { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { InputSize, InputVariant, StatusProduct } from "@/types/enums";
 import Input from "@/components/ui/input";
 import { AuthContext } from "@/context/AuthContext";
@@ -23,10 +23,7 @@ const AddProduct = () => {
   const [size, setSize] = useState<string[]>([]);
   const [color, setColor] = useState<string[]>([]);
   const [status] = useState(StatusProduct.ACTIVE);
-  const [image1, setImage1] = useState<File | null>(null);
-  const [image2, setImage2] = useState<File | null>(null);
-  const [image3, setImage3] = useState<File | null>(null);
-  const [image4, setImage4] = useState<File | null>(null);
+  const [images, setImages] = useState<File[]>([]);
 
   const addProduct = (product: ProductType) => {
     setProducts((prev) => [
@@ -39,22 +36,26 @@ const AddProduct = () => {
     ]);
   };
 
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files);
+      setImages((prev) => [...prev, ...filesArray]);
+    }
+  };
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     try {
-      if (!image1) {
-        toast.error("First Image is required!");
+      if (images?.length === 0) {
+        toast.error("At least one image is required!");
         return;
       }
 
       addProduct({
         id: "",
         name,
-        image1: image1 ? URL.createObjectURL(image1) : "",
-        image2: image2 ? URL.createObjectURL(image2) : "",
-        image3: image3 ? URL.createObjectURL(image3) : "",
-        image4: image4 ? URL.createObjectURL(image4) : "",
+        images: images.map((image) => URL.createObjectURL(image)),
         category,
         brand,
         description,
@@ -68,7 +69,6 @@ const AddProduct = () => {
       });
       router.push(Routes.PRODUCTS);
       toast.success("Product added successfully!");
-      console.log(addProduct);
     } catch (error) {
       console.log("error", error);
     }
@@ -90,130 +90,39 @@ const AddProduct = () => {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
-            Product Image
+            Product Images
           </label>
 
-          <div className="flex gap-2">
-            <div className="w-36 h-32 flex flex-col items-center justify-center border-2 border-dashed border-gray-500 rounded-lg p-2 cursor-pointer hover:border-teal-500 transition">
-              <input
-                id="image1"
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0] || null;
-                  setImage1(file);
-                }}
-              />
-
-              {image1 ? (
+          <div className="flex gap-2 flex-wrap">
+            {images.map((file, index) => (
+              <div
+                key={index}
+                className="w-36 h-32 flex items-center justify-center border-2 border-dashed border-gray-500 rounded-lg p-2 relative"
+              >
                 <Image
-                  src={URL.createObjectURL(image1 as Blob)}
-                  alt="image1"
-                  width={50}
-                  height={50}
+                  src={URL.createObjectURL(file)}
+                  alt={`image-${index + 1}`}
+                  width={100}
+                  height={100}
                   className="w-full h-full object-contain rounded-md shadow-md"
                 />
-              ) : (
-                <label
-                  className="text-sm text-gray-400 text-center cursor-pointer"
-                  htmlFor="image1"
-                >
-                  Upload an image
-                </label>
-              )}
-            </div>
-            <div className="w-36 h-32 flex flex-col items-center justify-center border-2 border-dashed border-gray-500 rounded-lg p-2 cursor-pointer hover:border-teal-500 transition">
+              </div>
+            ))}
+
+            <label className="w-36 h-32 flex flex-col items-center justify-center border-2 border-dashed border-gray-500 rounded-lg p-2 cursor-pointer hover:border-teal-500 transition text-sm text-gray-400">
+              Upload
               <input
-                id="image2"
                 type="file"
                 accept="image/*"
+                multiple
                 className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0] || null;
-                  setImage2(file);
-                }}
+                onChange={handleImageChange}
               />
-
-              {image2 ? (
-                <Image
-                  src={URL.createObjectURL(image2 as Blob)}
-                  alt="image2"
-                  width={50}
-                  height={50}
-                  className="w-full h-full object-contain rounded-md shadow-md"
-                />
-              ) : (
-                <label
-                  className="text-sm text-gray-400 text-center cursor-pointer"
-                  htmlFor="image2"
-                >
-                  Upload an image
-                </label>
-              )}
-            </div>
-            <div className="w-36 h-32 flex flex-col items-center justify-center border-2 border-dashed border-gray-500 rounded-lg p-2 cursor-pointer hover:border-teal-500 transition">
-              <input
-                id="image3"
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0] || null;
-                  setImage3(file);
-                }}
-              />
-
-              {image3 ? (
-                <Image
-                  src={URL.createObjectURL(image3 as Blob)}
-                  alt="image3"
-                  width={50}
-                  height={50}
-                  className="w-full h-full object-contain rounded-md shadow-md"
-                />
-              ) : (
-                <label
-                  className="text-sm text-gray-400 text-center cursor-pointer"
-                  htmlFor="image3"
-                >
-                  Upload an image
-                </label>
-              )}
-            </div>
-            <div className="w-36 h-32 flex flex-col items-center justify-center border-2 border-dashed border-gray-500 rounded-lg p-2 cursor-pointer hover:border-teal-500 transition">
-              <input
-                id="image4"
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0] || null;
-                  setImage4(file);
-                }}
-              />
-
-              {image4 ? (
-                <Image
-                  src={URL.createObjectURL(image4 as Blob)}
-                  alt="image4"
-                  width={50}
-                  height={50}
-                  className="w-full h-full object-contain rounded-md shadow-md"
-                />
-              ) : (
-                <label
-                  className="text-sm text-gray-400 text-center cursor-pointer"
-                  htmlFor="image4"
-                >
-                  Upload an image
-                </label>
-              )}
-            </div>
+            </label>
           </div>
           <p className="mt-2 text-xs text-gray-400">
-            Product image must be in a JPG or PNG format and should be clear
-            with a plain background, and the full product must be visible.
+            Product image must be JPG or PNG, clear with a plain background, and
+            the full product must be visible.
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-6">

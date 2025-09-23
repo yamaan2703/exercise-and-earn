@@ -155,8 +155,8 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <Card title="Total Users" value={25} Icon={FaUsers} />
         <Card title="Total Products" value={25} Icon={FaShoppingBag} />
-        <Card title="Orders Placed" value={5} Icon={FaBoxOpen} />
-        <Card title="Orders Pending" value={2} Icon={FaClock} />
+        <Card title="Orders Placed" value={6} Icon={FaBoxOpen} />
+        <Card title="Orders Pending" value={4} Icon={FaClock} />
       </div>
 
       <div className="flex flex-col md:flex-row gap-2 items-center">

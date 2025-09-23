@@ -510,7 +510,12 @@ export const dummyProducts: ProductType[] = [
   {
     id: "1",
     name: "Protein Powder",
-    image1: "/images/watch.png",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Supplements",
     brand: "Optimum Nutrition",
     price: 45,
@@ -519,11 +524,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-01",
     stock: 87,
+    description:
+      "High-quality protein powder designed to support muscle growth, recovery, and performance. Mixes easily with water or milk for a smooth post-workout shake.",
   },
   {
     id: "2",
     name: "Yoga Mat",
-    image1: "/images/bottle.png",
+    images: [
+      "/images/bottle.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Fitness Gear",
     brand: "Liforme",
     price: 30,
@@ -534,11 +546,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-02",
     stock: 95,
+    description:
+      "Durable yoga mat with excellent grip and cushioning. Perfect for beginners and advanced practitioners to improve stability, comfort, and posture during sessions.",
   },
   {
     id: "3",
     name: "Dumbbells Set",
-    image1: "/images/rope.png",
+    images: [
+      "/images/rope.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Equipment",
     brand: "Bowflex",
     price: 120,
@@ -549,11 +568,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-03",
     stock: 72,
+    description:
+      "Adjustable dumbbells perfect for strength training at home. Compact design saves space while offering multiple weight options to target all muscle groups.",
   },
   {
     id: "4",
     name: "Resistance Bands",
-    image1: "/images/watch.png",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Accessories",
     brand: "TheraBand",
     price: 25,
@@ -563,11 +589,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-04",
     stock: 98,
+    description:
+      "Versatile resistance bands for stretching, rehab, and strength training. Lightweight and portable, making them ideal for home workouts or travel fitness routines.",
   },
   {
     id: "5",
     name: "Whey Protein",
-    image1: "/images/bottle.png",
+    images: [
+      "/images/bottle.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Supplements",
     brand: "MyProtein",
     price: 50,
@@ -576,11 +609,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-05",
     stock: 61,
+    description:
+      "Premium whey protein that supports lean muscle growth and recovery. Rich in amino acids and great tasting for pre- or post-workout nutrition.",
   },
   {
     id: "6",
     name: "Kettlebell",
-    image1: "/images/rope.png",
+    images: [
+      "/images/rope.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Equipment",
     brand: "Rogue Fitness",
     price: 70,
@@ -591,11 +631,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-06",
     stock: 89,
+    description:
+      "Durable kettlebell for strength, endurance, and conditioning exercises. Designed for swings, squats, and presses, helping improve balance, flexibility, and power.",
   },
   {
     id: "7",
     name: "Treadmill",
-    image1: "/images/watch.png",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Equipment",
     brand: "NordicTrack",
     price: 900,
@@ -606,11 +653,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-07",
     stock: 76,
+    description:
+      "Advanced treadmill with multiple speed levels and incline settings. Ideal for home cardio training, endurance workouts, and fat-burning sessions throughout the year.",
   },
   {
     id: "8",
     name: "Creatine Monohydrate",
-    image1: "/images/bottle.png",
+    images: [
+      "/images/bottle.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Supplements",
     brand: "MuscleTech",
     price: 28,
@@ -619,11 +673,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-08",
     stock: 92,
+    description:
+      "Pure creatine monohydrate to increase strength, performance, and muscle endurance. Supports explosive workouts and faster recovery for athletes and fitness enthusiasts.",
   },
   {
     id: "9",
     name: "Jump Rope",
-    image1: "/images/rope.png",
+    images: [
+      "/images/rope.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Accessories",
     brand: "Crossrope",
     price: 15,
@@ -633,11 +694,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-09",
     stock: 81,
+    description:
+      "Lightweight jump rope designed for speed, cardio, and endurance training. Perfect for home workouts, warm-ups, or improving agility and coordination.",
   },
   {
     id: "10",
     name: "Foam Roller",
-    image1: "/images/watch.png",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Accessories",
     brand: "TriggerPoint",
     price: 22,
@@ -648,11 +716,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-10",
     stock: 66,
+    description:
+      "Foam roller for deep tissue massage and muscle recovery. Helps relieve soreness, improve flexibility, and prevent injuries after workouts or physical activities.",
   },
   {
     id: "11",
     name: "Pre-Workout",
-    image1: "/images/bottle.png",
+    images: [
+      "/images/bottle.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Supplements",
     brand: "Cellucor",
     price: 35,
@@ -661,11 +736,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-11",
     stock: 84,
+    description:
+      "Energy-boosting pre-workout formula with caffeine and essential ingredients to enhance focus, strength, and endurance during intense training sessions.",
   },
   {
     id: "12",
     name: "BCAA Powder",
-    image1: "/images/rope.png",
+    images: [
+      "/images/rope.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Supplements",
     brand: "Scivation Xtend",
     price: 32,
@@ -674,11 +756,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-12",
     stock: 99,
+    description:
+      "Amino acid powder that supports muscle recovery, reduces fatigue, and promotes endurance. Great-tasting supplement to drink before, during, or after workouts.",
   },
   {
     id: "13",
     name: "Weight Bench",
-    image1: "/images/watch.png",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Equipment",
     brand: "Marcy",
     price: 180,
@@ -689,11 +778,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-13",
     stock: 73,
+    description:
+      "Heavy-duty weight bench for versatile strength training. Adjustable design allows flat, incline, and decline exercises, supporting a wide range of workouts.",
   },
   {
     id: "14",
     name: "Pull-Up Bar",
-    image1: "/images/bottle.png",
+    images: [
+      "/images/bottle.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Equipment",
     brand: "Iron Gym",
     price: 50,
@@ -704,11 +800,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-14",
     stock: 65,
+    description:
+      "Sturdy pull-up bar designed for home workouts. Fits most doorways and supports multiple grips for pull-ups, chin-ups, and strength-building exercises.",
   },
   {
     id: "15",
     name: "Gym Gloves",
-    image1: "/images/rope.png",
+    images: [
+      "/images/rope.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Accessories",
     brand: "Nike",
     price: 20,
@@ -719,11 +822,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-15",
     stock: 91,
+    description:
+      "Comfortable gym gloves with padded grip to prevent blisters. Designed for weightlifting, training, and endurance exercises, ensuring safety and support.",
   },
   {
     id: "16",
     name: "Medicine Ball",
-    image1: "/images/watch.png",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Equipment",
     brand: "SPRI",
     price: 40,
@@ -734,11 +844,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-16",
     stock: 79,
+    description:
+      "Durable medicine ball for strength training, rehabilitation, and endurance workouts. Helps improve core stability, coordination, and overall athletic performance.",
   },
   {
     id: "17",
     name: "Protein Bars",
-    image1: "/images/bottle.png",
+    images: [
+      "/images/bottle.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Supplements",
     brand: "Quest",
     price: 25,
@@ -747,11 +864,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-17",
     stock: 86,
+    description:
+      "Tasty protein bars packed with nutrients for on-the-go energy. Ideal as a snack, meal replacement, or recovery option after workouts.",
   },
   {
     id: "18",
     name: "Fitness Tracker",
-    image1: "/images/rope.png",
+    images: [
+      "/images/rope.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Fitness Gear",
     brand: "Fitbit",
     price: 150,
@@ -761,11 +885,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-18",
     stock: 62,
+    description:
+      "Smart fitness tracker that monitors heart rate, steps, calories, and sleep. Syncs with mobile apps to track progress and set health goals.",
   },
   {
     id: "19",
     name: "Rowing Machine",
-    image1: "/images/watch.png",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Equipment",
     brand: "Concept2",
     price: 950,
@@ -776,11 +907,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-19",
     stock: 96,
+    description:
+      "Professional rowing machine providing a full-body cardio and strength workout. Durable design with adjustable resistance levels for all fitness levels.",
   },
   {
     id: "20",
     name: "Cycling Bike",
-    image1: "/images/bottle.png",
+    images: [
+      "/images/bottle.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Equipment",
     brand: "Peloton",
     price: 1200,
@@ -791,11 +929,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-20",
     stock: 88,
+    description:
+      "High-performance indoor cycling bike with interactive training programs. Smooth ride experience, adjustable resistance, and smart tracking features for home fitness.",
   },
   {
     id: "21",
     name: "Electrolyte Drink",
-    image1: "/images/rope.png",
+    images: [
+      "/images/rope.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Supplements",
     brand: "Gatorade",
     price: 12,
@@ -804,11 +949,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-21",
     stock: 64,
+    description:
+      "Refreshing electrolyte drink that hydrates and replenishes energy during intense workouts. Rich in minerals to restore balance and prevent dehydration.",
   },
   {
     id: "22",
     name: "Sports Bottle",
-    image1: "/images/watch.png",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Accessories",
     brand: "Hydro Flask",
     price: 28,
@@ -819,11 +971,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-22",
     stock: 83,
+    description:
+      "Durable sports bottle designed to keep drinks cold or hot for hours. Leak-proof and easy to carry during workouts or outdoor activities.",
   },
   {
     id: "23",
     name: "Sweat Towel",
-    image1: "/images/bottle.png",
+    images: [
+      "/images/bottle.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Accessories",
     brand: "Adidas",
     price: 18,
@@ -834,11 +993,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-23",
     stock: 69,
+    description:
+      "Soft, absorbent sweat towel for workouts and sports. Lightweight and quick-drying, ensuring comfort and hygiene during intense training sessions.",
   },
   {
     id: "24",
     name: "Running Shoes",
-    image1: "/images/rope.png",
+    images: [
+      "/images/rope.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Fitness Gear",
     brand: "Nike",
     price: 110,
@@ -849,11 +1015,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-24",
     stock: 93,
+    description:
+      "Lightweight running shoes designed for comfort, speed, and durability. Breathable material with cushioned soles supports long-distance running and daily training.",
   },
   {
     id: "25",
     name: "Yoga Block",
-    image1: "/images/watch.png",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Accessories",
     brand: "Gaiam",
     price: 14,
@@ -863,6 +1036,8 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-25",
     stock: 71,
+    description:
+      "Supportive yoga block that enhances balance, stability, and flexibility. Great for deep stretches, beginner assistance, and improving posture in yoga practice.",
   },
 ];
 

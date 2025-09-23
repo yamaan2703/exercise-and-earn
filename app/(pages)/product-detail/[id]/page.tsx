@@ -49,9 +49,9 @@ const ProductDetailPage = () => {
                 <div className="bg-white/20 rounded-full">
                   <Image
                     src={
-                      typeof product.image1 === "string"
-                        ? product.image1
-                        : URL.createObjectURL(product.image1)
+                      typeof product.images[0] === "string"
+                        ? product.images[0]
+                        : URL.createObjectURL(product.images[0])
                     }
                     alt={product.name}
                     width={150}

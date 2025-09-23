@@ -16,14 +16,18 @@ const UserClaimedProducts = () => {
             <div key={index}>
               <div className="bg-[#11413a] rounded-lg border border-teal-500/10 ">
                 <Image
-                  src="/images/watch.png"
+                  src={
+                    typeof product.images[0] === "string"
+                      ? product.images[0]
+                      : URL.createObjectURL(product.images[0])
+                  }
                   alt={product.name}
                   width={80}
                   height={80}
-                  className="size-12"
+                  className="size-12 my-1"
                 />
                 <h3
-                  className="text-white px-3 pb-3 font-semibold cursor-pointer hover:underline"
+                  className="text-white px-3 pb-2 font-semibold cursor-pointer hover:underline"
                   onClick={() =>
                     router.push(Routes.PRODUCTS_DETAIL(product.id))
                   }
