@@ -114,6 +114,11 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
   }, []);
 
   const handleUpdateUserStatus = (id: string, status: StatusUser) => {
+    const user = dummyUsers.find((user) => user.id === id);
+    if (user) {
+      user.status = status;
+    }
+
     setData((prev) =>
       prev.map((user) => (user.id === id ? { ...user, status } : user))
     );

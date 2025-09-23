@@ -60,6 +60,10 @@ export interface UserType {
 export interface ProductType {
   id: string;
   name: string;
+  image1: File | string;
+  image2?: File | string;
+  image3?: File | string;
+  image4?: File | string;
   category: string;
   brand: string;
   description?: string;

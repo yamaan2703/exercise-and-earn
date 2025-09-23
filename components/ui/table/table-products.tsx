@@ -31,7 +31,8 @@ const TableProductsComponent = ({
   searchProducts: string;
 }) => {
   const router = useRouter();
-  const { activeModal, setActiveModal, products } = useContext(AuthContext)!;
+  const { activeModal, setActiveModal, products, setProducts } =
+    useContext(AuthContext)!;
   const [data, setData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(
@@ -114,6 +115,12 @@ const TableProductsComponent = ({
   }, [products]);
 
   const handleUpdateProductStatus = (id: string, status: StatusProduct) => {
+    setProducts((prev) =>
+      prev.map((product) =>
+        product.id === id ? { ...product, status } : product
+      )
+    );
+
     setData((prev) =>
       prev.map((product) =>
         product.id === id ? { ...product, status } : product

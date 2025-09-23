@@ -13,10 +13,8 @@ import { FaqType } from "@/types/interface";
 import toast from "react-hot-toast";
 
 const FaqModal = ({
-  faqs,
   setFaqs,
 }: {
-  faqs: FaqType[];
   setFaqs: Dispatch<SetStateAction<FaqType[]>>;
 }) => {
   const { setFaqModal } = useContext(AuthContext)!;
@@ -28,6 +26,7 @@ const FaqModal = ({
     toast.success("Faq added!");
     setFaqModal(false);
   };
+
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[999]">
       <div className="bg-[#06211e] text-white w-[90%] max-w-sm rounded-lg shadow-lg p-4">
@@ -49,6 +48,7 @@ const FaqModal = ({
             setValue={setQuestion}
             variant={InputVariant.DEFAULT}
             size={InputSize.SMALL}
+            required
           />
           <Input
             id="answer"
@@ -58,6 +58,7 @@ const FaqModal = ({
             setValue={setAnswer}
             variant={InputVariant.DEFAULT}
             size={InputSize.SMALL}
+            required
           />
           <Button
             externalStyles="mt-3"

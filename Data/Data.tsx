@@ -510,6 +510,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "1",
     name: "Protein Powder",
+    image1: "/images/watch.png",
     category: "Supplements",
     brand: "Optimum Nutrition",
     price: 45,
@@ -522,6 +523,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "2",
     name: "Yoga Mat",
+    image1: "/images/bottle.png",
     category: "Fitness Gear",
     brand: "Liforme",
     price: 30,
@@ -536,6 +538,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "3",
     name: "Dumbbells Set",
+    image1: "/images/rope.png",
     category: "Equipment",
     brand: "Bowflex",
     price: 120,
@@ -550,6 +553,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "4",
     name: "Resistance Bands",
+    image1: "/images/watch.png",
     category: "Accessories",
     brand: "TheraBand",
     price: 25,
@@ -563,6 +567,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "5",
     name: "Whey Protein",
+    image1: "/images/bottle.png",
     category: "Supplements",
     brand: "MyProtein",
     price: 50,
@@ -575,6 +580,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "6",
     name: "Kettlebell",
+    image1: "/images/rope.png",
     category: "Equipment",
     brand: "Rogue Fitness",
     price: 70,
@@ -589,6 +595,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "7",
     name: "Treadmill",
+    image1: "/images/watch.png",
     category: "Equipment",
     brand: "NordicTrack",
     price: 900,
@@ -603,6 +610,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "8",
     name: "Creatine Monohydrate",
+    image1: "/images/bottle.png",
     category: "Supplements",
     brand: "MuscleTech",
     price: 28,
@@ -615,6 +623,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "9",
     name: "Jump Rope",
+    image1: "/images/rope.png",
     category: "Accessories",
     brand: "Crossrope",
     price: 15,
@@ -628,6 +637,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "10",
     name: "Foam Roller",
+    image1: "/images/watch.png",
     category: "Accessories",
     brand: "TriggerPoint",
     price: 22,
@@ -642,6 +652,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "11",
     name: "Pre-Workout",
+    image1: "/images/bottle.png",
     category: "Supplements",
     brand: "Cellucor",
     price: 35,
@@ -654,6 +665,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "12",
     name: "BCAA Powder",
+    image1: "/images/rope.png",
     category: "Supplements",
     brand: "Scivation Xtend",
     price: 32,
@@ -666,6 +678,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "13",
     name: "Weight Bench",
+    image1: "/images/watch.png",
     category: "Equipment",
     brand: "Marcy",
     price: 180,
@@ -680,6 +693,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "14",
     name: "Pull-Up Bar",
+    image1: "/images/bottle.png",
     category: "Equipment",
     brand: "Iron Gym",
     price: 50,
@@ -694,6 +708,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "15",
     name: "Gym Gloves",
+    image1: "/images/rope.png",
     category: "Accessories",
     brand: "Nike",
     price: 20,
@@ -708,6 +723,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "16",
     name: "Medicine Ball",
+    image1: "/images/watch.png",
     category: "Equipment",
     brand: "SPRI",
     price: 40,
@@ -722,6 +738,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "17",
     name: "Protein Bars",
+    image1: "/images/bottle.png",
     category: "Supplements",
     brand: "Quest",
     price: 25,
@@ -734,6 +751,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "18",
     name: "Fitness Tracker",
+    image1: "/images/rope.png",
     category: "Fitness Gear",
     brand: "Fitbit",
     price: 150,
@@ -747,6 +765,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "19",
     name: "Rowing Machine",
+    image1: "/images/watch.png",
     category: "Equipment",
     brand: "Concept2",
     price: 950,
@@ -761,6 +780,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "20",
     name: "Cycling Bike",
+    image1: "/images/bottle.png",
     category: "Equipment",
     brand: "Peloton",
     price: 1200,
@@ -775,6 +795,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "21",
     name: "Electrolyte Drink",
+    image1: "/images/rope.png",
     category: "Supplements",
     brand: "Gatorade",
     price: 12,
@@ -787,6 +808,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "22",
     name: "Sports Bottle",
+    image1: "/images/watch.png",
     category: "Accessories",
     brand: "Hydro Flask",
     price: 28,
@@ -801,6 +823,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "23",
     name: "Sweat Towel",
+    image1: "/images/bottle.png",
     category: "Accessories",
     brand: "Adidas",
     price: 18,
@@ -815,6 +838,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "24",
     name: "Running Shoes",
+    image1: "/images/rope.png",
     category: "Fitness Gear",
     brand: "Nike",
     price: 110,
@@ -829,6 +853,7 @@ export const dummyProducts: ProductType[] = [
   {
     id: "25",
     name: "Yoga Block",
+    image1: "/images/watch.png",
     category: "Accessories",
     brand: "Gaiam",
     price: 14,

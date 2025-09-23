@@ -62,7 +62,7 @@ const Faqs = () => {
         variant={ButtonVariant.THEME}
         size={ButtonSize.SMALL}
       />
-      {faqModal && <FaqModal faqs={faqs} setFaqs={setFaqs} />}
+      {faqModal && <FaqModal setFaqs={setFaqs} />}
     </div>
   );
 };
