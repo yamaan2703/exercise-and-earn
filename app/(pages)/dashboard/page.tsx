@@ -152,7 +152,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 mb-8">
         <Card title="Total Users" value={25} Icon={FaUsers} />
         <Card title="Total Products" value={25} Icon={FaShoppingBag} />
         <Card title="Orders Placed" value={6} Icon={FaBoxOpen} />
