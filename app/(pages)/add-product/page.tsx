@@ -1,5 +1,5 @@
 "use client";
-import React, { FormEvent, useContext, useState } from "react";
+import React, { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { InputSize, InputVariant, StatusProduct } from "@/types/enums";
 import Input from "@/components/ui/input";
 import { AuthContext } from "@/context/AuthContext";
@@ -23,7 +23,7 @@ const AddProduct = () => {
   const [size, setSize] = useState<string[]>([]);
   const [color, setColor] = useState<string[]>([]);
   const [status] = useState(StatusProduct.ACTIVE);
-  const [image, setImage] = useState<File | null>(null);
+  const [images, setImages] = useState<File[]>([]);
 
   const addProduct = (product: ProductType) => {
     setProducts((prev) => [
@@ -36,12 +36,26 @@ const AddProduct = () => {
     ]);
   };
 
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files);
+      setImages((prev) => [...prev, ...filesArray]);
+    }
+  };
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+
     try {
+      if (images?.length === 0) {
+        toast.error("At least one image is required!");
+        return;
+      }
+
       addProduct({
         id: "",
         name,
+        images: images.map((image) => URL.createObjectURL(image)),
         category,
         brand,
         description,
@@ -55,7 +69,6 @@ const AddProduct = () => {
       });
       router.push(Routes.PRODUCTS);
       toast.success("Product added successfully!");
-      console.log(addProduct);
     } catch (error) {
       console.log("error", error);
     }
@@ -77,38 +90,40 @@ const AddProduct = () => {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
-            Product Image
+            Product Images
           </label>
 
-          <div className="w-40 flex flex-col items-center justify-center border-2 border-dashed border-gray-500 rounded-lg p-6 cursor-pointer hover:border-teal-500 transition">
-            <input
-              id="image"
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => {
-                const file = e.target.files?.[0] || null;
-                setImage(file);
-              }}
-            />
-
-            {image ? (
-              <Image
-                src={URL.createObjectURL(image as Blob)}
-                alt="image"
-                width={50}
-                height={50}
-                className="w-40 object-cover rounded-md shadow-md"
-              />
-            ) : (
-              <label
-                className="text-gray-400 text-center cursor-pointer"
-                htmlFor="image"
+          <div className="flex gap-2 flex-wrap">
+            {images.map((file, index) => (
+              <div
+                key={index}
+                className="w-36 h-32 flex items-center justify-center border-2 border-dashed border-gray-500 rounded-lg p-2 relative"
               >
-                Upload an image
-              </label>
-            )}
+                <Image
+                  src={URL.createObjectURL(file)}
+                  alt={`image-${index + 1}`}
+                  width={100}
+                  height={100}
+                  className="w-full h-full object-contain rounded-md shadow-md"
+                />
+              </div>
+            ))}
+
+            <label className="w-36 h-32 flex flex-col items-center justify-center border-2 border-dashed border-gray-500 rounded-lg p-2 cursor-pointer hover:border-teal-500 transition text-sm text-gray-400">
+              Upload
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                className="hidden"
+                onChange={handleImageChange}
+              />
+            </label>
           </div>
+          <p className="mt-2 text-xs text-gray-400">
+            Product image must be JPG or PNG, clear with a plain background, and
+            the full product must be visible.
+          </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-6">
           <div className="flex-1">
@@ -234,6 +249,7 @@ const AddProduct = () => {
           </label>
           <textarea
             id="description"
+            minLength={8}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Enter description"

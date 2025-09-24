@@ -1,10 +1,4 @@
-import { IconType } from "react-icons/lib";
-
-interface CardProps {
-  title: string;
-  value: string | number;
-  Icon: IconType;
-}
+import { CardProps } from "@/types/interface";
 
 const Card = ({ title, value, Icon }: CardProps) => {
   return (

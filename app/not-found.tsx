@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/button";
+import { getCookie } from "@/lib/cookies";
 import { Routes } from "@/routes/Routes";
 import { ButtonSize, ButtonVariant } from "@/types/enums";
 import Image from "next/image";
@@ -7,6 +8,7 @@ import { useRouter } from "next/navigation";
 
 export default function NotFound() {
   const router = useRouter();
+  const token = getCookie("token");
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#06211e] text-white">
       <Image
@@ -22,8 +24,8 @@ export default function NotFound() {
       <Button
         variant={ButtonVariant.THEME}
         size={ButtonSize.MEDIUM}
-        label="Go to Dashboard"
-        onClick={() => router.push(Routes.DASHBOARD)}
+        label={token ? "Go to Dashboard" : "Go to Login"}
+        onClick={() => router.push(token ? Routes.DASHBOARD : Routes.LOGIN)}
       />
     </div>
   );

@@ -53,14 +53,17 @@ export interface UserType {
   createdAt: string;
   birthday: string;
   photoUrl: string;
+  connectedDevice: string;
+  address: string;
 }
 
 export interface ProductType {
   id: string;
   name: string;
+  images: (string | File)[];
   category: string;
   brand: string;
-  description?: string;
+  description: string;
   requiredCalories: number;
   size?: string[];
   color?: string[];
@@ -74,6 +77,20 @@ export interface ProductType {
 export interface OrderType {
   product: ProductType;
   user: UserType;
+  orderNumber: number;
   orderStatus: OrderStatus;
   date: string;
+  paymentType: string;
+}
+
+export interface CardProps {
+  title: string;
+  value: string | number;
+  Icon: IconType;
+}
+
+export interface FaqType {
+  id: number;
+  question: string;
+  answer: string;
 }

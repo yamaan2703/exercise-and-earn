@@ -7,7 +7,7 @@ import {
   StatusUser,
   UserDetailTab,
 } from "@/types/enums";
-import { UserType, ProductType, OrderType } from "@/types/interface";
+import { UserType, ProductType, OrderType, FaqType } from "@/types/interface";
 import dynamic from "next/dynamic";
 import {
   FaUsers,
@@ -21,6 +21,7 @@ import {
 import { FaBoxArchive } from "react-icons/fa6";
 import { LuNotebookText } from "react-icons/lu";
 import { MdDashboard } from "react-icons/md";
+import { BiSolidHelpCircle } from "react-icons/bi";
 
 export const sidebarMenu = [
   {
@@ -57,6 +58,11 @@ export const sidebarMenu = [
     label: "Terms & Conditions",
     to: Routes.TERMS_AND_CONDITIONS,
     icon: <FaFileContract />,
+  },
+  {
+    label: "FAQs",
+    to: Routes.FAQS,
+    icon: <BiSolidHelpCircle />,
   },
 ];
 
@@ -134,6 +140,44 @@ export const formats = [
   "video",
 ];
 
+export const initialFaqs: FaqType[] = [
+  {
+    id: 1,
+    question: "What is “Burn Calories & Earn Gadgets”?",
+    answer:
+      "It’s a fitness reward program where you can track your burned calories and redeem them for exciting gadgets. You only cover the delivery cost—gadgets are free!",
+  },
+  {
+    id: 2,
+    question: "How do I participate?",
+    answer:
+      "Simply sign up, start tracking your calories, and redeem them for available gadgets in the rewards section.",
+  },
+  {
+    id: 3,
+    question: "What kind of gadgets can I earn?",
+    answer:
+      "You can earn fitness bands, wireless earbuds, smart bottles, and other exciting gadgets.",
+  },
+  {
+    id: 4,
+    question: "Do I really get gadgets for free?",
+    answer:
+      "Yes, all gadgets are free. You only need to pay the delivery charges.",
+  },
+  {
+    id: 5,
+    question: "How are calories tracked?",
+    answer:
+      "Calories are tracked automatically using your connected fitness device or by manual entry in the app.",
+  },
+  {
+    id: 6,
+    question: "Can I return or exchange a gadget?",
+    answer: "No, gadgets once redeemed cannot be returned or exchanged.",
+  },
+];
+
 export const dummyUsers: UserType[] = [
   {
     id: "1",
@@ -145,6 +189,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-01-15",
     birthday: "1990-06-12",
     photoUrl: "https://randomuser.me/api/portraits/men/1.jpg",
+    connectedDevice: "iOS",
+    address: "123 Main Street Near City Park",
   },
   {
     id: "2",
@@ -156,6 +202,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-02-10",
     birthday: "1992-09-24",
     photoUrl: "https://randomuser.me/api/portraits/women/2.jpg",
+    connectedDevice: "Android",
+    address: "45 Oak Avenue Close To Market",
   },
   {
     id: "3",
@@ -167,6 +215,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-03-05",
     birthday: "1988-11-02",
     photoUrl: "https://randomuser.me/api/portraits/men/3.jpg",
+    connectedDevice: "iOS",
+    address: "78 Pine Street Opposite Grand Mall",
   },
   {
     id: "4",
@@ -178,6 +228,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-04-01",
     birthday: "1995-04-18",
     photoUrl: "https://randomuser.me/api/portraits/women/4.jpg",
+    connectedDevice: "Android",
+    address: "12 Rose Lane Behind Central Plaza",
   },
   {
     id: "5",
@@ -189,6 +241,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-04-20",
     birthday: "1991-12-09",
     photoUrl: "https://randomuser.me/api/portraits/men/5.jpg",
+    connectedDevice: "iOS",
+    address: "90 Maple Road Near River Bridge",
   },
   {
     id: "6",
@@ -200,6 +254,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-05-02",
     birthday: "1993-08-30",
     photoUrl: "https://randomuser.me/api/portraits/women/6.jpg",
+    connectedDevice: "Android",
+    address: "34 Lake View Street Close To School",
   },
   {
     id: "7",
@@ -211,6 +267,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-05-15",
     birthday: "1990-01-21",
     photoUrl: "https://randomuser.me/api/portraits/men/7.jpg",
+    connectedDevice: "iOS",
+    address: "56 Garden Road Beside Old Museum",
   },
   {
     id: "8",
@@ -222,6 +280,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-06-01",
     birthday: "1996-07-14",
     photoUrl: "https://randomuser.me/api/portraits/women/8.jpg",
+    connectedDevice: "Android",
+    address: "77 Hilltop Avenue Near City Hospital",
   },
   {
     id: "9",
@@ -233,6 +293,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-06-25",
     birthday: "1989-03-10",
     photoUrl: "https://randomuser.me/api/portraits/men/9.jpg",
+    connectedDevice: "iOS",
+    address: "101 River Side Street Close To Bridge",
   },
   {
     id: "10",
@@ -244,6 +306,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-07-05",
     birthday: "1997-05-05",
     photoUrl: "https://randomuser.me/api/portraits/women/10.jpg",
+    connectedDevice: "Android",
+    address: "88 Elm Street Near Community Center",
   },
   {
     id: "11",
@@ -255,6 +319,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-07-18",
     birthday: "1994-10-11",
     photoUrl: "https://randomuser.me/api/portraits/men/11.jpg",
+    connectedDevice: "iOS",
+    address: "65 Park Lane Opposite Railway Station",
   },
   {
     id: "12",
@@ -266,6 +332,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-08-02",
     birthday: "1992-01-07",
     photoUrl: "https://randomuser.me/api/portraits/women/12.jpg",
+    connectedDevice: "Android",
+    address: "24 Cherry Blossom Street Behind Library",
   },
   {
     id: "13",
@@ -277,6 +345,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-08-15",
     birthday: "1991-09-19",
     photoUrl: "https://randomuser.me/api/portraits/men/13.jpg",
+    connectedDevice: "iOS",
+    address: "110 King Road Near Shopping Plaza",
   },
   {
     id: "14",
@@ -288,6 +358,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-09-01",
     birthday: "1998-02-26",
     photoUrl: "https://randomuser.me/api/portraits/women/14.jpg",
+    connectedDevice: "Android",
+    address: "39 Willow Avenue Close To Central Park",
   },
   {
     id: "15",
@@ -299,6 +371,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-09-10",
     birthday: "1987-12-20",
     photoUrl: "https://randomuser.me/api/portraits/men/15.jpg",
+    connectedDevice: "iOS",
+    address: "59 Broadway Street Behind Grand Hotel",
   },
   {
     id: "16",
@@ -310,6 +384,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-09-22",
     birthday: "1996-06-01",
     photoUrl: "https://randomuser.me/api/portraits/women/16.jpg",
+    connectedDevice: "Android",
+    address: "18 Green Valley Road Near Main Market",
   },
   {
     id: "17",
@@ -321,6 +397,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-10-02",
     birthday: "1990-08-23",
     photoUrl: "https://randomuser.me/api/portraits/men/17.jpg",
+    connectedDevice: "iOS",
+    address: "72 Sunset Boulevard Close To Stadium",
   },
   {
     id: "18",
@@ -332,6 +410,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-10-14",
     birthday: "1994-03-04",
     photoUrl: "https://randomuser.me/api/portraits/women/18.jpg",
+    connectedDevice: "Android",
+    address: "200 Sunrise Road Near City Center Mall",
   },
   {
     id: "19",
@@ -343,6 +423,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-11-01",
     birthday: "1993-05-15",
     photoUrl: "https://randomuser.me/api/portraits/men/19.jpg",
+    connectedDevice: "iOS",
+    address: "89 Silver Street Opposite Government College",
   },
   {
     id: "20",
@@ -354,6 +436,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-11-12",
     birthday: "1999-07-27",
     photoUrl: "https://randomuser.me/api/portraits/women/20.jpg",
+    connectedDevice: "Android",
+    address: "37 Golden Avenue Near River View Park",
   },
   {
     id: "21",
@@ -365,6 +449,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-11-25",
     birthday: "1992-12-01",
     photoUrl: "https://randomuser.me/api/portraits/men/21.jpg",
+    connectedDevice: "iOS",
+    address: "141 Central Street Beside City Post Office",
   },
   {
     id: "22",
@@ -376,6 +462,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-12-05",
     birthday: "1995-09-08",
     photoUrl: "https://randomuser.me/api/portraits/women/22.jpg",
+    connectedDevice: "Android",
+    address: "250 Forest Lane Opposite Shopping Plaza",
   },
   {
     id: "23",
@@ -387,6 +475,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-12-15",
     birthday: "1989-04-22",
     photoUrl: "https://randomuser.me/api/portraits/men/23.jpg",
+    connectedDevice: "iOS",
+    address: "300 Cedar Street Near Metro Bus Stop",
   },
   {
     id: "24",
@@ -398,6 +488,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-12-28",
     birthday: "1997-10-19",
     photoUrl: "https://randomuser.me/api/portraits/women/24.jpg",
+    connectedDevice: "Android",
+    address: "42 Magnolia Street Behind Police Station",
   },
   {
     id: "25",
@@ -409,6 +501,8 @@ export const dummyUsers: UserType[] = [
     createdAt: "2025-01-05",
     birthday: "1991-11-30",
     photoUrl: "https://randomuser.me/api/portraits/men/25.jpg",
+    connectedDevice: "iOS",
+    address: "75 Ashwood Lane Close To National Bank",
   },
 ];
 
@@ -416,6 +510,12 @@ export const dummyProducts: ProductType[] = [
   {
     id: "1",
     name: "Protein Powder",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Supplements",
     brand: "Optimum Nutrition",
     price: 45,
@@ -424,10 +524,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-01",
     stock: 87,
+    description:
+      "High-quality protein powder designed to support muscle growth, recovery, and performance. Mixes easily with water or milk for a smooth post-workout shake.",
   },
   {
     id: "2",
     name: "Yoga Mat",
+    images: [
+      "/images/bottle.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Fitness Gear",
     brand: "Liforme",
     price: 30,
@@ -438,10 +546,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-02",
     stock: 95,
+    description:
+      "Durable yoga mat with excellent grip and cushioning. Perfect for beginners and advanced practitioners to improve stability, comfort, and posture during sessions.",
   },
   {
     id: "3",
     name: "Dumbbells Set",
+    images: [
+      "/images/rope.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Equipment",
     brand: "Bowflex",
     price: 120,
@@ -452,10 +568,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-03",
     stock: 72,
+    description:
+      "Adjustable dumbbells perfect for strength training at home. Compact design saves space while offering multiple weight options to target all muscle groups.",
   },
   {
     id: "4",
     name: "Resistance Bands",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Accessories",
     brand: "TheraBand",
     price: 25,
@@ -465,10 +589,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-04",
     stock: 98,
+    description:
+      "Versatile resistance bands for stretching, rehab, and strength training. Lightweight and portable, making them ideal for home workouts or travel fitness routines.",
   },
   {
     id: "5",
     name: "Whey Protein",
+    images: [
+      "/images/bottle.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Supplements",
     brand: "MyProtein",
     price: 50,
@@ -477,10 +609,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-05",
     stock: 61,
+    description:
+      "Premium whey protein that supports lean muscle growth and recovery. Rich in amino acids and great tasting for pre- or post-workout nutrition.",
   },
   {
     id: "6",
     name: "Kettlebell",
+    images: [
+      "/images/rope.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Equipment",
     brand: "Rogue Fitness",
     price: 70,
@@ -491,10 +631,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-06",
     stock: 89,
+    description:
+      "Durable kettlebell for strength, endurance, and conditioning exercises. Designed for swings, squats, and presses, helping improve balance, flexibility, and power.",
   },
   {
     id: "7",
     name: "Treadmill",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Equipment",
     brand: "NordicTrack",
     price: 900,
@@ -505,10 +653,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-07",
     stock: 76,
+    description:
+      "Advanced treadmill with multiple speed levels and incline settings. Ideal for home cardio training, endurance workouts, and fat-burning sessions throughout the year.",
   },
   {
     id: "8",
     name: "Creatine Monohydrate",
+    images: [
+      "/images/bottle.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Supplements",
     brand: "MuscleTech",
     price: 28,
@@ -517,10 +673,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-08",
     stock: 92,
+    description:
+      "Pure creatine monohydrate to increase strength, performance, and muscle endurance. Supports explosive workouts and faster recovery for athletes and fitness enthusiasts.",
   },
   {
     id: "9",
     name: "Jump Rope",
+    images: [
+      "/images/rope.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Accessories",
     brand: "Crossrope",
     price: 15,
@@ -530,10 +694,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-09",
     stock: 81,
+    description:
+      "Lightweight jump rope designed for speed, cardio, and endurance training. Perfect for home workouts, warm-ups, or improving agility and coordination.",
   },
   {
     id: "10",
     name: "Foam Roller",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Accessories",
     brand: "TriggerPoint",
     price: 22,
@@ -544,10 +716,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-10",
     stock: 66,
+    description:
+      "Foam roller for deep tissue massage and muscle recovery. Helps relieve soreness, improve flexibility, and prevent injuries after workouts or physical activities.",
   },
   {
     id: "11",
     name: "Pre-Workout",
+    images: [
+      "/images/bottle.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Supplements",
     brand: "Cellucor",
     price: 35,
@@ -556,10 +736,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-11",
     stock: 84,
+    description:
+      "Energy-boosting pre-workout formula with caffeine and essential ingredients to enhance focus, strength, and endurance during intense training sessions.",
   },
   {
     id: "12",
     name: "BCAA Powder",
+    images: [
+      "/images/rope.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Supplements",
     brand: "Scivation Xtend",
     price: 32,
@@ -568,10 +756,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-12",
     stock: 99,
+    description:
+      "Amino acid powder that supports muscle recovery, reduces fatigue, and promotes endurance. Great-tasting supplement to drink before, during, or after workouts.",
   },
   {
     id: "13",
     name: "Weight Bench",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Equipment",
     brand: "Marcy",
     price: 180,
@@ -582,10 +778,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-13",
     stock: 73,
+    description:
+      "Heavy-duty weight bench for versatile strength training. Adjustable design allows flat, incline, and decline exercises, supporting a wide range of workouts.",
   },
   {
     id: "14",
     name: "Pull-Up Bar",
+    images: [
+      "/images/bottle.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Equipment",
     brand: "Iron Gym",
     price: 50,
@@ -596,10 +800,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-14",
     stock: 65,
+    description:
+      "Sturdy pull-up bar designed for home workouts. Fits most doorways and supports multiple grips for pull-ups, chin-ups, and strength-building exercises.",
   },
   {
     id: "15",
     name: "Gym Gloves",
+    images: [
+      "/images/rope.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Accessories",
     brand: "Nike",
     price: 20,
@@ -610,10 +822,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-15",
     stock: 91,
+    description:
+      "Comfortable gym gloves with padded grip to prevent blisters. Designed for weightlifting, training, and endurance exercises, ensuring safety and support.",
   },
   {
     id: "16",
     name: "Medicine Ball",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Equipment",
     brand: "SPRI",
     price: 40,
@@ -624,10 +844,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-16",
     stock: 79,
+    description:
+      "Durable medicine ball for strength training, rehabilitation, and endurance workouts. Helps improve core stability, coordination, and overall athletic performance.",
   },
   {
     id: "17",
     name: "Protein Bars",
+    images: [
+      "/images/bottle.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Supplements",
     brand: "Quest",
     price: 25,
@@ -636,10 +864,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-17",
     stock: 86,
+    description:
+      "Tasty protein bars packed with nutrients for on-the-go energy. Ideal as a snack, meal replacement, or recovery option after workouts.",
   },
   {
     id: "18",
     name: "Fitness Tracker",
+    images: [
+      "/images/rope.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Fitness Gear",
     brand: "Fitbit",
     price: 150,
@@ -649,10 +885,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-18",
     stock: 62,
+    description:
+      "Smart fitness tracker that monitors heart rate, steps, calories, and sleep. Syncs with mobile apps to track progress and set health goals.",
   },
   {
     id: "19",
     name: "Rowing Machine",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Equipment",
     brand: "Concept2",
     price: 950,
@@ -663,10 +907,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-19",
     stock: 96,
+    description:
+      "Professional rowing machine providing a full-body cardio and strength workout. Durable design with adjustable resistance levels for all fitness levels.",
   },
   {
     id: "20",
     name: "Cycling Bike",
+    images: [
+      "/images/bottle.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Equipment",
     brand: "Peloton",
     price: 1200,
@@ -677,10 +929,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-20",
     stock: 88,
+    description:
+      "High-performance indoor cycling bike with interactive training programs. Smooth ride experience, adjustable resistance, and smart tracking features for home fitness.",
   },
   {
     id: "21",
     name: "Electrolyte Drink",
+    images: [
+      "/images/rope.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Supplements",
     brand: "Gatorade",
     price: 12,
@@ -689,10 +949,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-21",
     stock: 64,
+    description:
+      "Refreshing electrolyte drink that hydrates and replenishes energy during intense workouts. Rich in minerals to restore balance and prevent dehydration.",
   },
   {
     id: "22",
     name: "Sports Bottle",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Accessories",
     brand: "Hydro Flask",
     price: 28,
@@ -703,10 +971,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-22",
     stock: 83,
+    description:
+      "Durable sports bottle designed to keep drinks cold or hot for hours. Leak-proof and easy to carry during workouts or outdoor activities.",
   },
   {
     id: "23",
     name: "Sweat Towel",
+    images: [
+      "/images/bottle.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Accessories",
     brand: "Adidas",
     price: 18,
@@ -717,10 +993,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-23",
     stock: 69,
+    description:
+      "Soft, absorbent sweat towel for workouts and sports. Lightweight and quick-drying, ensuring comfort and hygiene during intense training sessions.",
   },
   {
     id: "24",
     name: "Running Shoes",
+    images: [
+      "/images/rope.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Fitness Gear",
     brand: "Nike",
     price: 110,
@@ -731,10 +1015,18 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.ACTIVE,
     createdAt: "2025-12-24",
     stock: 93,
+    description:
+      "Lightweight running shoes designed for comfort, speed, and durability. Breathable material with cushioned soles supports long-distance running and daily training.",
   },
   {
     id: "25",
     name: "Yoga Block",
+    images: [
+      "/images/watch.png",
+      "/images/watch.png",
+      "/images/bottle.png",
+      "/images/rope.png",
+    ],
     category: "Accessories",
     brand: "Gaiam",
     price: 14,
@@ -744,6 +1036,8 @@ export const dummyProducts: ProductType[] = [
     status: StatusProduct.INACTIVE,
     createdAt: "2025-12-25",
     stock: 71,
+    description:
+      "Supportive yoga block that enhances balance, stability, and flexibility. Great for deep stretches, beginner assistance, and improving posture in yoga practice.",
   },
 ];
 
@@ -751,61 +1045,81 @@ export const initialOrders: OrderType[] = [
   {
     product: dummyProducts[0],
     user: dummyUsers[0],
+    orderNumber: 1,
     orderStatus: OrderStatus.DELIVERED,
     date: "2025-09-10",
+    paymentType: "Online",
   },
   {
     product: dummyProducts[1],
     user: dummyUsers[1],
+    orderNumber: 2,
     orderStatus: OrderStatus.PENDING,
     date: "2025-09-12",
+    paymentType: "Online",
   },
   {
     product: dummyProducts[2],
     user: dummyUsers[2],
+    orderNumber: 3,
     orderStatus: OrderStatus.SHIPPED,
     date: "2025-07-16",
+    paymentType: "Cash",
   },
   {
     product: dummyProducts[3],
     user: dummyUsers[3],
+    orderNumber: 4,
     orderStatus: OrderStatus.DELIVERED,
     date: "2025-08-22",
+    paymentType: "Cash",
   },
   {
     product: dummyProducts[4],
     user: dummyUsers[4],
+    orderNumber: 5,
     orderStatus: OrderStatus.SHIPPED,
     date: "2025-09-01",
+    paymentType: "Online",
   },
   {
     product: dummyProducts[5],
     user: dummyUsers[5],
+    orderNumber: 6,
     orderStatus: OrderStatus.PENDING,
     date: "2025-03-12",
+    paymentType: "Cash",
   },
   {
     product: dummyProducts[6],
     user: dummyUsers[6],
+    orderNumber: 7,
     orderStatus: OrderStatus.SHIPPED,
     date: "2025-11-22",
+    paymentType: "Cash",
   },
   {
     product: dummyProducts[7],
     user: dummyUsers[7],
+    orderNumber: 8,
     orderStatus: OrderStatus.PENDING,
     date: "2025-10-16",
+    paymentType: "Cash",
   },
   {
     product: dummyProducts[8],
     user: dummyUsers[8],
+    orderNumber: 9,
     orderStatus: OrderStatus.DELIVERED,
     date: "2025-05-28",
+    paymentType: "Online",
   },
   {
     product: dummyProducts[9],
     user: dummyUsers[9],
+    orderNumber: 10,
     orderStatus: OrderStatus.PENDING,
     date: "2025-07-10",
+    paymentType: "Online",
   },
 ];

@@ -10,6 +10,7 @@ import { Routes } from "@/routes/Routes";
 import { StatusProduct } from "@/types/enums";
 import { AuthContext } from "@/context/AuthContext";
 import ConfirmationModal from "../confirmation-modal";
+import { cn } from "@/lib/utils";
 
 type ColumnsType<T extends object = object> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<
@@ -30,7 +31,8 @@ const TableProductsComponent = ({
   searchProducts: string;
 }) => {
   const router = useRouter();
-  const { activeModal, setActiveModal, products } = useContext(AuthContext)!;
+  const { activeModal, setActiveModal, products, setProducts } =
+    useContext(AuthContext)!;
   const [data, setData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(
@@ -87,7 +89,11 @@ const TableProductsComponent = ({
               setSelectedProduct(record);
             }}
             title="Delete User"
-            className="p-1 text-white hover:text-gray-300 transition cursor-pointer"
+            className={cn(
+              "p-1 text-white hover:text-gray-300 transition cursor-pointer",
+              record.status === StatusProduct.INACTIVE &&
+                "opacity-50 cursor-not-allowed"
+            )}
           >
             <DeleteOutlined />
           </button>
@@ -109,6 +115,12 @@ const TableProductsComponent = ({
   }, [products]);
 
   const handleUpdateProductStatus = (id: string, status: StatusProduct) => {
+    setProducts((prev) =>
+      prev.map((product) =>
+        product.id === id ? { ...product, status } : product
+      )
+    );
+
     setData((prev) =>
       prev.map((product) =>
         product.id === id ? { ...product, status } : product

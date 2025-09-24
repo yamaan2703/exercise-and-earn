@@ -114,6 +114,11 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
   }, []);
 
   const handleUpdateUserStatus = (id: string, status: StatusUser) => {
+    const user = dummyUsers.find((user) => user.id === id);
+    if (user) {
+      user.status = status;
+    }
+
     setData((prev) =>
       prev.map((user) => (user.id === id ? { ...user, status } : user))
     );
@@ -127,21 +132,18 @@ const TableUsersComponent = ({ searchUsers }: { searchUsers: string }) => {
   ) => {
     let filteredData = [...dummyUsers];
 
-    // filter by Gender
     if (filters.gender) {
       filteredData = filteredData.filter((item) =>
         (filters.gender as string[]).includes(item.gender)
       );
     }
 
-    // filter by Status
     if (filters.status) {
       filteredData = filteredData.filter((item) =>
         (filters.status as string[]).includes(item.status)
       );
     }
 
-    // sort by name (ascend or descend)
     if (!Array.isArray(sorter) && sorter.order && sorter.field) {
       filteredData.sort((a, b) => {
         const field = sorter.field as keyof UserType;

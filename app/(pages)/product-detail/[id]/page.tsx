@@ -1,6 +1,6 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
-import { dummyProducts, ProductTabs } from "@/Data/Data";
+import { ProductTabs } from "@/Data/Data";
 import { FaArrowLeft } from "react-icons/fa";
 import Button from "@/components/ui/button";
 import {
@@ -18,11 +18,11 @@ import ProductInfo from "@/components/product-detail-component/product-info";
 import ProductStock from "@/components/product-detail-component/product-stock";
 
 const ProductDetailPage = () => {
-  const { setIsSidebarOpen } = useContext(AuthContext)!;
+  const { setIsSidebarOpen, products } = useContext(AuthContext)!;
   const [activeTab, setActiveTab] = useState(ProductDetailTab.INFO);
   const { id } = useParams();
   const router = useRouter();
-  const product = dummyProducts.find((product) => product.id === id);
+  const product = products.find((product) => product.id === id);
 
   return (
     <div className="min-h-screen p-1">
@@ -48,11 +48,15 @@ const ProductDetailPage = () => {
               <div className="flex flex-col sm:flex-row items-center gap-6">
                 <div className="bg-white/20 rounded-full">
                   <Image
-                    src="/images/watch.png"
+                    src={
+                      typeof product.images[0] === "string"
+                        ? product.images[0]
+                        : URL.createObjectURL(product.images[0])
+                    }
                     alt={product.name}
                     width={150}
                     height={150}
-                    className="size-24 sm:size-28"
+                    className="size-24 sm:size-28 rounded-full"
                   />
                 </div>
                 <div className="flex flex-col items-center sm:items-start">

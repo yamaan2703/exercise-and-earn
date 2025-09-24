@@ -76,46 +76,39 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
           <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
             Product Description
           </h2>
-          <p className="text-gray-300 leading-relaxed">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae,
-            autem! Doloremque, veniam iste. Quisquam animi magnam libero ad
-            tempora incidunt. Lorem ipsum dolor sit, amet consectetur
-            adipisicing elit. Accusantium, velit nihil.Lorem ipsum dolor sit
-            amet consectetur adipisicing elit.
-          </p>
+          <p className="text-gray-300 leading-relaxed">{product.description}</p>
         </div>
         <div className="bg-[#0b2d29] flex-1 rounded-xl p-6 border border-teal-500/20 shadow-md">
           <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-            Product Images
+            Product Extra Images
           </h2>
-          <div className="flex gap-3">
-            <div className="bg-white/20 flex justify-center flex-1 rounded-lg">
-              <Image
-                src="/images/watch.png"
-                alt="watch_image"
-                width={150}
-                height={150}
-                className="size-24 sm:size-32"
-              />
-            </div>
-            <div className="bg-white/20 flex justify-center flex-1 rounded-lg">
-              <Image
-                src="/images/bottle.png"
-                alt="bottle_image"
-                width={150}
-                height={150}
-                className="size-24 sm:size-32"
-              />
-            </div>
-            <div className="bg-white/20 flex justify-center flex-1 rounded-lg">
-              <Image
-                src="/images/rope.png"
-                alt="rope_image"
-                width={150}
-                height={150}
-                className="size-24 sm:size-32"
-              />
-            </div>
+          <div className="flex flex-wrap gap-3">
+            {product.images.length > 1 ? (
+              <>
+                {product.images.slice(1).map((image, index) => (
+                  <div
+                    key={index}
+                    className="bg-white/20 flex justify-center rounded-md"
+                  >
+                    <Image
+                      src={
+                        typeof image === "string"
+                          ? image
+                          : URL.createObjectURL(image)
+                      }
+                      alt={`image_${index}`}
+                      width={150}
+                      height={150}
+                      className="size-24 sm:size-32 rounded-md"
+                    />
+                  </div>
+                ))}
+              </>
+            ) : (
+              <p className="text-gray-300 text-sm mt-6 mx-auto">
+                No extra images!
+              </p>
+            )}
           </div>
         </div>
       </div>

@@ -45,13 +45,13 @@ const UserProfile = ({ user }: { user: UserType }) => {
 
         <div className="space-y-2">
           <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
-            <span className="text-gray-300 font-medium">City</span>
-            <span>Karachi</span>
+            <span className="text-gray-300 font-medium">Connected Device</span>
+            <span>{user.connectedDevice}</span>
           </div>
 
           <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
-            <span className="text-gray-300 font-medium">Country</span>
-            <span>Pakistan</span>
+            <span className="text-gray-300 font-medium">Address</span>
+            <span>{user.address}</span>
           </div>
 
           <div className="flex justify-between items-center py-3 border-b border-teal-500/10">

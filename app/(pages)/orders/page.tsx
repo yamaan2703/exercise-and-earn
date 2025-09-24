@@ -17,14 +17,16 @@ const Orders = () => {
 
   const handleApprove = (id: string) => {
     setOrders((prev) =>
-      prev.map((o) =>
-        o.product.id === id ? { ...o, orderStatus: OrderStatus.SHIPPED } : o
+      prev.map((order) =>
+        order.product.id === id
+          ? { ...order, orderStatus: OrderStatus.SHIPPED }
+          : order
       )
     );
   };
 
   const handleReject = (id: string) => {
-    setOrders((prev) => prev.filter((o) => o.product.id !== id));
+    setOrders((prev) => prev.filter((order) => order.product.id !== id));
   };
 
   const openRejectModal = (orderId: string) => {
@@ -65,7 +67,7 @@ const Orders = () => {
           .map((order) => (
             <div
               key={order.product.id}
-              className="bg-[#0d332e] p-6 rounded-xl border border-teal-500/20 shadow-lg hover:shadow-xl hover:border-teal-400 transition-all duration-300"
+              className="bg-[#0d332e] relative p-6 rounded-xl border border-teal-500/20 shadow-lg hover:shadow-xl hover:border-teal-400 transition-all duration-300"
             >
               <div className="flex justify-between items-center mb-4">
                 <div
@@ -83,9 +85,14 @@ const Orders = () => {
                       className="size-12 object-contains"
                     />
                   </div>
-                  <h3 className="font-semibold text-white text-lg group-hover:underline transition">
-                    {order.product.name}
-                  </h3>
+                  <div className="space-y-[2px]">
+                    <h3 className="font-semibold text-white text-lg group-hover:underline transition">
+                      {order.product.name}
+                    </h3>
+                    <p className="text-gray-300 text-xs">
+                      Order Number: {order.orderNumber}
+                    </p>
+                  </div>
                 </div>
 
                 <span className="text-xs text-gray-400">{order.date}</span>
@@ -114,8 +121,8 @@ const Orders = () => {
                     {order.user.email}
                   </p>
                   <p className="text-gray-300 max-w-72">
-                    <span className="text-white ">Address:</span> Lorem ipsum
-                    dolor sit amet consectetur.
+                    <span className="text-white ">Address:</span>{" "}
+                    {order.user.address}
                   </p>
                 </div>
 
@@ -142,6 +149,10 @@ const Orders = () => {
                   <p className="text-gray-300">
                     <span className="text-white">Delivery Fee:</span> $
                     {order.product.deliveryFee}
+                  </p>
+                  <p className="text-gray-300">
+                    <span className="text-white">Payment Type:</span>{" "}
+                    {order.paymentType}
                   </p>
                 </div>
               </div>
