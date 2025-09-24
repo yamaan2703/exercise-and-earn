@@ -89,7 +89,7 @@ const UserCalories = () => {
   };
   return (
     <>
-      <div className="bg-[#0b2d29] rounded-xl p-4 border border-teal-500/20">
+      <div className="bg-[#0b2d29] rounded-xl p-3 sm:p-4 border border-teal-500/20">
         <h2 className="text-xl font-bold text-white mb-4">Calories Details</h2>
 
         <div className="space-y-3">

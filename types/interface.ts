@@ -69,7 +69,7 @@ export interface ProductType {
   color?: string[];
   stock: number;
   price: number;
-  deliveryFee?: number;
+  deliveryFee: number;
   createdAt: string;
   status: StatusProduct;
 }

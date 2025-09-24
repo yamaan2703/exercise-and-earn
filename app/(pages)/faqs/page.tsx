@@ -32,6 +32,15 @@ const Faqs = () => {
         </div>
       </div>
 
+      <div className="flex justify-end mb-2 mr-2">
+        <Button
+          label="Add Faq"
+          onClick={() => setFaqModal(true)}
+          variant={ButtonVariant.THEME}
+          size={ButtonSize.SMALL}
+        />
+      </div>
+
       <div className="space-y-4">
         {faqs.map((faq) => (
           <div
@@ -55,13 +64,6 @@ const Faqs = () => {
           </div>
         ))}
       </div>
-      <Button
-        externalStyles="mt-3"
-        label="Add Faq"
-        onClick={() => setFaqModal(true)}
-        variant={ButtonVariant.THEME}
-        size={ButtonSize.SMALL}
-      />
       {faqModal && <FaqModal setFaqs={setFaqs} />}
     </div>
   );

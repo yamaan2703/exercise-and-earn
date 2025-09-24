@@ -2,7 +2,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import type { GetProp, TableProps } from "antd";
 import { Table } from "antd";
-import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EyeOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import type { SorterResult } from "antd/es/table/interface";
 import { ProductType } from "@/types/interface";
 import { useRouter } from "next/navigation";
@@ -73,7 +73,7 @@ const TableProductsComponent = ({
     {
       title: "Actions",
       key: "actions",
-      width: "12%",
+      width: "15%",
       render: (_, record: ProductType) => (
         <div className="flex gap-2">
           <button
@@ -84,11 +84,18 @@ const TableProductsComponent = ({
             <EyeOutlined />
           </button>
           <button
+            onClick={() => router.push(Routes.EDIT_PRODUCT(record.id))}
+            title="Edit Product"
+            className="p-1 text-white hover:text-gray-300 transition cursor-pointer"
+          >
+            <EditOutlined />
+          </button>
+          <button
             onClick={() => {
               setActiveModal(true);
               setSelectedProduct(record);
             }}
-            title="Delete User"
+            title="Delete Product"
             className={cn(
               "p-1 text-white hover:text-gray-300 transition cursor-pointer",
               record.status === StatusProduct.INACTIVE &&

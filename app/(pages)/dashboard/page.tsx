@@ -3,11 +3,12 @@ import Card from "@/components/ui/card";
 import { FaBoxOpen, FaClock, FaShoppingBag, FaUsers } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { AiOutlineMenu } from "react-icons/ai";
 import { cn } from "@/lib/utils";
 import { ChartFilter } from "@/types/enums";
+import Loader from "@/components/ui/loader";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -138,6 +139,15 @@ const Dashboard = () => {
 
   const chartSeries = [15, 10];
 
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, []);
+
   return (
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
@@ -160,7 +170,7 @@ const Dashboard = () => {
       </div>
 
       <div className="flex flex-col md:flex-row gap-2 items-center">
-        <div className="w-full md:w-[70%] bg-[#0b2d29] rounded-lg">
+        <div className="w-full md:w-[70%] h-full min-h-[450px] bg-[#0b2d29] rounded-lg">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mx-3 mb-4 mt-8">
             <h1 className="text-xl font-medium">
               <span className="capitalize">{chartFilter}</span> User
@@ -184,24 +194,36 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="p-2">
-            <Chart
-              options={chartData.options}
-              series={currentData.series}
-              type="bar"
-              height={350}
-            />
+            {loading ? (
+              <p className="flex justify-center items-center gap-2 text-xl mt-20">
+                <Loader /> Loading...
+              </p>
+            ) : (
+              <Chart
+                options={chartData.options}
+                series={currentData.series}
+                type="bar"
+                height={350}
+              />
+            )}
           </div>
         </div>
-        <div className="w-full md:w-[30%] py-10 md:py-20 flex flex-col items-center bg-[#0b2d29] p-2 rounded-lg shadow-md text-white">
+        <div className="w-full md:w-[30%] h-full min-h-[450px] flex flex-col justify-center items-center bg-[#0b2d29] p-2 rounded-lg shadow-md text-white">
           <h2 className="text-lg font-semibold mb-4 text-center">
             User Statistics
           </h2>
-          <Chart
-            options={chartOptions}
-            series={chartSeries}
-            type="pie"
-            width="100%"
-          />
+          {loading ? (
+            <p className="flex justify-center items-center gap-2 text-xl mt-10">
+              <Loader /> Loading...
+            </p>
+          ) : (
+            <Chart
+              options={chartOptions}
+              series={chartSeries}
+              type="pie"
+              width="100%"
+            />
+          )}
         </div>
       </div>
     </div>
