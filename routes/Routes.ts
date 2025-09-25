@@ -6,6 +6,7 @@ export const Routes = {
   PRODUCTS: "/products",
   PRODUCTS_DETAIL: (id: string) => `/product-detail/${id}`,
   ADD_PRODUCT: "/add-product",
+  EDIT_PRODUCT: (id: string) => `/edit-product/${id}`,
   ORDERS: "/orders",
   ORDER_HISTORY: "/order-history",
   PRIVACY_POLICY: "/privacy-policy",

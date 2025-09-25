@@ -22,7 +22,7 @@ const Button = ({
     [ButtonVariant.SECONDARY]: "text-gray-800 bg-gray-200 hover:bg-gray-300",
     [ButtonVariant.DANGER]: "text-white bg-red-600 hover:bg-red-700",
     [ButtonVariant.OUTLINE]:
-      "text-green-600 border border-green-600 hover:bg-green-50",
+      "text-teal-600 border border-teal-600 hover:bg-green-50",
     [ButtonVariant.THEME]:
       "bg-teal-600 hover:bg-teal-700 rounded-lg text-white transition-all duration-200 shadow-md",
   };

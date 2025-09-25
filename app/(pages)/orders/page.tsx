@@ -1,19 +1,17 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
 import { AiOutlineMenu } from "react-icons/ai";
 import Image from "next/image";
-import ConfirmationModal from "@/components/ui/confirmation-modal";
 import { Routes } from "@/routes/Routes";
 import { ButtonSize, ButtonVariant, OrderStatus } from "@/types/enums";
 
 const Orders = () => {
-  const { orders, setOrders, setIsSidebarOpen, rejectModal, setRejectModal } =
-    useContext(AuthContext)!;
+  const { orders, setOrders, setIsSidebarOpen } = useContext(AuthContext)!;
   const router = useRouter();
-  const [orderToReject, setOrderToReject] = useState<string | null>(null);
+  // const [orderToReject, setOrderToReject] = useState<string | null>(null);
 
   const handleApprove = (id: string) => {
     setOrders((prev) =>
@@ -25,27 +23,27 @@ const Orders = () => {
     );
   };
 
-  const handleReject = (id: string) => {
-    setOrders((prev) => prev.filter((order) => order.product.id !== id));
-  };
+  // const handleReject = (id: string) => {
+  //   setOrders((prev) => prev.filter((order) => order.product.id !== id));
+  // };
 
-  const openRejectModal = (orderId: string) => {
-    setOrderToReject(orderId);
-    setRejectModal(true);
-  };
+  // const openRejectModal = (orderId: string) => {
+  //   setOrderToReject(orderId);
+  //   setRejectModal(true);
+  // };
 
-  const confirmReject = () => {
-    if (orderToReject) {
-      handleReject(orderToReject);
-    }
-    setRejectModal(false);
-    setOrderToReject(null);
-  };
+  // const confirmReject = () => {
+  //   if (orderToReject) {
+  //     handleReject(orderToReject);
+  //   }
+  //   setRejectModal(false);
+  //   setOrderToReject(null);
+  // };
 
-  const cancelReject = () => {
-    setRejectModal(false);
-    setOrderToReject(null);
-  };
+  // const cancelReject = () => {
+  //   setRejectModal(false);
+  //   setOrderToReject(null);
+  // };
 
   return (
     <div className="p-1">
@@ -147,7 +145,7 @@ const Orders = () => {
                     </p>
                   )}
                   <p className="text-gray-300">
-                    <span className="text-white">Delivery Fee:</span> $
+                    <span className="text-white">Delivery Fee:</span> €
                     {order.product.deliveryFee}
                   </p>
                   <p className="text-gray-300">
@@ -166,25 +164,25 @@ const Orders = () => {
                   label="Approve Order"
                   onClick={() => handleApprove(order.product.id)}
                 />
-                <Button
+                {/* <Button
                   variant={ButtonVariant.DANGER}
                   size={ButtonSize.SMALL}
                   label="Reject Order"
                   onClick={() => openRejectModal(order.product.id)}
-                />
+                /> */}
               </div>
             </div>
           ))}
       </div>
 
-      {rejectModal && (
+      {/* {rejectModal && (
         <ConfirmationModal
           title={"Confirm Reject Order"}
           description={"Are you sure you want to reject this order?"}
           onClick={confirmReject}
           onCancel={cancelReject}
         />
-      )}
+      )} */}
     </div>
   );
 };

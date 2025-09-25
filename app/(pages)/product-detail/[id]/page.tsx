@@ -79,13 +79,13 @@ const ProductDetailPage = () => {
           </div>
 
           {/* Tabs */}
-          <div className="flex items-center mb-4 bg-[#0d332e] p-2 rounded-lg border border-teal-500/20">
+          <div className="flex items-center gap-1 mb-4 bg-[#0d332e] p-2 rounded-lg border border-teal-500/20">
             {ProductTabs.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all duration-300 mx-1 cursor-pointer",
+                  "flex items-center gap-1 px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 cursor-pointer",
                   activeTab === tab.key
                     ? "bg-teal-600 text-white shadow-md"
                     : "text-gray-300 hover:bg-teal-700/40 hover:text-white"

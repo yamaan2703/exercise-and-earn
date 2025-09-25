@@ -1,19 +1,64 @@
 "use client";
+import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import { AuthContext } from "@/context/AuthContext";
 import { Routes } from "@/routes/Routes";
-import { InputSize, InputVariant, OrderStatus } from "@/types/enums";
+import {
+  ButtonSize,
+  ButtonVariant,
+  InputSize,
+  InputVariant,
+  OrderStatus,
+} from "@/types/enums";
+import { OrderType } from "@/types/interface";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { FaSearch } from "react-icons/fa";
+import { FaFilter, FaSearch } from "react-icons/fa";
 
 const OrderHistory = () => {
   const router = useRouter();
   const { orders, setIsSidebarOpen } = useContext(AuthContext)!;
   const [orderSearch, setOrderSearch] = useState("");
+  const [openFilter, setOpenFilter] = useState(false);
+  const [filterStatus, setFilterStatus] = useState<OrderStatus[]>([]);
+  const filterRef = useRef<HTMLInputElement | null>(null);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        filterRef.current &&
+        !filterRef.current.contains(event.target as Node)
+      ) {
+        setOpenFilter(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const toggleStatus = (status: OrderStatus) => {
+    setFilterStatus((prev) =>
+      prev.includes(status)
+        ? prev.filter((s) => s !== status)
+        : [...prev, status]
+    );
+  };
+
+  const applyFilter = (order: OrderType) => {
+    const searchMatch =
+      order.user.name.toLowerCase().includes(orderSearch.toLowerCase()) ||
+      order.product.name.toLowerCase().includes(orderSearch.toLowerCase()) ||
+      order.orderNumber.toString().includes(orderSearch);
+
+    const statusMatch =
+      filterStatus.length === 0 || filterStatus.includes(order.orderStatus);
+
+    return searchMatch && statusMatch;
+  };
   return (
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
@@ -28,25 +73,56 @@ const OrderHistory = () => {
         </div>
       </div>
 
-      <div className="max-w-[400px] w-full mb-3">
-        <Input
-          placeholder="Search order by order status..."
-          type="text"
-          id="search"
-          value={orderSearch}
-          setValue={setOrderSearch}
-          variant={InputVariant.OUTLINE}
-          size={InputSize.SMALL}
-          iconLeft={<FaSearch />}
-        />
+      <div className="flex justify-between items-center gap-2 mb-3">
+        <div className="max-w-[500px] w-full">
+          <Input
+            placeholder="Search by product name, user name, or order number..."
+            type="text"
+            id="search"
+            value={orderSearch}
+            setValue={setOrderSearch}
+            variant={InputVariant.OUTLINE}
+            size={InputSize.SMALL}
+            iconLeft={<FaSearch />}
+          />
+        </div>
+        <div className="mr-4 relative" ref={filterRef}>
+          <Button
+            label="Filter Status"
+            variant={ButtonVariant.OUTLINE}
+            size={ButtonSize.SMALL}
+            icon={FaFilter}
+            onClick={() => setOpenFilter((prev) => !prev)}
+          />
+          {openFilter && (
+            <div className="absolute right-0 mt-2 bg-[#0d332e] border border-teal-500/30 rounded-lg shadow-lg pl-3 pr-8 pt-2 pb-3 z-50">
+              <div className="flex flex-col gap-2 text-sm text-gray-300">
+                {Object.values(OrderStatus)
+                  .filter((status) => status !== OrderStatus.PENDING)
+                  .map((status) => (
+                    <label
+                      key={status}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={filterStatus.includes(status)}
+                        onChange={() => toggleStatus(status)}
+                        className="accent-teal-500"
+                      />
+                      {status}
+                    </label>
+                  ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {orders
           .filter((order) => order.orderStatus !== OrderStatus.PENDING)
-          .filter((order) =>
-            order.orderStatus.toLowerCase().includes(orderSearch.toLowerCase())
-          )
+          .filter(applyFilter)
           .map((order) => (
             <div
               key={order.product.id}
@@ -130,7 +206,7 @@ const OrderHistory = () => {
                     </p>
                   )}
                   <p className="text-gray-300">
-                    <span className="text-white">Delivery Fee:</span> $
+                    <span className="text-white">Delivery Fee:</span> €
                     {order.product.deliveryFee}
                   </p>
                   <p className="text-gray-300">

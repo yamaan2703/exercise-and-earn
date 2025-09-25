@@ -5,7 +5,7 @@ import React from "react";
 const ProductInfo = ({ product }: { product: ProductType }) => {
   return (
     <div className="flex flex-col gap-3 mb-6">
-      <div className="bg-[#0b2d29] rounded-xl p-5 border border-teal-500/20 shadow-md">
+      <div className="bg-[#0b2d29] rounded-xl p-3 sm:p-5 border border-teal-500/20 shadow-md">
         <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
           Product Information
         </h2>
@@ -63,6 +63,14 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
               </p>
             </div>
           )}
+
+          <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
+            <p className="text-gray-300 font-medium flex items-center gap-2">
+              Delivery Fees{" "}
+            </p>
+            <p>€{product.deliveryFee}</p>
+          </div>
+
           <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
             <p className="text-gray-300 font-medium flex items-center gap-2">
               Created At
@@ -72,13 +80,13 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
         </div>
       </div>
       <div className="flex flex-col sm:flex-row gap-3">
-        <div className="bg-[#0b2d29] flex-1 rounded-xl p-6 border border-teal-500/20 shadow-md">
+        <div className="bg-[#0b2d29] flex-1 rounded-xl p-3 sm:p-6 border border-teal-500/20 shadow-md">
           <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
             Product Description
           </h2>
           <p className="text-gray-300 leading-relaxed">{product.description}</p>
         </div>
-        <div className="bg-[#0b2d29] flex-1 rounded-xl p-6 border border-teal-500/20 shadow-md">
+        <div className="bg-[#0b2d29] flex-1 rounded-xl p-3 sm:p-6 border border-teal-500/20 shadow-md">
           <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
             Product Extra Images
           </h2>
