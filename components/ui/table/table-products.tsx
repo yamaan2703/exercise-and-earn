@@ -55,11 +55,16 @@ const TableProductsComponent = ({
       dataIndex: "requiredCalories",
       width: "15%",
     },
+    {
+      title: "Stock",
+      dataIndex: "stock",
+      width: "13%",
+    },
     { title: "Created At", dataIndex: "createdAt", sorter: true, width: "15%" },
     {
       title: "Status",
       dataIndex: "status",
-      width: "12%",
+      width: "15%",
       filters: [
         { text: StatusProduct.ACTIVE, value: StatusProduct.ACTIVE },
         { text: StatusProduct.INACTIVE, value: StatusProduct.INACTIVE },

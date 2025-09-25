@@ -11,11 +11,12 @@ import {
 } from "@/types/enums";
 import Image from "next/image";
 import { AiOutlineMenu } from "react-icons/ai";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
 import ProductInfo from "@/components/product-detail-component/product-info";
 import ProductStock from "@/components/product-detail-component/product-stock";
+import toast from "react-hot-toast";
 
 const ProductDetailPage = () => {
   const { setIsSidebarOpen, products } = useContext(AuthContext)!;
@@ -23,6 +24,12 @@ const ProductDetailPage = () => {
   const { id } = useParams();
   const router = useRouter();
   const product = products.find((product) => product.id === id);
+
+  useEffect(() => {
+    if (product?.stock !== undefined && product.stock <= 5) {
+      toast.error(`Only ${product.stock} stock left. Hurry up!`);
+    }
+  }, [product?.stock]);
 
   return (
     <div className="min-h-screen p-1">
