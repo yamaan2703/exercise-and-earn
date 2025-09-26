@@ -22,10 +22,10 @@ interface AuthContextType {
   setLogoutModal: (value: boolean) => void;
   activeModal: boolean;
   setActiveModal: (value: boolean) => void;
+  faqDeleteModal: boolean;
+  setFaqDeleteModal: (value: boolean) => void;
   // rejectModal: boolean;
   // setRejectModal: (value: boolean) => void;
-  faqModal: boolean;
-  setFaqModal: (value: boolean) => void;
   orders: OrderType[];
   setOrders: Dispatch<SetStateAction<OrderType[]>>;
   products: ProductType[];
@@ -42,8 +42,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [logoutModal, setLogoutModal] = useState(false);
   const [activeModal, setActiveModal] = useState(false);
+  const [faqDeleteModal, setFaqDeleteModal] = useState(false);
   // const [rejectModal, setRejectModal] = useState(false);
-  const [faqModal, setFaqModal] = useState(false);
   const [orders, setOrders] = useState(initialOrders);
   const [products, setProducts] = useState(dummyProducts);
 
@@ -67,8 +67,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         setActiveModal,
         // rejectModal,
         // setRejectModal,
-        faqModal,
-        setFaqModal,
+        faqDeleteModal,
+        setFaqDeleteModal,
         orders,
         setOrders,
         products,

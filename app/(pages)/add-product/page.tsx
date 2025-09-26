@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, FormEvent, useContext, useState } from "react";
+import React, { ChangeEvent, useContext, useState } from "react";
 import { InputSize, InputVariant, StatusProduct } from "@/types/enums";
 import Input from "@/components/ui/input";
 import { AuthContext } from "@/context/AuthContext";
@@ -9,22 +9,40 @@ import { AiOutlineMenu } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { ProductType } from "@/types/interface";
 import Image from "next/image";
+import { useForm, Controller } from "react-hook-form";
+
+type FormValues = {
+  name: string;
+  category: string;
+  brand: string;
+  description: string;
+  requiredCalories: string;
+  stock: string;
+  price: string;
+  deliveryFee: string;
+  size?: string;
+  color?: string;
+};
 
 const AddProduct = () => {
   const { setProducts, setIsSidebarOpen } = useContext(AuthContext)!;
   const router = useRouter();
-  const [name, setName] = useState("");
-  const [category, setCategory] = useState("");
-  const [brand, setBrand] = useState("");
-  const [description, setDescription] = useState("");
-  const [requiredCalories, setRequiredCalories] = useState("");
-  const [stock, setStock] = useState("");
-  const [price, setPrice] = useState("");
-  const [deliveryFee, setDeliveryFee] = useState("");
-  const [size, setSize] = useState<string[]>([]);
-  const [color, setColor] = useState<string[]>([]);
-  const [status] = useState(StatusProduct.ACTIVE);
   const [images, setImages] = useState<File[]>([]);
+
+  const { control, handleSubmit, reset } = useForm<FormValues>({
+    defaultValues: {
+      name: "",
+      category: "",
+      brand: "",
+      description: "",
+      requiredCalories: "",
+      stock: "",
+      price: "",
+      deliveryFee: "",
+      size: "",
+      color: "",
+    },
+  });
 
   const addProduct = (product: ProductType) => {
     setProducts((prev) => [
@@ -44,9 +62,7 @@ const AddProduct = () => {
     }
   };
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-
+  const onSubmit = (data: FormValues) => {
     try {
       if (images?.length === 0) {
         toast.error("At least one image is required!");
@@ -55,26 +71,30 @@ const AddProduct = () => {
 
       addProduct({
         id: "",
-        name,
+        name: data.name,
         images: images.map((image) => URL.createObjectURL(image)),
-        category,
-        brand,
-        description,
-        requiredCalories: Number(requiredCalories),
-        stock: Number(stock),
-        price: Number(price),
-        deliveryFee: Number(deliveryFee),
-        size,
-        color,
-        status,
+        category: data.category,
+        brand: data.brand,
+        description: data.description,
+        requiredCalories: Number(data.requiredCalories),
+        stock: Number(data.stock),
+        price: Number(data.price),
+        deliveryFee: Number(data.deliveryFee),
+        size: data.size ? data.size.split(",").map((s) => s.trim()) : [],
+        color: data.color ? data.color.split(",").map((c) => c.trim()) : [],
+        status: StatusProduct.ACTIVE,
         createdAt: "",
       });
+
+      reset();
+      setImages([]);
       router.push(Routes.PRODUCTS);
       toast.success("Product added successfully!");
     } catch (error) {
       console.log("error", error);
     }
   };
+
   return (
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
@@ -89,7 +109,7 @@ const AddProduct = () => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Product Images
@@ -127,120 +147,171 @@ const AddProduct = () => {
             the full product must be visible.
           </p>
         </div>
+
         <div className="flex flex-col sm:flex-row gap-6">
           <div className="flex-1">
-            <Input
-              type="text"
-              id="name"
-              label="Name"
-              value={name}
-              setValue={setName}
-              variant={InputVariant.OUTLINE}
-              size={InputSize.SMALL}
-              placeholder="Enter product name"
-              required
+            <Controller
+              name="name"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Input
+                  type="text"
+                  id="name"
+                  label="Name"
+                  value={field.value}
+                  setValue={field.onChange}
+                  variant={InputVariant.OUTLINE}
+                  size={InputSize.SMALL}
+                  placeholder="Enter product name"
+                  required
+                />
+              )}
             />
           </div>
-
           <div className="flex-1">
-            <Input
-              type="text"
-              id="category"
-              label="Category"
-              value={category}
-              setValue={setCategory}
-              variant={InputVariant.OUTLINE}
-              size={InputSize.SMALL}
-              placeholder="Enter product category"
-              required
+            <Controller
+              name="category"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Input
+                  type="text"
+                  id="category"
+                  label="Category"
+                  value={field.value}
+                  setValue={field.onChange}
+                  variant={InputVariant.OUTLINE}
+                  size={InputSize.SMALL}
+                  placeholder="Enter product category"
+                  required
+                />
+              )}
             />
           </div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-6">
           <div className="flex-1">
-            <Input
-              type="text"
-              id="brand"
-              label="Brand"
-              value={brand}
-              setValue={setBrand}
-              variant={InputVariant.OUTLINE}
-              size={InputSize.SMALL}
-              placeholder="Enter brand name"
-              required
+            <Controller
+              name="brand"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Input
+                  type="text"
+                  id="brand"
+                  label="Brand"
+                  value={field.value}
+                  setValue={field.onChange}
+                  variant={InputVariant.OUTLINE}
+                  size={InputSize.SMALL}
+                  placeholder="Enter brand name"
+                  required
+                />
+              )}
             />
           </div>
-
           <div className="flex-1">
-            <Input
-              type="number"
-              id="price"
-              label="Price"
-              value={price}
-              setValue={setPrice}
-              variant={InputVariant.OUTLINE}
-              size={InputSize.SMALL}
-              placeholder="Enter product price"
-              required
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-6">
-          <div className="flex-1">
-            <Input
-              type="number"
-              id="requiredCalories"
-              label="Required Calories"
-              value={requiredCalories}
-              setValue={setRequiredCalories}
-              variant={InputVariant.OUTLINE}
-              size={InputSize.SMALL}
-              placeholder="Enter required calories"
-              required
-            />
-          </div>
-
-          <div className="flex-1">
-            <Input
-              type="number"
-              id="stock"
-              label="Stock"
-              value={stock}
-              setValue={setStock}
-              variant={InputVariant.OUTLINE}
-              size={InputSize.SMALL}
-              placeholder="Enter stock quantity"
-              required
+            <Controller
+              name="price"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Input
+                  type="number"
+                  id="price"
+                  label="Price"
+                  value={field.value}
+                  setValue={field.onChange}
+                  variant={InputVariant.OUTLINE}
+                  size={InputSize.SMALL}
+                  placeholder="Enter product price"
+                  required
+                />
+              )}
             />
           </div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-6">
           <div className="flex-1">
-            <Input
-              type="text"
-              id="size"
-              label="Sizes (Optional)"
-              value={size.join(", ")}
-              setValue={(val) => setSize(val.split(",").map((s) => s.trim()))}
-              variant={InputVariant.OUTLINE}
-              size={InputSize.SMALL}
-              placeholder="e.g. Small, Medium, Large"
+            <Controller
+              name="requiredCalories"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Input
+                  type="number"
+                  id="requiredCalories"
+                  label="Required Calories"
+                  value={field.value}
+                  setValue={field.onChange}
+                  variant={InputVariant.OUTLINE}
+                  size={InputSize.SMALL}
+                  placeholder="Enter required calories"
+                  required
+                />
+              )}
             />
           </div>
-
           <div className="flex-1">
-            <Input
-              type="text"
-              id="color"
-              label="Colors (Optional)"
-              value={color.join(", ")}
-              setValue={(val) => setColor(val.split(",").map((c) => c.trim()))}
-              variant={InputVariant.OUTLINE}
-              size={InputSize.SMALL}
-              placeholder="e.g. Red, Blue, Black"
+            <Controller
+              name="stock"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Input
+                  type="number"
+                  id="stock"
+                  label="Stock"
+                  value={field.value}
+                  setValue={field.onChange}
+                  variant={InputVariant.OUTLINE}
+                  size={InputSize.SMALL}
+                  placeholder="Enter stock quantity"
+                  required
+                />
+              )}
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-6">
+          <div className="flex-1">
+            <Controller
+              name="size"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  type="text"
+                  id="size"
+                  label="Sizes (Optional)"
+                  value={field.value ?? ""}
+                  setValue={field.onChange}
+                  variant={InputVariant.OUTLINE}
+                  size={InputSize.SMALL}
+                  placeholder="e.g. Small, Medium, Large"
+                />
+              )}
+            />
+          </div>
+          <div className="flex-1">
+            <Controller
+              name="color"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  type="text"
+                  id="color"
+                  label="Colors (Optional)"
+                  value={field.value ?? ""}
+                  setValue={field.onChange}
+                  variant={InputVariant.OUTLINE}
+                  size={InputSize.SMALL}
+                  placeholder="e.g. Red, Blue, Black"
+                />
+              )}
             />
           </div>
         </div>
@@ -250,31 +321,47 @@ const AddProduct = () => {
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Description
             </label>
-            <textarea
-              id="description"
-              minLength={8}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Enter description"
-              rows={3}
-              className="bg-transparent w-full p-2 rounded-lg text-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
-              required
+            <Controller
+              name="description"
+              control={control}
+              rules={{ required: true, minLength: 8 }}
+              render={({ field }) => (
+                <textarea
+                  id="description"
+                  minLength={8}
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Enter description"
+                  rows={3}
+                  className="bg-transparent w-full p-2 rounded-lg text-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  required
+                />
+              )}
             />
           </div>
           <div className="flex-1 mt-1">
-            <Input
-              type="number"
-              id="delivery fee"
-              label="Delivery Fee (In Euro)"
-              value={deliveryFee}
-              setValue={setDeliveryFee}
-              variant={InputVariant.OUTLINE}
-              size={InputSize.SMALL}
-              placeholder="Enter delivery fee"
-              required
+            <Controller
+              name="deliveryFee"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Input
+                  type="number"
+                  id="deliveryFee"
+                  label="Delivery Fee (In Euro)"
+                  value={field.value}
+                  setValue={field.onChange}
+                  variant={InputVariant.OUTLINE}
+                  size={InputSize.SMALL}
+                  placeholder="Enter delivery fee"
+                  required
+                />
+              )}
             />
           </div>
         </div>
+
+        {/* Submit */}
         <div className="mt-2">
           <button
             type="submit"

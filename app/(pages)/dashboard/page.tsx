@@ -1,16 +1,14 @@
 "use client";
 import Card from "@/components/ui/card";
 import { FaBoxOpen, FaClock, FaShoppingBag, FaUsers } from "react-icons/fa";
-import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { AiOutlineMenu } from "react-icons/ai";
 import { cn } from "@/lib/utils";
-import { ChartFilter } from "@/types/enums";
+import { ChartFilter, ChartType } from "@/types/enums";
 import Loader from "@/components/ui/loader";
-
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+import Chart from "@/components/ui/chart";
 
 const Dashboard = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
@@ -200,9 +198,9 @@ const Dashboard = () => {
               </p>
             ) : (
               <Chart
-                options={chartData.options}
+                type={ChartType.BAR}
                 series={currentData.series}
-                type="bar"
+                options={chartData.options}
                 height={350}
               />
             )}
@@ -220,8 +218,9 @@ const Dashboard = () => {
             <Chart
               options={chartOptions}
               series={chartSeries}
-              type="pie"
-              width="100%"
+              type={ChartType.PIE}
+              height={250}
+              width={250}
             />
           )}
         </div>

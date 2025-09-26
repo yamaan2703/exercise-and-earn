@@ -32,8 +32,8 @@ export enum ChartFilter {
 
 export enum OrderStatus {
   PENDING = "Pending",
-  DELIVERED = "Delivered",
   SHIPPED = "Shipped",
+  DELIVERED = "Delivered",
 }
 
 export enum InputVariant {
@@ -62,4 +62,12 @@ export enum ButtonSize {
   SMALL = "sm",
   MEDIUM = "md",
   LARGE = "lg",
+}
+
+export enum ChartType {
+  BAR = "bar",
+  LINE = "line",
+  AREA = "area",
+  PIE = "pie",
+  DONUT = "donut",
 }

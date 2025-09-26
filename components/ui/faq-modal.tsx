@@ -1,5 +1,4 @@
 "use client";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
 import Input from "./input";
 import {
   ButtonSize,
@@ -7,31 +6,49 @@ import {
   InputSize,
   InputVariant,
 } from "@/types/enums";
-import { AuthContext } from "@/context/AuthContext";
 import Button from "./button";
-import { FaqType } from "@/types/interface";
+import { FaqModalProps } from "@/types/interface";
 import toast from "react-hot-toast";
 
 const FaqModal = ({
+  label,
   setFaqs,
-}: {
-  setFaqs: Dispatch<SetStateAction<FaqType[]>>;
-}) => {
-  const { setFaqModal } = useContext(AuthContext)!;
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
+  setFaqModal,
+  question,
+  setQuestion,
+  answer,
+  setAnswer,
+  buttonLabel,
+  currentFaqId,
+}: FaqModalProps) => {
+  const handleSave = () => {
+    if (!question.trim() || !answer.trim) {
+      toast.error("Both fields are required!");
+      return;
+    }
 
-  const addFaq = () => {
-    setFaqs((prev) => [...prev, { id: prev.length + 1, question, answer }]);
-    toast.success("Faq added!");
+    if (currentFaqId) {
+      setFaqs((prev) =>
+        prev.map((faq) =>
+          faq.id === currentFaqId ? { ...faq, question, answer } : faq
+        )
+      );
+      toast.success("Faq updated!");
+    } else {
+      setFaqs((prev) => [...prev, { id: prev.length + 1, question, answer }]);
+      toast.success("Faq added!");
+    }
+
     setFaqModal(false);
+    setQuestion("");
+    setAnswer("");
   };
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[999]">
       <div className="bg-[#06211e] text-white w-[90%] max-w-sm rounded-lg shadow-lg p-4">
         <div className="flex justify-between items-center gap-2 mb-3">
-          <h2 className="text-lg font-semibold">Add Faq</h2>
+          <h2 className="text-lg font-semibold">{label}</h2>
           <button
             onClick={() => setFaqModal(false)}
             className="text-white hover:text-gray-400  cursor-pointer"
@@ -62,8 +79,8 @@ const FaqModal = ({
           />
           <Button
             externalStyles="mt-3"
-            label="Add Faq"
-            onClick={() => addFaq()}
+            label={buttonLabel}
+            onClick={handleSave}
             variant={ButtonVariant.THEME}
             size={ButtonSize.SMALL}
           />
