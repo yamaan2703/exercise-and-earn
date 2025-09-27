@@ -6,7 +6,7 @@ import {
   Dispatch,
   SetStateAction,
 } from "react";
-import { OrderType, ProductType } from "@/types/interface";
+import { OrderType, ProductType, StockHistoryItem } from "@/types/interface";
 import { dummyProducts, initialOrders } from "@/Data/Data";
 import toast from "react-hot-toast";
 import { removeCookie } from "@/lib/cookies";
@@ -24,12 +24,14 @@ interface AuthContextType {
   setActiveModal: (value: boolean) => void;
   faqDeleteModal: boolean;
   setFaqDeleteModal: (value: boolean) => void;
-  // rejectModal: boolean;
-  // setRejectModal: (value: boolean) => void;
+  goalDeleteModal: boolean;
+  setGoalDeleteModal: (value: boolean) => void;
   orders: OrderType[];
   setOrders: Dispatch<SetStateAction<OrderType[]>>;
   products: ProductType[];
   setProducts: Dispatch<SetStateAction<ProductType[]>>;
+  stockHistory: StockHistoryItem[];
+  setStockHistory: Dispatch<SetStateAction<StockHistoryItem[]>>;
   handleLogoutClick: () => void;
 }
 
@@ -43,9 +45,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [logoutModal, setLogoutModal] = useState(false);
   const [activeModal, setActiveModal] = useState(false);
   const [faqDeleteModal, setFaqDeleteModal] = useState(false);
-  // const [rejectModal, setRejectModal] = useState(false);
+  const [goalDeleteModal, setGoalDeleteModal] = useState(false);
   const [orders, setOrders] = useState(initialOrders);
   const [products, setProducts] = useState(dummyProducts);
+  const [stockHistory, setStockHistory] = useState<StockHistoryItem[]>([]);
 
   const handleLogoutClick = () => {
     toast.success("Logged out successfully!");
@@ -65,14 +68,16 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         setLogoutModal,
         activeModal,
         setActiveModal,
-        // rejectModal,
-        // setRejectModal,
         faqDeleteModal,
         setFaqDeleteModal,
+        goalDeleteModal,
+        setGoalDeleteModal,
         orders,
         setOrders,
         products,
         setProducts,
+        stockHistory,
+        setStockHistory,
         handleLogoutClick,
       }}
     >

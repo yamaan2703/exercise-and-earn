@@ -1,6 +1,7 @@
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import {
   ButtonSize,
+  ButtonType,
   ButtonVariant,
   ChartType,
   Gender,
@@ -35,6 +36,7 @@ export interface ConfirmationModalProps {
 }
 
 export interface ButtonProps {
+  type: ButtonType;
   isLoading?: boolean;
   label?: string;
   variant?: ButtonVariant;
@@ -70,6 +72,7 @@ export interface ProductType {
   size?: string[];
   color?: string[];
   stock: number;
+  availableStock?: number;
   price: number;
   deliveryFee: number;
   createdAt: string;
@@ -115,4 +118,17 @@ export interface ChartComponentProps {
   options: ApexOptions;
   height?: number | string;
   width?: number | string;
+}
+
+export interface GoalItem {
+  id: string;
+  calories: number;
+  reward: string;
+}
+
+export interface StockHistoryItem {
+  productId: string;
+  productName: string;
+  addedStock: number;
+  createdAt: string;
 }

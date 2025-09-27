@@ -1,15 +1,100 @@
 "use client";
 import Input from "@/components/ui/input";
-import TableUsersComponent from "@/components/ui/table/table-users";
+import React, { useContext, useState } from "react";
+import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Gender, StatusUser } from "@/types/enums";
+import { dummyUsers } from "@/Data/Data";
+import { UserType } from "@/types/interface";
+import { useRouter } from "next/navigation";
+import { Routes } from "@/routes/Routes";
 import { AuthContext } from "@/context/AuthContext";
+import { cn } from "@/lib/utils";
+import type { ColumnsType } from "antd/es/table";
+import ConfirmationModal from "@/components/ui/modal/confirmation-modal";
 import { InputSize, InputVariant } from "@/types/enums";
-import { useContext, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { FaSearch } from "react-icons/fa";
+import DynamicTable from "@/components/ui/table";
 
 const Users = () => {
+  const router = useRouter();
+  const { setIsSidebarOpen, activeModal, setActiveModal } =
+    useContext(AuthContext)!;
   const [searchUsers, setSearchUsers] = useState("");
-  const { setIsSidebarOpen } = useContext(AuthContext)!;
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
+
+  const handleView = (record: UserType) => {
+    router.push(Routes.USERS_DETAIL(record.id));
+  };
+
+  const handleUpdateUserStatus = (id: string, status: StatusUser) => {
+    const user = dummyUsers.find((user) => user.id === id);
+    if (user) {
+      user.status = status;
+    }
+  };
+
+  const columns: ColumnsType<UserType> = [
+    { title: "Name", dataIndex: "name", sorter: true, width: "10%" },
+    { title: "Email", dataIndex: "email", width: "15%" },
+    { title: "Phone", dataIndex: "phone", width: "15%" },
+    { title: "Created At", dataIndex: "createdAt", sorter: true, width: "15%" },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+      filters: [
+        { text: Gender.MALE, value: Gender.MALE },
+        { text: Gender.FEMALE, value: Gender.FEMALE },
+      ],
+      width: "10%",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      width: "10%",
+      filters: [
+        { text: StatusUser.ACTIVE, value: StatusUser.ACTIVE },
+        { text: StatusUser.INACTIVE, value: StatusUser.INACTIVE },
+      ],
+      render: (status: StatusUser) => {
+        const color =
+          status === StatusUser.ACTIVE ? "text-green-500" : "text-red-500";
+        return <p className={color}>{status}</p>;
+      },
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      width: "10%",
+      render: (_, record: UserType) => (
+        <div className="flex gap-2">
+          <button
+            onClick={() => handleView(record)}
+            title="View Details"
+            className="p-1 text-white hover:text-gray-300 transition cursor-pointer"
+          >
+            <EyeOutlined />
+          </button>
+          <button
+            onClick={() => {
+              setActiveModal(true);
+              setSelectedUser(record);
+            }}
+            disabled={record.status === StatusUser.INACTIVE}
+            title="Delete User"
+            className={cn(
+              "p-1 text-white hover:text-gray-300 transition cursor-pointer",
+              record.status === StatusUser.INACTIVE &&
+                "opacity-50 cursor-not-allowed"
+            )}
+          >
+            <DeleteOutlined />
+          </button>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="space-y-2 p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
@@ -38,8 +123,29 @@ const Users = () => {
       </div>
 
       <div className="">
-        <TableUsersComponent searchUsers={searchUsers} />
+        <DynamicTable<UserType>
+          columns={columns}
+          data={dummyUsers}
+          searchValue={searchUsers}
+          searchableFields={["name", "email", "phone"]}
+          rowKey="id"
+          scroll={{ x: 800 }}
+        />
       </div>
+
+      {activeModal && (
+        <ConfirmationModal
+          title={"Confirm Inactive User"}
+          description={"Are you sure you want to make this user inactive?"}
+          onClick={() => {
+            if (selectedUser) {
+              handleUpdateUserStatus(selectedUser.id, StatusUser.INACTIVE);
+            }
+            setActiveModal(false);
+          }}
+          onCancel={() => setActiveModal(false)}
+        />
+      )}
     </div>
   );
 };

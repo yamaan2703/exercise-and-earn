@@ -8,7 +8,7 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { cn } from "@/lib/utils";
 import { AuthContext } from "@/context/AuthContext";
 import Button from "./button";
-import { ButtonSize, ButtonVariant } from "@/types/enums";
+import { ButtonSize, ButtonType, ButtonVariant } from "@/types/enums";
 
 interface MenuLink {
   to: string;
@@ -117,6 +117,7 @@ function Sidebar() {
 
       <div className="px-3 py-2 mt-[-20px]">
         <Button
+          type={ButtonType.BUTTON}
           variant={ButtonVariant.THEME}
           size={ButtonSize.SMALL}
           label="Logout"

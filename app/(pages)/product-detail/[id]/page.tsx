@@ -5,6 +5,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import Button from "@/components/ui/button";
 import {
   ButtonSize,
+  ButtonType,
   ButtonVariant,
   ProductDetailTab,
   StatusProduct,
@@ -26,10 +27,10 @@ const ProductDetailPage = () => {
   const product = products.find((product) => product.id === id);
 
   useEffect(() => {
-    if (product?.stock !== undefined && product.stock <= 5) {
-      toast.error(`Only ${product.stock} stock left. Hurry up!`);
+    if (product?.availableStock !== undefined && product.availableStock <= 5) {
+      toast.error(`Only ${product.availableStock} stock left. Hurry up!`);
     }
-  }, [product?.stock]);
+  }, [product?.availableStock]);
 
   return (
     <div className="min-h-screen p-1">
@@ -119,6 +120,7 @@ const ProductDetailPage = () => {
               Product not found
             </p>
             <Button
+              type={ButtonType.BUTTON}
               label="Back"
               icon={FaArrowLeft}
               variant={ButtonVariant.THEME}

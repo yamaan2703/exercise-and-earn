@@ -6,7 +6,12 @@ import Button from "@/components/ui/button";
 import { AiOutlineMenu } from "react-icons/ai";
 import Image from "next/image";
 import { Routes } from "@/routes/Routes";
-import { ButtonSize, ButtonVariant, OrderStatus } from "@/types/enums";
+import {
+  ButtonSize,
+  ButtonType,
+  ButtonVariant,
+  OrderStatus,
+} from "@/types/enums";
 
 const Orders = () => {
   const { orders, setOrders, setIsSidebarOpen } = useContext(AuthContext)!;
@@ -157,6 +162,7 @@ const Orders = () => {
 
               <div className="flex justify-between gap-4 items-center">
                 <Button
+                  type={ButtonType.BUTTON}
                   variant={ButtonVariant.THEME}
                   size={ButtonSize.SMALL}
                   label="Approve Order"

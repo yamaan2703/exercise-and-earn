@@ -2,7 +2,7 @@
 import Button from "@/components/ui/button";
 import { getCookie } from "@/lib/cookies";
 import { Routes } from "@/routes/Routes";
-import { ButtonSize, ButtonVariant } from "@/types/enums";
+import { ButtonSize, ButtonType, ButtonVariant } from "@/types/enums";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -22,6 +22,7 @@ export default function NotFound() {
         Oops! The page you are looking for doesnt exist.
       </p>
       <Button
+        type={ButtonType.BUTTON}
         variant={ButtonVariant.THEME}
         size={ButtonSize.MEDIUM}
         label={token ? "Go to Dashboard" : "Go to Login"}

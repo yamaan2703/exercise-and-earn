@@ -5,6 +5,7 @@ import { AuthContext } from "@/context/AuthContext";
 import { Routes } from "@/routes/Routes";
 import {
   ButtonSize,
+  ButtonType,
   ButtonVariant,
   InputSize,
   InputVariant,
@@ -88,6 +89,7 @@ const OrderHistory = () => {
         </div>
         <div className="mr-4 relative" ref={filterRef}>
           <Button
+            type={ButtonType.BUTTON}
             label="Filter Status"
             variant={ButtonVariant.OUTLINE}
             size={ButtonSize.SMALL}
