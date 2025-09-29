@@ -5,17 +5,19 @@ import { FaArrowLeft } from "react-icons/fa";
 import Button from "@/components/ui/button";
 import {
   ButtonSize,
+  ButtonType,
   ButtonVariant,
   ProductDetailTab,
   StatusProduct,
 } from "@/types/enums";
 import Image from "next/image";
 import { AiOutlineMenu } from "react-icons/ai";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
 import ProductInfo from "@/components/product-detail-component/product-info";
 import ProductStock from "@/components/product-detail-component/product-stock";
+import toast from "react-hot-toast";
 
 const ProductDetailPage = () => {
   const { setIsSidebarOpen, products } = useContext(AuthContext)!;
@@ -23,6 +25,12 @@ const ProductDetailPage = () => {
   const { id } = useParams();
   const router = useRouter();
   const product = products.find((product) => product.id === id);
+
+  useEffect(() => {
+    if (product?.availableStock !== undefined && product.availableStock <= 5) {
+      toast.error(`Only ${product.availableStock} stock left. Hurry up!`);
+    }
+  }, [product?.availableStock]);
 
   return (
     <div className="min-h-screen p-1">
@@ -112,6 +120,7 @@ const ProductDetailPage = () => {
               Product not found
             </p>
             <Button
+              type={ButtonType.BUTTON}
               label="Back"
               icon={FaArrowLeft}
               variant={ButtonVariant.THEME}

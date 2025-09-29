@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { removeCookie } from "@/lib/cookies";
 import { Routes } from "@/routes/Routes";
 import { useRouter } from "next/navigation";
-import { ButtonSize, ButtonVariant } from "@/types/enums";
+import { ButtonSize, ButtonType, ButtonVariant } from "@/types/enums";
 
 const Header = () => {
   const { isSidebarOpen, setIsSidebarOpen } = useContext(AuthContext)!;
@@ -72,6 +72,7 @@ const Header = () => {
               </div>
 
               <Button
+                type={ButtonType.BUTTON}
                 onClick={handleLogoutClick}
                 variant={ButtonVariant.SECONDARY}
                 label="Logout"

@@ -9,7 +9,12 @@ import toast from "react-hot-toast";
 import Button from "@/components/ui/button";
 import { getCookie, setCookie } from "@/lib/cookies";
 import { AuthContext } from "@/context/AuthContext";
-import { ButtonVariant, InputSize, InputVariant } from "@/types/enums";
+import {
+  ButtonType,
+  ButtonVariant,
+  InputSize,
+  InputVariant,
+} from "@/types/enums";
 
 const Login = () => {
   const router = useRouter();
@@ -110,6 +115,7 @@ const Login = () => {
           </div>
 
           <Button
+            type={ButtonType.BUTTON}
             isLoading={isLoading}
             label="Sign In"
             variant={ButtonVariant.PRIMARY}

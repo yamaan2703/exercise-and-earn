@@ -2,8 +2,12 @@ import { ProductType } from "@/types/interface";
 import React from "react";
 
 const ProductStock = ({ product }: { product: ProductType }) => {
-  const availableStock = Math.floor(product.stock * 0.8);
+  const availableStock =
+    product.availableStock === undefined
+      ? product.stock
+      : product.availableStock;
   const usedStock = product.stock - availableStock;
+
   return (
     <div className="bg-[#0b2d29] rounded-xl p-3 sm:p-4 border border-teal-500/20">
       <h2 className="text-xl font-bold text-white mb-4">Product Details</h2>

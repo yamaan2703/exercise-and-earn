@@ -1,11 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
-import { ChartFilter } from "@/types/enums";
-
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+import { ChartFilter, ChartType } from "@/types/enums";
+import Chart from "../ui/chart";
 
 const UserCalories = () => {
   const [chartFilter, setChartFilter] = useState(ChartFilter.DAILY);
@@ -144,7 +142,7 @@ const UserCalories = () => {
         <Chart
           options={chartOptions}
           series={currentData.series}
-          type="area"
+          type={ChartType.AREA}
           height={350}
         />
       </div>

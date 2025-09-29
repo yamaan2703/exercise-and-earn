@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { dummyUsers, UserTabs } from "@/Data/Data";
 import {
   ButtonSize,
+  ButtonType,
   ButtonVariant,
   StatusUser,
   UserDetailTab,
@@ -109,6 +110,7 @@ const UserDetailPage = () => {
               User not found
             </p>
             <Button
+              type={ButtonType.BUTTON}
               label="Back"
               icon={FaArrowLeft}
               variant={ButtonVariant.THEME}

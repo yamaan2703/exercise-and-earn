@@ -1,6 +1,6 @@
 import { ConfirmationModalProps } from "@/types/interface";
-import Button from "./button";
-import { ButtonSize, ButtonVariant } from "@/types/enums";
+import Button from "../button";
+import { ButtonSize, ButtonType, ButtonVariant } from "@/types/enums";
 
 const ConfirmationModal = ({
   title,
@@ -25,12 +25,14 @@ const ConfirmationModal = ({
 
         <div className="flex justify-end gap-3">
           <Button
+            type={ButtonType.BUTTON}
             label="Cancel"
             onClick={onCancel}
             variant={ButtonVariant.SECONDARY}
             size={ButtonSize.EXTRASMALL}
           />
           <Button
+            type={ButtonType.BUTTON}
             onClick={onClick}
             variant={ButtonVariant.DANGER}
             label="Confirm"

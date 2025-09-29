@@ -5,6 +5,7 @@ import { AuthContext } from "@/context/AuthContext";
 import { Routes } from "@/routes/Routes";
 import {
   ButtonSize,
+  ButtonType,
   ButtonVariant,
   InputSize,
   InputVariant,
@@ -76,7 +77,7 @@ const OrderHistory = () => {
       <div className="flex justify-between items-center gap-2 mb-3">
         <div className="max-w-[500px] w-full">
           <Input
-            placeholder="Search by product name, user name, or order number..."
+            placeholder="Search by product name, username, or order number..."
             type="text"
             id="search"
             value={orderSearch}
@@ -88,6 +89,7 @@ const OrderHistory = () => {
         </div>
         <div className="mr-4 relative" ref={filterRef}>
           <Button
+            type={ButtonType.BUTTON}
             label="Filter Status"
             variant={ButtonVariant.OUTLINE}
             size={ButtonSize.SMALL}
@@ -119,16 +121,16 @@ const OrderHistory = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {orders
           .filter((order) => order.orderStatus !== OrderStatus.PENDING)
           .filter(applyFilter)
           .map((order) => (
             <div
               key={order.product.id}
-              className="bg-[#0d332e] p-6 rounded-xl border border-teal-500/20 shadow-lg hover:shadow-xl hover:border-teal-400 transition-all duration-300"
+              className="bg-[#0d332e] p-4 rounded-xl border border-teal-500/20 shadow-lg hover:shadow-xl hover:border-teal-400 transition-all duration-300 flex flex-col"
             >
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex justify-between items-center">
                 <div
                   className="flex items-center gap-3 cursor-pointer group"
                   onClick={() =>
@@ -153,13 +155,11 @@ const OrderHistory = () => {
                     </p>
                   </div>
                 </div>
-
-                <span className="text-xs text-gray-400">{order.date}</span>
               </div>
 
-              <div className="border-t border-teal-500/10 my-4"></div>
+              <div className="border-t border-teal-500/10 mt-5 mb-3"></div>
 
-              <div className="flex flex-col sm:flex-row justify-between gap-4 text-sm">
+              <div className="flex flex-col justify-between gap-4 text-sm mb-2">
                 <div className="space-y-1">
                   <h4 className="text-teal-400 font-semibold mb-2">
                     Customer Details
@@ -216,16 +216,19 @@ const OrderHistory = () => {
                 </div>
               </div>
 
-              <div className="border-t border-teal-500/10 my-4"></div>
+              <div className="border-t border-teal-500/10 mb-3 mt-auto"></div>
 
-              <div className="flex gap-4 items-center">
-                <p className="text-gray-300 text-sm">
-                  <span className="text-white">Order Status:</span>
-                </p>
+              <div className="flex justify-between gap-4 items-center">
+                <div className="flex gap-2 items-center">
+                  <p className="text-gray-300 text-sm">
+                    <span className="text-white">Order Status:</span>
+                  </p>
 
-                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-400 border border-green-500/40">
-                  {order.orderStatus}
-                </span>
+                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-400 border border-green-500/40">
+                    {order.orderStatus}
+                  </span>
+                </div>
+                <span className="text-xs text-gray-400">{order.date}</span>
               </div>
             </div>
           ))}
