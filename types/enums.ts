@@ -64,6 +64,12 @@ export enum ButtonSize {
   LARGE = "lg",
 }
 
+export enum ButtonType {
+  SUBMIT = "submit",
+  BUTTON = "button",
+  RESET = "reset",
+}
+
 export enum ChartType {
   BAR = "bar",
   LINE = "line",

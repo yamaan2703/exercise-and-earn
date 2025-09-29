@@ -1,26 +1,29 @@
 "use client";
-import Input from "./input";
+import Input from "../input";
 import {
   ButtonSize,
+  ButtonType,
   ButtonVariant,
   InputSize,
   InputVariant,
 } from "@/types/enums";
-import Button from "./button";
+import Button from "../button";
 import { FaqModalProps } from "@/types/interface";
 import toast from "react-hot-toast";
 
-const FaqModal = ({
-  label,
-  setFaqs,
-  setFaqModal,
-  question,
-  setQuestion,
-  answer,
-  setAnswer,
-  buttonLabel,
-  currentFaqId,
-}: FaqModalProps) => {
+const FaqModal = (props: FaqModalProps) => {
+  const {
+    label,
+    setFaqs,
+    setFaqModal,
+    question,
+    setQuestion,
+    answer,
+    setAnswer,
+    buttonLabel,
+    currentFaqId,
+  } = props;
+
   const handleSave = () => {
     if (!question.trim() || !answer.trim) {
       toast.error("Both fields are required!");
@@ -78,6 +81,7 @@ const FaqModal = ({
             required
           />
           <Button
+            type={ButtonType.BUTTON}
             externalStyles="mt-3"
             label={buttonLabel}
             onClick={handleSave}

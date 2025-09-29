@@ -2,6 +2,7 @@
 import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import {
   ButtonSize,
+  ButtonType,
   ButtonVariant,
   InputSize,
   InputVariant,
@@ -32,7 +33,8 @@ type FormValues = {
 };
 
 const EditProduct = () => {
-  const { products, setProducts, setIsSidebarOpen } = useContext(AuthContext)!;
+  const { products, setProducts, setIsSidebarOpen, setStockHistory } =
+    useContext(AuthContext)!;
   const { id } = useParams();
   const router = useRouter();
 
@@ -91,6 +93,9 @@ const EditProduct = () => {
         return;
       }
 
+      const oldStock = product?.stock ?? 0;
+      const newStock = Number(data.stock);
+
       const updatedProduct: ProductType = {
         ...(product as ProductType),
         name: data.name,
@@ -98,7 +103,7 @@ const EditProduct = () => {
         brand: data.brand,
         description: data.description,
         requiredCalories: Number(data.requiredCalories),
-        stock: Number(data.stock),
+        stock: newStock,
         price: Number(data.price),
         deliveryFee: Number(data.deliveryFee),
         size: data.size ? data.size.split(",").map((s) => s.trim()) : [],
@@ -109,8 +114,21 @@ const EditProduct = () => {
       };
 
       setProducts((prev) =>
-        prev.map((p) => (p.id === id ? updatedProduct : p))
+        prev.map((product) => (product.id === id ? updatedProduct : product))
       );
+
+      if (newStock > oldStock) {
+        const addedStock = newStock - oldStock;
+        setStockHistory((prev) => [
+          ...prev,
+          {
+            productId: product?.id as string,
+            productName: data.name,
+            addedStock,
+            createdAt: new Date().toLocaleString(),
+          },
+        ]);
+      }
 
       router.push(Routes.PRODUCTS_DETAIL(id as string));
       toast.success("Product updated successfully!");
@@ -140,8 +158,8 @@ const EditProduct = () => {
             Product Images
           </label>
           <div className="flex gap-2 flex-wrap">
-            <label className="w-36 h-32 flex flex-col items-center justify-center border-2 border-dashed border-gray-500 rounded-lg p-2 cursor-pointer select-none hover:border-teal-500 transition text-sm text-gray-400">
-              Upload
+            <label className="w-36 h-32 flex flex-col items-center justify-center border-2 border-dashed border-gray-500 rounded-lg p-2 cursor-pointer select-none hover:border-teal-500 transition text-4xl text-gray-400">
+              +
               <input
                 type="file"
                 accept="image/*"
@@ -161,7 +179,7 @@ const EditProduct = () => {
                   onClick={() => removeImage(index)}
                   className="absolute top-[-4px] right-[-6px] size-4 text-xs bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition"
                 >
-                  ✕
+                  X
                 </button>
                 <Image
                   src={
@@ -402,12 +420,12 @@ const EditProduct = () => {
         </div>
 
         <div className="mt-2">
-          <button
-            type="submit"
-            className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-md font-semibold transition cursor-pointer"
-          >
-            Update Product
-          </button>
+          <Button
+            label="Update Product"
+            type={ButtonType.SUBMIT}
+            variant={ButtonVariant.THEME}
+            size={ButtonSize.MEDIUM}
+          />
         </div>
       </form>
     </div>
@@ -419,6 +437,7 @@ const EditProduct = () => {
           Product not found
         </p>
         <Button
+          type={ButtonType.BUTTON}
           label="Back"
           icon={FaArrowLeft}
           variant={ButtonVariant.THEME}

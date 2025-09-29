@@ -1,10 +1,10 @@
 "use client";
 import Button from "@/components/ui/button";
-import ConfirmationModal from "@/components/ui/confirmation-modal";
-import FaqModal from "@/components/ui/faq-modal";
+import ConfirmationModal from "@/components/ui/modal/confirmation-modal";
+import FaqModal from "@/components/ui/modal/faq-modal";
 import { AuthContext } from "@/context/AuthContext";
 import { initialFaqs } from "@/Data/Data";
-import { ButtonSize, ButtonVariant } from "@/types/enums";
+import { ButtonSize, ButtonType, ButtonVariant } from "@/types/enums";
 import { FaqType } from "@/types/interface";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
@@ -55,6 +55,7 @@ const Faqs = () => {
       </div>
       <div className="flex justify-end mb-2 mr-2">
         <Button
+          type={ButtonType.BUTTON}
           label="Add Faq"
           onClick={() => {
             setQuestion("");

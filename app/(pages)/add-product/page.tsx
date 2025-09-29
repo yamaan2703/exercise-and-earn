@@ -1,6 +1,13 @@
 "use client";
 import React, { ChangeEvent, useContext, useState } from "react";
-import { InputSize, InputVariant, StatusProduct } from "@/types/enums";
+import {
+  ButtonSize,
+  ButtonType,
+  ButtonVariant,
+  InputSize,
+  InputVariant,
+  StatusProduct,
+} from "@/types/enums";
 import Input from "@/components/ui/input";
 import { AuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -10,6 +17,7 @@ import toast from "react-hot-toast";
 import { ProductType } from "@/types/interface";
 import Image from "next/image";
 import { useForm, Controller } from "react-hook-form";
+import Button from "@/components/ui/button";
 
 type FormValues = {
   name: string;
@@ -116,8 +124,8 @@ const AddProduct = () => {
           </label>
 
           <div className="flex gap-2 flex-wrap">
-            <label className="w-36 h-32 flex flex-col items-center justify-center border-2 border-dashed border-gray-500 rounded-lg p-2 cursor-pointer select-none hover:border-teal-500 transition text-sm text-gray-400">
-              Upload
+            <label className="w-36 h-32 text-4xl flex flex-col items-center justify-center border-2 border-dashed border-gray-500 rounded-lg p-2 cursor-pointer select-none hover:border-teal-500 transition text-gray-400">
+              +
               <input
                 type="file"
                 accept="image/*"
@@ -142,9 +150,10 @@ const AddProduct = () => {
               </div>
             ))}
           </div>
-          <p className="mt-2 text-xs text-gray-400">
-            Product image must be JPG or PNG, clear with a plain background, and
-            the full product must be visible.
+          <p className="mt-2 text-xs max-w-[600px] text-gray-400">
+            Product image must in a JPG or PNG format, clear with a plain
+            background, and the full product must be visible. Avoid colorful or
+            busy backgrounds to keep the product visible in the app
           </p>
         </div>
 
@@ -361,14 +370,13 @@ const AddProduct = () => {
           </div>
         </div>
 
-        {/* Submit */}
-        <div className="mt-2">
-          <button
-            type="submit"
-            className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-md font-semibold transition cursor-pointer"
-          >
-            Add Product
-          </button>
+        <div>
+          <Button
+            label="Add Product"
+            type={ButtonType.SUBMIT}
+            variant={ButtonVariant.THEME}
+            size={ButtonSize.MEDIUM}
+          />
         </div>
       </form>
     </div>

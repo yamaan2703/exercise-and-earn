@@ -4,6 +4,7 @@ import { ButtonProps } from "@/types/interface";
 import { ButtonSize, ButtonVariant } from "@/types/enums";
 
 const Button = ({
+  type,
   isLoading = false,
   label,
   variant,
@@ -35,6 +36,7 @@ const Button = ({
   };
   return (
     <button
+      type={type}
       onClick={onClick}
       className={clsx(
         baseStyles,
