@@ -55,6 +55,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     removeCookie("token");
     router.push(Routes.LOGIN);
     setLogoutModal(false);
+    setIsSidebarOpen(false);
   };
 
   return (

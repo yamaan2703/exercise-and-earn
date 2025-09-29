@@ -74,9 +74,9 @@ const Faqs = () => {
             className="bg-[#0a2c28] text-white p-4 rounded-lg shadow-md"
           >
             <div className="flex justify-between items-center">
-              <button
+              <p
                 onClick={() => toggleFaq(faq.id)}
-                className="flex-1 flex justify-between items-center font-semibold text-left"
+                className="flex-1 flex justify-between items-center font-semibold text-left cursor-pointer"
               >
                 {faq.question}
                 {openFaq === faq.id ? (
@@ -84,7 +84,7 @@ const Faqs = () => {
                 ) : (
                   <FaChevronDown className="ml-2" />
                 )}
-              </button>
+              </p>
 
               <div className="flex items-center gap-3 ml-4">
                 <FaEdit

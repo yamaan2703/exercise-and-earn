@@ -5,7 +5,7 @@ import Button from "@/components/ui/button";
 import { AiOutlineMenu } from "react-icons/ai";
 import { AuthContext } from "@/context/AuthContext";
 import { formats, modules, ReactQuill } from "@/Data/Data";
-import { ButtonSize, ButtonVariant } from "@/types/enums";
+import { ButtonSize, ButtonType, ButtonVariant } from "@/types/enums";
 
 export default function PrivacyPolicy() {
   const [editorContent, setEditorContent] = useState("");
@@ -38,6 +38,7 @@ export default function PrivacyPolicy() {
       </div>
       <div className="flex justify-end mb-2 mr-2">
         <Button
+          type={ButtonType.BUTTON}
           onClick={handleUpdate}
           label="Update"
           variant={ButtonVariant.THEME}

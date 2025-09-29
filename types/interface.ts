@@ -55,9 +55,9 @@ export interface UserType {
   status: StatusUser;
   phone: string;
   createdAt: string;
-  birthday: string;
+  dob: string;
   photoUrl: string;
-  connectedDevice: string;
+  device: string;
   address: string;
 }
 

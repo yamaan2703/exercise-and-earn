@@ -16,7 +16,6 @@ import {
 const Orders = () => {
   const { orders, setOrders, setIsSidebarOpen } = useContext(AuthContext)!;
   const router = useRouter();
-  // const [orderToReject, setOrderToReject] = useState<string | null>(null);
 
   const handleApprove = (id: string) => {
     setOrders((prev) =>
@@ -27,28 +26,6 @@ const Orders = () => {
       )
     );
   };
-
-  // const handleReject = (id: string) => {
-  //   setOrders((prev) => prev.filter((order) => order.product.id !== id));
-  // };
-
-  // const openRejectModal = (orderId: string) => {
-  //   setOrderToReject(orderId);
-  //   setRejectModal(true);
-  // };
-
-  // const confirmReject = () => {
-  //   if (orderToReject) {
-  //     handleReject(orderToReject);
-  //   }
-  //   setRejectModal(false);
-  //   setOrderToReject(null);
-  // };
-
-  // const cancelReject = () => {
-  //   setRejectModal(false);
-  //   setOrderToReject(null);
-  // };
 
   return (
     <div className="p-1">
@@ -169,25 +146,10 @@ const Orders = () => {
                   onClick={() => handleApprove(order.product.id)}
                 />
                 <span className="text-xs text-gray-400">{order.date}</span>
-                {/* <Button
-                  variant={ButtonVariant.DANGER}
-                  size={ButtonSize.SMALL}
-                  label="Reject Order"
-                  onClick={() => openRejectModal(order.product.id)}
-                /> */}
               </div>
             </div>
           ))}
       </div>
-
-      {/* {rejectModal && (
-        <ConfirmationModal
-          title={"Confirm Reject Order"}
-          description={"Are you sure you want to reject this order?"}
-          onClick={confirmReject}
-          onCancel={cancelReject}
-        />
-      )} */}
     </div>
   );
 };
