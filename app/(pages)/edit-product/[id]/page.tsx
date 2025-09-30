@@ -152,7 +152,6 @@ const EditProduct = () => {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Images */}
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Product Images

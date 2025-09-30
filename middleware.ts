@@ -13,8 +13,10 @@ export function middleware(request: NextRequest) {
     Routes.USERS,
     Routes.PRODUCTS,
     Routes.ADD_PRODUCT,
+    Routes.GOALS,
     Routes.ORDERS,
     Routes.ORDER_HISTORY,
+    Routes.STOCK_HISTORY,
     Routes.PRIVACY_POLICY,
     Routes.TERMS_AND_CONDITIONS,
     Routes.FAQS,
@@ -26,14 +28,15 @@ export function middleware(request: NextRequest) {
 
   const isDynamicPrivateRoute =
     pathname.startsWith("/user-detail/") ||
-    pathname.startsWith("/product-detail/");
+    pathname.startsWith("/product-detail/") ||
+    pathname.startsWith("edit-product");
 
   if (token && isPublicRoute) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL(Routes.DASHBOARD, request.url));
   }
 
   if (!token && (isPrivateRoute || isDynamicPrivateRoute)) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL(Routes.LOGIN, request.url));
   }
 
   return NextResponse.next();

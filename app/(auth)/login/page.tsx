@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -8,21 +8,20 @@ import { Routes } from "@/routes/Routes";
 import toast from "react-hot-toast";
 import Button from "@/components/ui/button";
 import { getCookie, setCookie } from "@/lib/cookies";
-import { AuthContext } from "@/context/AuthContext";
 import {
   ButtonType,
   ButtonVariant,
   InputSize,
   InputVariant,
 } from "@/types/enums";
+import { useLoginMutation } from "@/redux/slices/loginSlice";
 
 const Login = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { adminEmail, adminPassword } = useContext(AuthContext)!;
+  const [login, { isLoading }] = useLoginMutation();
 
   useEffect(() => {
     const token = getCookie("token");
@@ -34,22 +33,16 @@ const Login = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      setIsLoading(true);
+      const response = await login({ email, password }).unwrap();
 
-      setTimeout(() => {
-        if (email === adminEmail && password === adminPassword) {
-          console.log("Login successful");
-          toast.success("Login successful");
-          setCookie("token", email);
-          router.push(Routes.DASHBOARD);
-        } else {
-          console.log("Invalid login credentials");
-          toast.error("Invalid login credentials");
-        }
-        setIsLoading(false);
-      }, 1000);
+      if (response.token) {
+        setCookie("token", response.token);
+        toast.success("Login succesful!");
+        router.push(Routes.DASHBOARD);
+      }
     } catch (error) {
       console.log(error);
+      toast.error("Invalid Login credentials");
     }
   };
 
@@ -115,7 +108,7 @@ const Login = () => {
           </div>
 
           <Button
-            type={ButtonType.BUTTON}
+            type={ButtonType.SUBMIT}
             isLoading={isLoading}
             label="Sign In"
             variant={ButtonVariant.PRIMARY}

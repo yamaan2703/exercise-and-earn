@@ -121,13 +121,11 @@ function DynamicTable<T extends Record<string, any>>({
       sortOrder: Array.isArray(sorter) ? undefined : sorter.order,
     });
 
-    // Call external onChange handler if provided
     if (onTableChange) {
       onTableChange(pagination, filters, sorter, processedData);
     }
   };
 
-  // Calculate pagination total based on filtered data
   const searchFilteredData =
     searchValue && searchableFields.length > 0
       ? filteredData.filter((item) =>
