@@ -22,6 +22,8 @@ interface AuthContextType {
   setLogoutModal: (value: boolean) => void;
   activeModal: boolean;
   setActiveModal: (value: boolean) => void;
+  banModal: boolean;
+  setBanModal: (value: boolean) => void;
   faqDeleteModal: boolean;
   setFaqDeleteModal: (value: boolean) => void;
   goalDeleteModal: boolean;
@@ -46,6 +48,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [activeModal, setActiveModal] = useState(false);
   const [faqDeleteModal, setFaqDeleteModal] = useState(false);
   const [goalDeleteModal, setGoalDeleteModal] = useState(false);
+  const [banModal, setBanModal] = useState(false);
   const [orders, setOrders] = useState(initialOrders);
   const [products, setProducts] = useState(dummyProducts);
   const [stockHistory, setStockHistory] = useState<StockHistoryItem[]>([]);
@@ -69,6 +72,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         setLogoutModal,
         activeModal,
         setActiveModal,
+        banModal,
+        setBanModal,
         faqDeleteModal,
         setFaqDeleteModal,
         goalDeleteModal,

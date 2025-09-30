@@ -1,6 +1,7 @@
 export enum StatusUser {
   ACTIVE = "ACTIVE",
   INACTIVE = "INACTIVE",
+  BANNED = "BANNED",
 }
 
 export enum StatusProduct {

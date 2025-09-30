@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import type { GetProp, TableProps } from "antd";
 import { Table } from "antd";
-import type { SorterResult } from "antd/es/table/interface";
+import type { FilterValue, SorterResult } from "antd/es/table/interface";
 
 type ColumnsType<T extends object = object> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<
@@ -17,7 +17,7 @@ interface TableParams<T> {
   filters?: Parameters<GetProp<TableProps, "onChange">>[1];
 }
 
-interface DynamicTableProps<T extends Record<string, any>> {
+interface DynamicTableProps<T extends object> {
   columns: ColumnsType<T>;
   data: T[];
   searchValue?: string;
@@ -27,16 +27,16 @@ interface DynamicTableProps<T extends Record<string, any>> {
   loading?: boolean;
   pageSize?: number;
   onTableChange?: (
-    pagination: any,
-    filters: any,
-    sorter: any,
+    pagination: TablePaginationConfig,
+    filters: Record<string, FilterValue | null>,
+    sorter: SorterResult<T> | SorterResult<T>[],
     filteredData: T[]
   ) => void;
-  rowKey?: string | ((record: T) => string);
+  rowKey?: string | ((record: T) => Key);
   scroll?: { x?: string | number; y?: string | number };
 }
 
-function DynamicTable<T extends Record<string, any>>({
+function DynamicTable<T extends object>({
   columns,
   data,
   searchValue = "",
@@ -68,15 +68,23 @@ function DynamicTable<T extends Record<string, any>>({
     Object.keys(filters || {}).forEach((key) => {
       const filterValue = filters![key];
       if (filterValue && filterValue.length > 0) {
-        const column = columns?.find((col) => (col as any).dataIndex === key);
+        const column = columns?.find(
+          (col) => (col as Record<string, unknown>).dataIndex === key
+        );
 
         if (column && typeof column.onFilter === "function") {
           processedData = processedData.filter((item) =>
             (filterValue as number[]).some((val) => column.onFilter!(val, item))
           );
         } else {
+          const filterValues = filterValue as Array<string | number | boolean>;
           processedData = processedData.filter((item) =>
-            (filterValue as string[]).includes(item[key])
+            filterValues.includes(
+              (item as Record<string, unknown>)[key] as unknown as
+                | string
+                | number
+                | boolean
+            )
           );
         }
       }
@@ -149,7 +157,9 @@ function DynamicTable<T extends Record<string, any>>({
       <Table<T>
         columns={columns}
         rowKey={
-          typeof rowKey === "string" ? (record) => record[rowKey] : rowKey
+          typeof rowKey === "string"
+            ? (record) => String((record as Record<string, unknown>)[rowKey])
+            : rowKey
         }
         dataSource={searchFilteredData}
         pagination={{
