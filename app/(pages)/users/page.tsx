@@ -20,20 +20,17 @@ import {
   useGetUsersQuery,
 } from "@/redux/slices/userSlice";
 import { cn } from "@/lib/utils";
+import Loader from "@/components/ui/loader";
 
 const Users = () => {
   const router = useRouter();
-  const {
-    setIsSidebarOpen,
-    activeModal,
-    setActiveModal,
-    banModal,
-    setBanModal,
-  } = useContext(AuthContext)!;
+  const { setIsSidebarOpen, activeModal, setActiveModal } =
+    useContext(AuthContext)!;
   const { data, isLoading, isError } = useGetUsersQuery(null);
   const [activateUser] = useActivateUserMutation();
   const [deactivateUser] = useDeactivateUserMutation();
   const [banUser] = useBanUserMutation();
+  const [banModal, setBanModal] = useState(false);
   const [searchUsers, setSearchUsers] = useState("");
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
 
@@ -155,7 +152,9 @@ const Users = () => {
       </div>
 
       {isLoading ? (
-        <p className="text-white">Loading users...</p>
+        <p className="flex justify-center items-center min-h-[100vh]">
+          <Loader size="xl" />
+        </p>
       ) : isError ? (
         <p className="text-red-500">Failed to load users.</p>
       ) : (

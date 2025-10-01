@@ -23,7 +23,7 @@ export const userSlice = createApi({
     }),
 
     getUserbyId: builder.query({
-      query: (id: any) => ({
+      query: (id: string) => ({
         url: `/user/${id}`,
       }),
       providesTags: ["Users"],

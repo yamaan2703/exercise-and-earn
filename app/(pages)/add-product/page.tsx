@@ -6,7 +6,6 @@ import {
   ButtonVariant,
   InputSize,
   InputVariant,
-  StatusProduct,
 } from "@/types/enums";
 import Input from "@/components/ui/input";
 import { AuthContext } from "@/context/AuthContext";
@@ -24,7 +23,7 @@ type FormValues = {
   category: string;
   brand: string;
   description: string;
-  requiredCalories: string;
+  calories: string;
   stock: string;
   price: string;
   deliveryFee: string;
@@ -43,7 +42,7 @@ const AddProduct = () => {
       category: "",
       brand: "",
       description: "",
-      requiredCalories: "",
+      calories: "",
       stock: "",
       price: "",
       deliveryFee: "",
@@ -57,7 +56,7 @@ const AddProduct = () => {
       ...prev,
       {
         ...product,
-        id: String(prev.length + 1),
+        id: Number(prev.length + 1),
         createdAt: new Date().toISOString(),
       },
     ]);
@@ -78,20 +77,24 @@ const AddProduct = () => {
       }
 
       addProduct({
-        id: "",
+        id: Date.now(),
         name: data.name,
         images: images.map((image) => URL.createObjectURL(image)),
-        category: data.category,
-        brand: data.brand,
+        category: { id: 1, name: data.category },
+        brand: { id: 1, name: data.brand },
         description: data.description,
-        requiredCalories: Number(data.requiredCalories),
+        calories: Number(data.calories),
         stock: Number(data.stock),
         price: Number(data.price),
-        deliveryFee: Number(data.deliveryFee),
-        size: data.size ? data.size.split(",").map((s) => s.trim()) : [],
-        color: data.color ? data.color.split(",").map((c) => c.trim()) : [],
-        status: StatusProduct.ACTIVE,
-        createdAt: "",
+        size: data.size ?? "",
+        color: data.color ?? "",
+        featuredImage: images.length > 0 ? URL.createObjectURL(images[0]) : "",
+        goalId: 1,
+        brandId: 1,
+        categoryId: 1,
+        specs: "",
+        updatedAt: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
       });
 
       reset();
@@ -246,7 +249,7 @@ const AddProduct = () => {
         <div className="flex flex-col sm:flex-row gap-6">
           <div className="flex-1">
             <Controller
-              name="requiredCalories"
+              name="calories"
               control={control}
               rules={{ required: true }}
               render={({ field }) => (

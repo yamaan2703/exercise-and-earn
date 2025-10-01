@@ -62,21 +62,24 @@ export interface UserType {
 }
 
 export interface ProductType {
-  id: string;
+  id: number;
   name: string;
-  images: (string | File)[];
-  category: string;
-  brand: string;
-  description: string;
-  requiredCalories: number;
-  size?: string[];
-  color?: string[];
+  images: string[];
+  category: { id: number; name: string };
+  brand: { id: number; name: string };
+  description: string | null;
+  calories: number;
+  color?: string;
+  size?: string;
+  specs?: string;
   stock: number;
-  availableStock?: number;
+  featuredImage: string;
+  goalId: number;
+  brandId: number;
+  categoryId: number;
   price: number;
-  deliveryFee: number;
+  updatedAt: string;
   createdAt: string;
-  status: StatusProduct;
 }
 
 export interface OrderType {
@@ -127,7 +130,7 @@ export interface GoalItem {
 }
 
 export interface StockHistoryItem {
-  productId: string;
+  productId: number;
   productName: string;
   addedStock: number;
   createdAt: string;

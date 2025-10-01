@@ -51,10 +51,7 @@ const Button = ({
     >
       {isLoading ? (
         <span className="flex items-center gap-2">
-          <Loader
-            size={size}
-            color={variant === "outline" ? "green" : "white"}
-          />
+          <Loader size="sm" color={variant === "outline" ? "green" : "white"} />
           {label ? label : "Loading..."}
         </span>
       ) : (

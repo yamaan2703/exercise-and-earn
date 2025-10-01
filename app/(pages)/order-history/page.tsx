@@ -191,7 +191,7 @@ const OrderHistory = () => {
                   </h4>
                   <p className="text-gray-300">
                     <span className="text-white">Required Calories:</span>{" "}
-                    {order.product.requiredCalories}
+                    {order.product.calories}
                   </p>
                   {order.product.size && (
                     <p className="text-gray-300">
@@ -206,8 +206,7 @@ const OrderHistory = () => {
                     </p>
                   )}
                   <p className="text-gray-300">
-                    <span className="text-white">Delivery Fee:</span> €
-                    {order.product.deliveryFee}
+                    <span className="text-white">Delivery Fee:</span> €5
                   </p>
                   <p className="text-gray-300">
                     <span className="text-white">Payment Type:</span>{" "}

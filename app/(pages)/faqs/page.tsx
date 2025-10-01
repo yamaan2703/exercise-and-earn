@@ -12,8 +12,8 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { FaChevronDown, FaChevronUp, FaEdit, FaTrash } from "react-icons/fa";
 
 const Faqs = () => {
-  const { setIsSidebarOpen, faqDeleteModal, setFaqDeleteModal } =
-    useContext(AuthContext)!;
+  const { setIsSidebarOpen } = useContext(AuthContext)!;
+  const [faqDeleteModal, setFaqDeleteModal] = useState(false);
   const [addFaqModal, setAddFaqModal] = useState(false);
   const [editFaqModal, setEditFaqModal] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -60,6 +60,7 @@ const Faqs = () => {
           onClick={() => {
             setQuestion("");
             setAnswer("");
+            setCurrentFaqId(null);
             setAddFaqModal(true);
           }}
           variant={ButtonVariant.THEME}

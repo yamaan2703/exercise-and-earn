@@ -1,14 +1,13 @@
 "use client";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { EyeOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { ProductType } from "@/types/interface";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
-import { ButtonType, StatusProduct } from "@/types/enums";
+import { ButtonType } from "@/types/enums";
 import { AuthContext } from "@/context/AuthContext";
-import { cn } from "@/lib/utils";
 import type { ColumnsType } from "antd/es/table";
 import DynamicTable from "@/components/ui/table";
 import ConfirmationModal from "@/components/ui/modal/confirmation-modal";
@@ -20,51 +19,56 @@ import {
 } from "@/types/enums";
 import { AiOutlineMenu } from "react-icons/ai";
 import { FaPlus, FaSearch } from "react-icons/fa";
+import {
+  useDeleteProductMutation,
+  useGetProductsQuery,
+} from "@/redux/slices/productSlice";
+import Loader from "@/components/ui/loader";
 
 const Products = () => {
   const router = useRouter();
-  const {
-    setIsSidebarOpen,
-    activeModal,
-    setActiveModal,
-    products,
-    setProducts,
-  } = useContext(AuthContext)!;
+  const { setIsSidebarOpen, activeModal, setActiveModal } =
+    useContext(AuthContext)!;
+  const { data, isLoading, isError } = useGetProductsQuery(null);
+  const [deleteProduct] = useDeleteProductMutation();
   const [searchProducts, setSearchProducts] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(
     null
   );
 
+  useEffect(() => {
+    if (data) {
+      console.log(data.products);
+    }
+  }, [data]);
+
   const handleView = (record: ProductType) => {
     router.push(Routes.PRODUCTS_DETAIL(record.id));
   };
 
-  const handleUpdateProductStatus = (id: string, status: StatusProduct) => {
-    setProducts((prev) =>
-      prev.map((product) =>
-        product.id === id ? { ...product, status } : product
-      )
-    );
+  const handleDeleteProduct = (id: number) => {
+    deleteProduct(id);
   };
 
   const columns: ColumnsType<ProductType> = [
     { title: "Product Name", dataIndex: "name", sorter: true, width: "15%" },
-    { title: "Category", dataIndex: "category", width: "15%" },
-    { title: "Brand", dataIndex: "brand", width: "15%" },
+    { title: "Category", dataIndex: ["category", "name"], width: "15%" },
+    { title: "Brand", dataIndex: ["brand", "name"], width: "15%" },
     {
       title: "Calories",
-      dataIndex: "requiredCalories",
+      dataIndex: "calories",
+      sorter: true,
       width: "15%",
     },
     {
       title: "Stock",
-      dataIndex: "availableStock",
+      dataIndex: "stock",
       filters: [
         { text: "All Stock", value: "all" },
         { text: "Stock less than 5", value: "low" },
       ],
       onFilter: (value, record) => {
-        const stockValue = record.availableStock ?? record.stock;
+        const stockValue = record.stock;
         if (value === "all") return true;
         if (value === "low") return stockValue <= 5;
         return true;
@@ -73,25 +77,11 @@ const Products = () => {
     },
     { title: "Created At", dataIndex: "createdAt", sorter: true, width: "15%" },
     {
-      title: "Status",
-      dataIndex: "status",
-      width: "15%",
-      filters: [
-        { text: StatusProduct.ACTIVE, value: StatusProduct.ACTIVE },
-        { text: StatusProduct.INACTIVE, value: StatusProduct.INACTIVE },
-      ],
-      render: (status: StatusProduct) => {
-        const color =
-          status === StatusProduct.ACTIVE ? "text-green-500" : "text-red-500";
-        return <p className={color}>{status}</p>;
-      },
-    },
-    {
       title: "Actions",
       key: "actions",
       width: "15%",
       render: (_, record: ProductType) => (
-        <div className="flex gap-2">
+        <div className="flex gap-1">
           <button
             onClick={() => handleView(record)}
             title="View Details"
@@ -112,11 +102,7 @@ const Products = () => {
               setSelectedProduct(record);
             }}
             title="Delete Product"
-            className={cn(
-              "p-1 text-white hover:text-gray-300 transition cursor-pointer",
-              record.status === StatusProduct.INACTIVE &&
-                "opacity-50 cursor-not-allowed"
-            )}
+            className="p-1 text-white hover:text-gray-300 transition cursor-pointer"
           >
             <DeleteOutlined />
           </button>
@@ -161,25 +147,30 @@ const Products = () => {
           onClick={() => router.push(Routes.ADD_PRODUCT)}
         />
       </div>
-      <DynamicTable<ProductType>
-        columns={columns}
-        data={products}
-        searchValue={searchProducts}
-        searchableFields={["name", "category"]}
-        rowKey="id"
-        scroll={{ x: 800 }}
-      />
+      {isLoading ? (
+        <p className="flex justify-center items-center min-h-[100vh]">
+          <Loader size="xl" />
+        </p>
+      ) : isError ? (
+        <p className="text-red-500">Failed to load product.</p>
+      ) : (
+        <DynamicTable<ProductType>
+          columns={columns}
+          data={data.products}
+          searchValue={searchProducts}
+          searchableFields={["name", "category"]}
+          rowKey="id"
+          scroll={{ x: 800 }}
+        />
+      )}
 
       {activeModal && (
         <ConfirmationModal
-          title={"Confirm Inactive Product"}
-          description={"Are you sure you want to make this product inactive?"}
+          title={"Confirm Delete Product"}
+          description={"Are you sure you want to delete this product?"}
           onClick={() => {
             if (selectedProduct) {
-              handleUpdateProductStatus(
-                selectedProduct.id,
-                StatusProduct.INACTIVE
-              );
+              handleDeleteProduct(selectedProduct.id);
             }
             setActiveModal(false);
           }}

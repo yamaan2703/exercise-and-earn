@@ -2,10 +2,7 @@ import { ProductType } from "@/types/interface";
 import React from "react";
 
 const ProductStock = ({ product }: { product: ProductType }) => {
-  const availableStock =
-    product.availableStock === undefined
-      ? product.stock
-      : product.availableStock;
+  const availableStock = Math.floor(Math.random() * product.stock);
   const usedStock = product.stock - availableStock;
 
   return (

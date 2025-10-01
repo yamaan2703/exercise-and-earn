@@ -20,21 +20,15 @@ import UserCalories from "@/components/user-detail-component/user-calories";
 import UserClaimedProducts from "@/components/user-detail-component/user-claimed-products";
 import {
   useActivateUserMutation,
-  useBanUserMutation,
   useGetUserbyIdQuery,
 } from "@/redux/slices/userSlice";
 import ConfirmationModal from "@/components/ui/modal/confirmation-modal";
+import Loader from "@/components/ui/loader";
 
 const UserDetailPage = () => {
-  const {
-    setIsSidebarOpen,
-    activeModal,
-    setActiveModal,
-    banModal,
-    setBanModal,
-  } = useContext(AuthContext)!;
+  const { setIsSidebarOpen, activeModal, setActiveModal } =
+    useContext(AuthContext)!;
   const [activateUser] = useActivateUserMutation();
-  const [banUser] = useBanUserMutation();
   const { id } = useParams();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState(UserDetailTab.PROFILE);
@@ -45,7 +39,12 @@ const UserDetailPage = () => {
     if (user) console.log("user", user);
   }, [user]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading)
+    return (
+      <p className="flex justify-center items-center min-h-[100vh]">
+        <Loader size="xl" />
+      </p>
+    );
   return (
     <div className="min-h-screen p-1">
       {user ? (
@@ -96,12 +95,6 @@ const UserDetailPage = () => {
                   >
                     {user.status}
                   </span>
-                  <span
-                    onClick={() => setBanModal(true)}
-                    className="px-4 py-2 rounded-full text-sm font-semibold bg-red-200 text-red-500 border border-red-500/50 cursor-pointer"
-                  >
-                    Ban user
-                  </span>
                 </div>
               </div>
             </div>
@@ -142,20 +135,6 @@ const UserDetailPage = () => {
                 setActiveModal(false);
               }}
               onCancel={() => setActiveModal(false)}
-            />
-          )}
-
-          {banModal && (
-            <ConfirmationModal
-              title="Confirm Ban User"
-              description="Are you sure you want to ban this user? This action cannot be undone."
-              onClick={async () => {
-                if (user) {
-                  await banUser(user.id);
-                }
-                setBanModal(false);
-              }}
-              onCancel={() => setBanModal(false)}
             />
           )}
         </>

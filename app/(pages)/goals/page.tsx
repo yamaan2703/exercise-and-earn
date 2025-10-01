@@ -22,8 +22,8 @@ const initialGoals = [
 ];
 
 const Goals = () => {
-  const { setIsSidebarOpen, goalDeleteModal, setGoalDeleteModal } =
-    useContext(AuthContext)!;
+  const { setIsSidebarOpen } = useContext(AuthContext)!;
+  const [goalDeleteModal, setGoalDeleteModal] = useState(false);
   const [calories, setCalories] = useState("");
   const [reward, setReward] = useState("");
   const [editCalories, setEditCalories] = useState("");
