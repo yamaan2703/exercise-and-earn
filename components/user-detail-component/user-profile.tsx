@@ -46,7 +46,7 @@ const UserProfile = ({ user }: { user: UserType }) => {
         <div className="space-y-2">
           <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
             <span className="text-gray-300 font-medium">Connected Device</span>
-            <span>{user.connectedDevice}</span>
+            <span>{user.device}</span>
           </div>
 
           <div className="flex justify-between gap-4 items-center py-3 border-b border-teal-500/10">
@@ -61,7 +61,7 @@ const UserProfile = ({ user }: { user: UserType }) => {
 
           <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
             <span className="text-gray-300 font-medium">Birthday</span>
-            <span>{user.birthday}</span>
+            <span>{user.dob}</span>
           </div>
         </div>
       </div>

@@ -25,7 +25,7 @@ const FaqModal = (props: FaqModalProps) => {
   } = props;
 
   const handleSave = () => {
-    if (!question.trim() || !answer.trim) {
+    if (!question.trim() || !answer.trim()) {
       toast.error("Both fields are required!");
       return;
     }

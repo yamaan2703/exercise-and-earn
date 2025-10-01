@@ -40,23 +40,20 @@ const UserClaimedProducts = () => {
               <div className="text-gray-300 text-sm px-3 pb-3 space-y-1">
                 <p className="text-gray-300">
                   <span className="text-white">Calorie Required: </span>
-                  {product.requiredCalories} cal
+                  {product.calories} cal
                 </p>
                 {product.size && (
                   <p className="text-gray-300">
-                    <span className="text-white">Size:</span>{" "}
-                    {product.size?.slice(0, 1)?.map((size) => size)}
+                    <span className="text-white">Size:</span> {product.size}
                   </p>
                 )}
                 {product.color && (
                   <p className="text-gray-300">
-                    <span className="text-white">Color:</span>{" "}
-                    {product.color?.slice(0, 1)?.map((color) => color)}
+                    <span className="text-white">Color:</span> {product.color}
                   </p>
                 )}
                 <p className="text-gray-300">
-                  <span className="text-white">Delivery Fee:</span> €
-                  {product.deliveryFee}
+                  <span className="text-white">Delivery Fee:</span> €5
                 </p>
                 <p className="text-gray-300">
                   <span className="text-white">Payment Type:</span> Cash

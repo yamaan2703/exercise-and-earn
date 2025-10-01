@@ -24,7 +24,7 @@ type FormValues = {
   category: string;
   brand: string;
   description: string;
-  requiredCalories: string;
+  calories: string;
   stock: string;
   price: string;
   size?: string;
@@ -38,7 +38,7 @@ const EditProduct = () => {
   const { id } = useParams();
   const router = useRouter();
 
-  const product = products.find((product) => product.id === id);
+  const product = products.find((product) => product.id === Number(id));
 
   const { control, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: {
@@ -46,7 +46,7 @@ const EditProduct = () => {
       category: "",
       brand: "",
       description: "",
-      requiredCalories: "",
+      calories: "",
       stock: "",
       price: "",
       size: "",
@@ -59,15 +59,20 @@ const EditProduct = () => {
     if (product) {
       reset({
         name: product.name,
-        category: product.category,
-        brand: product.brand,
-        description: product.description,
-        requiredCalories: product.requiredCalories.toString(),
+        category:
+          typeof product.category === "object"
+            ? product.category.name
+            : product.category,
+        brand:
+          typeof product.brand === "object"
+            ? product.brand.name
+            : product.brand,
+        description: product.description ?? "",
+        calories: product.calories.toString(),
         stock: product.stock.toString(),
         price: product.price.toString(),
-        size: product.size?.join(", ") ?? "",
-        color: product.color?.join(", ") ?? "",
-        deliveryFee: product.deliveryFee?.toString() ?? "",
+        size: product.size ?? "",
+        color: product.color ?? "",
       });
       setImages(product.images);
     }
@@ -99,22 +104,26 @@ const EditProduct = () => {
       const updatedProduct: ProductType = {
         ...(product as ProductType),
         name: data.name,
-        category: data.category,
-        brand: data.brand,
+        category: {
+          id: product?.category?.id ?? Date.now(),
+          name: data.category,
+        },
+        brand: { id: product?.brand?.id ?? Date.now(), name: data.brand },
         description: data.description,
-        requiredCalories: Number(data.requiredCalories),
+        calories: Number(data.calories),
         stock: newStock,
         price: Number(data.price),
-        deliveryFee: Number(data.deliveryFee),
-        size: data.size ? data.size.split(",").map((s) => s.trim()) : [],
-        color: data.color ? data.color.split(",").map((c) => c.trim()) : [],
+        size: data.size,
+        color: data.color,
         images: images.map((image) =>
           typeof image === "string" ? image : URL.createObjectURL(image)
         ),
       };
 
       setProducts((prev) =>
-        prev.map((product) => (product.id === id ? updatedProduct : product))
+        prev.map((product) =>
+          product.id === Number(id) ? updatedProduct : product
+        )
       );
 
       if (newStock > oldStock) {
@@ -122,7 +131,7 @@ const EditProduct = () => {
         setStockHistory((prev) => [
           ...prev,
           {
-            productId: product?.id as string,
+            productId: product?.id ?? 0,
             productName: data.name,
             addedStock,
             createdAt: new Date().toLocaleString(),
@@ -130,7 +139,7 @@ const EditProduct = () => {
         ]);
       }
 
-      router.push(Routes.PRODUCTS_DETAIL(id as string));
+      router.push(Routes.PRODUCTS_DETAIL(Number(id)));
       toast.success("Product updated successfully!");
     } catch (error) {
       console.log("error", error);
@@ -291,7 +300,7 @@ const EditProduct = () => {
         <div className="flex flex-col sm:flex-row gap-6">
           <div className="flex-1">
             <Controller
-              name="requiredCalories"
+              name="calories"
               control={control}
               rules={{ required: true }}
               render={({ field }) => (

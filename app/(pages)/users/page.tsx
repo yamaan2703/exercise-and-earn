@@ -1,36 +1,54 @@
 "use client";
 import Input from "@/components/ui/input";
-import React, { useContext, useState } from "react";
-import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
+import React, { useContext, useEffect, useState } from "react";
+import { EyeOutlined, PoweroffOutlined, StopOutlined } from "@ant-design/icons";
 import { Gender, StatusUser } from "@/types/enums";
-import { dummyUsers } from "@/Data/Data";
 import { UserType } from "@/types/interface";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
 import { AuthContext } from "@/context/AuthContext";
-import { cn } from "@/lib/utils";
 import type { ColumnsType } from "antd/es/table";
 import ConfirmationModal from "@/components/ui/modal/confirmation-modal";
 import { InputSize, InputVariant } from "@/types/enums";
 import { AiOutlineMenu } from "react-icons/ai";
 import { FaSearch } from "react-icons/fa";
 import DynamicTable from "@/components/ui/table";
+import {
+  useActivateUserMutation,
+  useBanUserMutation,
+  useDeactivateUserMutation,
+  useGetUsersQuery,
+} from "@/redux/slices/userSlice";
+import { cn } from "@/lib/utils";
+import Loader from "@/components/ui/loader";
 
 const Users = () => {
   const router = useRouter();
   const { setIsSidebarOpen, activeModal, setActiveModal } =
     useContext(AuthContext)!;
+  const { data, isLoading, isError } = useGetUsersQuery(null);
+  const [activateUser] = useActivateUserMutation();
+  const [deactivateUser] = useDeactivateUserMutation();
+  const [banUser] = useBanUserMutation();
+  const [banModal, setBanModal] = useState(false);
   const [searchUsers, setSearchUsers] = useState("");
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
+
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+    }
+  }, [data]);
 
   const handleView = (record: UserType) => {
     router.push(Routes.USERS_DETAIL(record.id));
   };
 
-  const handleUpdateUserStatus = (id: string, status: StatusUser) => {
-    const user = dummyUsers.find((user) => user.id === id);
-    if (user) {
-      user.status = status;
+  const handleUpdateUserStatus = (user: UserType) => {
+    if (user.status === StatusUser.ACTIVE) {
+      deactivateUser(user.id);
+    } else {
+      activateUser(user.id);
     }
   };
 
@@ -55,6 +73,7 @@ const Users = () => {
       filters: [
         { text: StatusUser.ACTIVE, value: StatusUser.ACTIVE },
         { text: StatusUser.INACTIVE, value: StatusUser.INACTIVE },
+        { text: StatusUser.BANNED, value: StatusUser.BANNED },
       ],
       render: (status: StatusUser) => {
         const color =
@@ -66,8 +85,8 @@ const Users = () => {
       title: "Actions",
       key: "actions",
       width: "10%",
-      render: (_, record: UserType) => (
-        <div className="flex gap-2">
+      render: (record: UserType) => (
+        <div className="flex gap-1">
           <button
             onClick={() => handleView(record)}
             title="View Details"
@@ -81,14 +100,24 @@ const Users = () => {
               setSelectedUser(record);
             }}
             disabled={record.status === StatusUser.INACTIVE}
-            title="Delete User"
+            title="update user status"
             className={cn(
               "p-1 text-white hover:text-gray-300 transition cursor-pointer",
               record.status === StatusUser.INACTIVE &&
                 "opacity-50 cursor-not-allowed"
             )}
           >
-            <DeleteOutlined />
+            <PoweroffOutlined />
+          </button>
+          <button
+            onClick={() => {
+              setBanModal(true);
+              setSelectedUser(record);
+            }}
+            title="ban user"
+            className="p-1 text-white hover:text-gray-300 transition cursor-pointer"
+          >
+            <StopOutlined />
           </button>
         </div>
       ),
@@ -122,28 +151,48 @@ const Users = () => {
         />
       </div>
 
-      <div className="">
+      {isLoading ? (
+        <p className="flex justify-center items-center min-h-[100vh]">
+          <Loader size="xl" />
+        </p>
+      ) : isError ? (
+        <p className="text-red-500">Failed to load users.</p>
+      ) : (
         <DynamicTable<UserType>
           columns={columns}
-          data={dummyUsers}
+          data={data.users}
           searchValue={searchUsers}
           searchableFields={["name", "email", "phone"]}
           rowKey="id"
           scroll={{ x: 800 }}
         />
-      </div>
+      )}
 
-      {activeModal && (
+      {activeModal && selectedUser?.status === StatusUser.ACTIVE && (
         <ConfirmationModal
-          title={"Confirm Inactive User"}
-          description={"Are you sure you want to make this user inactive?"}
+          title="Confirm Inactive User"
+          description="Are you sure you want to deactivate this user?"
           onClick={() => {
             if (selectedUser) {
-              handleUpdateUserStatus(selectedUser.id, StatusUser.INACTIVE);
+              handleUpdateUserStatus(selectedUser);
             }
             setActiveModal(false);
           }}
           onCancel={() => setActiveModal(false)}
+        />
+      )}
+
+      {banModal && (
+        <ConfirmationModal
+          title="Confirm Ban User"
+          description="Are you sure you want to ban this user? This action cannot be undone."
+          onClick={() => {
+            if (selectedUser) {
+              banUser(selectedUser.id);
+            }
+            setBanModal(false);
+          }}
+          onCancel={() => setBanModal(false)}
         />
       )}
     </div>

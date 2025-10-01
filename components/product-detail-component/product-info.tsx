@@ -15,21 +15,21 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
             <p className="text-gray-300 font-medium flex items-center gap-2">
               Category
             </p>
-            <p>{product.category}</p>
+            <p>{product.category.name}</p>
           </div>
 
           <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
             <p className="text-gray-300 font-medium flex items-center gap-2">
               Brand
             </p>
-            <p>{product.brand}</p>
+            <p>{product.brand.name}</p>
           </div>
 
           <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
             <p className="text-gray-300 font-medium flex items-center gap-2">
               Required Calories
             </p>
-            <p>{product.requiredCalories}</p>
+            <p>{product.calories}</p>
           </div>
 
           {product.size && product.size.length > 0 && (
@@ -37,14 +37,7 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
               <p className="text-gray-300 font-medium flex items-center gap-2">
                 Size
               </p>
-              <p className="space-x-2">
-                {product.size?.map((size, index) => (
-                  <span className="space-x-2" key={index}>
-                    {size}
-                    {index < product.size!.length - 1 ? "," : ""}
-                  </span>
-                ))}
-              </p>
+              <p className="space-x-2">{product.size}</p>
             </div>
           )}
 
@@ -53,23 +46,9 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
               <span className="text-gray-300 font-medium flex items-center gap-2">
                 Color
               </span>
-              <p className="space-x-2">
-                {product.color?.map((color, index) => (
-                  <span className="space-x-2" key={index}>
-                    {color}
-                    {index < product.color!.length - 1 ? "," : ""}
-                  </span>
-                ))}
-              </p>
+              <p className="space-x-2">{product.color}</p>
             </div>
           )}
-
-          <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
-            <p className="text-gray-300 font-medium flex items-center gap-2">
-              Delivery Fees{" "}
-            </p>
-            <p>€{product.deliveryFee}</p>
-          </div>
 
           <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
             <p className="text-gray-300 font-medium flex items-center gap-2">
@@ -91,19 +70,15 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
             Product Extra Images
           </h2>
           <div className="flex flex-wrap gap-3">
-            {product.images.length > 1 ? (
+            {product.images && product.images.length > 0 ? (
               <>
-                {product.images.slice(1).map((image, index) => (
+                {product.images.map((image, index) => (
                   <div
                     key={index}
                     className="bg-white/20 flex justify-center rounded-md"
                   >
                     <Image
-                      src={
-                        typeof image === "string"
-                          ? image
-                          : URL.createObjectURL(image)
-                      }
+                      src={`/${image}`}
                       alt={`image_${index}`}
                       width={150}
                       height={150}
