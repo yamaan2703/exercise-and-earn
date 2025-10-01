@@ -67,13 +67,39 @@ const ProductDetailPage = () => {
             <div className="relative z-10 flex flex-col sm:flex-row justify-between items-center gap-6">
               <div className="flex flex-col sm:flex-row items-center gap-6">
                 <div className="bg-white/20 rounded-full">
-                  <Image
-                    src={`/${product.featuredImage}`}
-                    alt={product.name}
-                    width={150}
-                    height={150}
-                    className="size-24 sm:size-28 rounded-full"
-                  />
+                  {(() => {
+                    const isValidHttpUrl = (value: unknown) => {
+                      if (
+                        typeof value !== "string" ||
+                        value.trim().length === 0
+                      )
+                        return false;
+                      try {
+                        // Allow only http/https absolute URLs
+                        const u = new URL(value);
+                        return (
+                          u.protocol === "http:" || u.protocol === "https:"
+                        );
+                      } catch {
+                        return false;
+                      }
+                    };
+
+                    const src = isValidHttpUrl(product.featuredImage)
+                      ? (product.featuredImage as string)
+                      : "/images/bottle.png";
+
+                    return (
+                      <Image
+                        src={src}
+                        alt={product.name}
+                        width={150}
+                        height={150}
+                        className="size-24 sm:size-28 rounded-full"
+                        unoptimized
+                      />
+                    );
+                  })()}
                 </div>
                 <div className="flex flex-col items-center sm:items-start">
                   <h1 className="text-3xl font-bold text-white mb-1">
