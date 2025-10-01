@@ -1,7 +1,9 @@
-import { ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 import {
   ButtonSize,
+  ButtonType,
   ButtonVariant,
+  ChartType,
   Gender,
   InputSize,
   InputVariant,
@@ -10,10 +12,11 @@ import {
   StatusUser,
 } from "./enums";
 import { IconType } from "react-icons/lib";
+import { ApexOptions } from "apexcharts";
 
 export interface InputProps {
   label?: string;
-  value?: string;
+  value: string;
   setValue: (value: string) => void;
   id: string;
   type: string;
@@ -33,6 +36,7 @@ export interface ConfirmationModalProps {
 }
 
 export interface ButtonProps {
+  type: ButtonType;
   isLoading?: boolean;
   label?: string;
   variant?: ButtonVariant;
@@ -51,27 +55,31 @@ export interface UserType {
   status: StatusUser;
   phone: string;
   createdAt: string;
-  birthday: string;
+  dob: string;
   photoUrl: string;
-  connectedDevice: string;
+  device: string;
   address: string;
 }
 
 export interface ProductType {
-  id: string;
+  id: number;
   name: string;
-  images: (string | File)[];
-  category: string;
-  brand: string;
-  description: string;
-  requiredCalories: number;
-  size?: string[];
-  color?: string[];
+  images: string[];
+  category: { id: number; name: string };
+  brand: { id: number; name: string };
+  description: string | null;
+  calories: number;
+  color?: string;
+  size?: string;
+  specs?: string;
   stock: number;
+  featuredImage: string;
+  goalId: number;
+  brandId: number;
+  categoryId: number;
   price: number;
-  deliveryFee?: number;
+  updatedAt: string;
   createdAt: string;
-  status: StatusProduct;
 }
 
 export interface OrderType {
@@ -93,4 +101,37 @@ export interface FaqType {
   id: number;
   question: string;
   answer: string;
+}
+
+export interface FaqModalProps {
+  label: string;
+  setFaqs: Dispatch<SetStateAction<FaqType[]>>;
+  setFaqModal: Dispatch<SetStateAction<boolean>>;
+  question: string;
+  setQuestion: Dispatch<SetStateAction<string>>;
+  answer: string;
+  setAnswer: Dispatch<SetStateAction<string>>;
+  buttonLabel: string;
+  currentFaqId: number | null;
+}
+
+export interface ChartComponentProps {
+  type: ChartType;
+  series: ApexOptions["series"];
+  options: ApexOptions;
+  height?: number | string;
+  width?: number | string;
+}
+
+export interface GoalItem {
+  id: string;
+  calories: number;
+  reward: string;
+}
+
+export interface StockHistoryItem {
+  productId: number;
+  productName: string;
+  addedStock: number;
+  createdAt: string;
 }

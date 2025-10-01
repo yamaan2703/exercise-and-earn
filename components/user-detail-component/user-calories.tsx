@@ -1,11 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
-import { ChartFilter } from "@/types/enums";
-
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+import { ChartFilter, ChartType } from "@/types/enums";
+import Chart from "../ui/chart";
 
 const UserCalories = () => {
   const [chartFilter, setChartFilter] = useState(ChartFilter.DAILY);
@@ -89,7 +87,7 @@ const UserCalories = () => {
   };
   return (
     <>
-      <div className="bg-[#0b2d29] rounded-xl p-4 border border-teal-500/20">
+      <div className="bg-[#0b2d29] rounded-xl p-3 sm:p-4 border border-teal-500/20">
         <h2 className="text-xl font-bold text-white mb-4">Calories Details</h2>
 
         <div className="space-y-3">
@@ -144,7 +142,7 @@ const UserCalories = () => {
         <Chart
           options={chartOptions}
           series={currentData.series}
-          type="area"
+          type={ChartType.AREA}
           height={350}
         />
       </div>

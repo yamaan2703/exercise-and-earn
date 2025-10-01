@@ -1,21 +1,23 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/button";
 import { AiOutlineMenu } from "react-icons/ai";
 import Image from "next/image";
-import ConfirmationModal from "@/components/ui/confirmation-modal";
 import { Routes } from "@/routes/Routes";
-import { ButtonSize, ButtonVariant, OrderStatus } from "@/types/enums";
+import {
+  ButtonSize,
+  ButtonType,
+  ButtonVariant,
+  OrderStatus,
+} from "@/types/enums";
 
 const Orders = () => {
-  const { orders, setOrders, setIsSidebarOpen, rejectModal, setRejectModal } =
-    useContext(AuthContext)!;
+  const { orders, setOrders, setIsSidebarOpen } = useContext(AuthContext)!;
   const router = useRouter();
-  const [orderToReject, setOrderToReject] = useState<string | null>(null);
 
-  const handleApprove = (id: string) => {
+  const handleApprove = (id: number) => {
     setOrders((prev) =>
       prev.map((order) =>
         order.product.id === id
@@ -23,28 +25,6 @@ const Orders = () => {
           : order
       )
     );
-  };
-
-  const handleReject = (id: string) => {
-    setOrders((prev) => prev.filter((order) => order.product.id !== id));
-  };
-
-  const openRejectModal = (orderId: string) => {
-    setOrderToReject(orderId);
-    setRejectModal(true);
-  };
-
-  const confirmReject = () => {
-    if (orderToReject) {
-      handleReject(orderToReject);
-    }
-    setRejectModal(false);
-    setOrderToReject(null);
-  };
-
-  const cancelReject = () => {
-    setRejectModal(false);
-    setOrderToReject(null);
   };
 
   return (
@@ -61,15 +41,15 @@ const Orders = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {orders
           .filter((order) => order.orderStatus === OrderStatus.PENDING)
           .map((order) => (
             <div
               key={order.product.id}
-              className="bg-[#0d332e] relative p-6 rounded-xl border border-teal-500/20 shadow-lg hover:shadow-xl hover:border-teal-400 transition-all duration-300"
+              className="bg-[#0d332e] relative p-4 rounded-xl border border-teal-500/20 shadow-lg hover:shadow-xl hover:border-teal-400 transition-all duration-300 flex flex-col"
             >
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex justify-between items-center">
                 <div
                   className="flex items-center gap-3 cursor-pointer group"
                   onClick={() =>
@@ -94,15 +74,13 @@ const Orders = () => {
                     </p>
                   </div>
                 </div>
-
-                <span className="text-xs text-gray-400">{order.date}</span>
               </div>
 
-              <div className="border-t border-teal-500/10 my-4"></div>
+              <div className="border-t border-teal-500/10 mt-5 mb-3"></div>
 
-              <div className="flex flex-col sm:flex-row justify-between gap-4 text-sm">
+              <div className="flex flex-col justify-between gap-4 text-sm mb-2">
                 <div className="space-y-1">
-                  <h4 className="text-teal-400 font-semibold mb-2">
+                  <h4 className="text-teal-400 font-semibold mb-1">
                     Customer Details
                   </h4>
                   <p className="text-white">
@@ -127,12 +105,12 @@ const Orders = () => {
                 </div>
 
                 <div className="space-y-1">
-                  <h4 className="text-teal-400 font-semibold mb-2">
+                  <h4 className="text-teal-400 font-semibold mb-1">
                     Order Details
                   </h4>
                   <p className="text-gray-300">
                     <span className="text-white">Required Calories:</span>{" "}
-                    {order.product.requiredCalories}
+                    {order.product.calories}
                   </p>
                   {order.product.size && (
                     <p className="text-gray-300">
@@ -147,8 +125,7 @@ const Orders = () => {
                     </p>
                   )}
                   <p className="text-gray-300">
-                    <span className="text-white">Delivery Fee:</span> $
-                    {order.product.deliveryFee}
+                    <span className="text-white">Delivery Fee:</span> €5
                   </p>
                   <p className="text-gray-300">
                     <span className="text-white">Payment Type:</span>{" "}
@@ -157,34 +134,21 @@ const Orders = () => {
                 </div>
               </div>
 
-              <div className="border-t border-teal-500/10 my-4"></div>
+              <div className="border-t border-teal-500/10 mb-3 mt-auto"></div>
 
-              <div className="flex gap-4 items-center">
+              <div className="flex justify-between gap-4 items-center">
                 <Button
+                  type={ButtonType.BUTTON}
                   variant={ButtonVariant.THEME}
                   size={ButtonSize.SMALL}
                   label="Approve Order"
                   onClick={() => handleApprove(order.product.id)}
                 />
-                <Button
-                  variant={ButtonVariant.DANGER}
-                  size={ButtonSize.SMALL}
-                  label="Reject Order"
-                  onClick={() => openRejectModal(order.product.id)}
-                />
+                <span className="text-xs text-gray-400">{order.date}</span>
               </div>
             </div>
           ))}
       </div>
-
-      {rejectModal && (
-        <ConfirmationModal
-          title={"Confirm Reject Order"}
-          description={"Are you sure you want to reject this order?"}
-          onClick={confirmReject}
-          onCancel={cancelReject}
-        />
-      )}
     </div>
   );
 };

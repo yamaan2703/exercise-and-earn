@@ -4,7 +4,7 @@ import React from "react";
 const UserProfile = ({ user }: { user: UserType }) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <div className="bg-[#0b2d29] rounded-xl p-6 border border-teal-500/20">
+      <div className="bg-[#0b2d29] rounded-xl p-3 sm:p-6 border border-teal-500/20">
         <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
           Profile Details
         </h2>
@@ -38,7 +38,7 @@ const UserProfile = ({ user }: { user: UserType }) => {
         </div>
       </div>
 
-      <div className="bg-[#0b2d29] rounded-xl p-6 border border-teal-500/20">
+      <div className="bg-[#0b2d29] rounded-xl p-3 sm:p-6 border border-teal-500/20">
         <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
           Extra Details
         </h2>
@@ -46,10 +46,10 @@ const UserProfile = ({ user }: { user: UserType }) => {
         <div className="space-y-2">
           <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
             <span className="text-gray-300 font-medium">Connected Device</span>
-            <span>{user.connectedDevice}</span>
+            <span>{user.device}</span>
           </div>
 
-          <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
+          <div className="flex justify-between gap-4 items-center py-3 border-b border-teal-500/10">
             <span className="text-gray-300 font-medium">Address</span>
             <span>{user.address}</span>
           </div>
@@ -61,7 +61,7 @@ const UserProfile = ({ user }: { user: UserType }) => {
 
           <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
             <span className="text-gray-300 font-medium">Birthday</span>
-            <span>{user.birthday}</span>
+            <span>{user.dob}</span>
           </div>
         </div>
       </div>

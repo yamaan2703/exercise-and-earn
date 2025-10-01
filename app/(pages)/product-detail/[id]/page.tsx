@@ -5,25 +5,45 @@ import { FaArrowLeft } from "react-icons/fa";
 import Button from "@/components/ui/button";
 import {
   ButtonSize,
+  ButtonType,
   ButtonVariant,
   ProductDetailTab,
-  StatusProduct,
 } from "@/types/enums";
 import Image from "next/image";
 import { AiOutlineMenu } from "react-icons/ai";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
 import ProductInfo from "@/components/product-detail-component/product-info";
 import ProductStock from "@/components/product-detail-component/product-stock";
+import toast from "react-hot-toast";
+import { useGetProductbyIdQuery } from "@/redux/slices/productSlice";
+import Loader from "@/components/ui/loader";
 
 const ProductDetailPage = () => {
-  const { setIsSidebarOpen, products } = useContext(AuthContext)!;
+  const { setIsSidebarOpen } = useContext(AuthContext)!;
   const [activeTab, setActiveTab] = useState(ProductDetailTab.INFO);
   const { id } = useParams();
   const router = useRouter();
-  const product = products.find((product) => product.id === id);
+  const { data, isLoading } = useGetProductbyIdQuery(Number(id));
+  const product = data?.product;
 
+  useEffect(() => {
+    if (data) console.log(data);
+  }, [data]);
+
+  useEffect(() => {
+    if (product?.availableStock !== undefined && product.availableStock <= 5) {
+      toast.error(`Only ${product.availableStock} stock left. Hurry up!`);
+    }
+  }, [product?.availableStock]);
+
+  if (isLoading)
+    return (
+      <p className="flex justify-center items-center min-h-[100vh]">
+        <Loader size="xl" />
+      </p>
+    );
   return (
     <div className="min-h-screen p-1">
       {product ? (
@@ -48,11 +68,7 @@ const ProductDetailPage = () => {
               <div className="flex flex-col sm:flex-row items-center gap-6">
                 <div className="bg-white/20 rounded-full">
                   <Image
-                    src={
-                      typeof product.images[0] === "string"
-                        ? product.images[0]
-                        : URL.createObjectURL(product.images[0])
-                    }
+                    src={`/${product.featuredImage}`}
                     alt={product.name}
                     width={150}
                     height={150}
@@ -63,29 +79,21 @@ const ProductDetailPage = () => {
                   <h1 className="text-3xl font-bold text-white mb-1">
                     {product.name}
                   </h1>
-                  <p className="text-teal-100 text-lg">{product.category}</p>
+                  <p className="text-teal-100 text-lg">
+                    {product.category.name}
+                  </p>
                 </div>
               </div>
-              <span
-                className={`px-4 py-2 rounded-full text-sm font-semibold ${
-                  product.status === StatusProduct.ACTIVE
-                    ? "bg-green-500/20 text-green-300 border border-green-500"
-                    : "bg-red-200 text-red-500 border border-red-500/50"
-                }`}
-              >
-                {product.status}
-              </span>
             </div>
           </div>
 
-          {/* Tabs */}
-          <div className="flex items-center mb-4 bg-[#0d332e] p-2 rounded-lg border border-teal-500/20">
+          <div className="flex items-center gap-1 mb-4 bg-[#0d332e] p-2 rounded-lg border border-teal-500/20">
             {ProductTabs.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all duration-300 mx-1 cursor-pointer",
+                  "flex items-center gap-1 px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 cursor-pointer",
                   activeTab === tab.key
                     ? "bg-teal-600 text-white shadow-md"
                     : "text-gray-300 hover:bg-teal-700/40 hover:text-white"
@@ -112,6 +120,7 @@ const ProductDetailPage = () => {
               Product not found
             </p>
             <Button
+              type={ButtonType.BUTTON}
               label="Back"
               icon={FaArrowLeft}
               variant={ButtonVariant.THEME}
