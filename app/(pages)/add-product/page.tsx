@@ -13,10 +13,10 @@ import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
 import { AiOutlineMenu } from "react-icons/ai";
 import toast from "react-hot-toast";
-import { ProductType } from "@/types/interface";
 import Image from "next/image";
 import { useForm, Controller } from "react-hook-form";
 import Button from "@/components/ui/button";
+import { useAddProductsMutation } from "@/redux/slices/productSlice";
 
 type FormValues = {
   name: string;
@@ -26,14 +26,14 @@ type FormValues = {
   calories: string;
   stock: string;
   price: string;
-  deliveryFee: string;
   size?: string;
   color?: string;
 };
 
 const AddProduct = () => {
-  const { setProducts, setIsSidebarOpen } = useContext(AuthContext)!;
+  const { setIsSidebarOpen } = useContext(AuthContext)!;
   const router = useRouter();
+  const [addProductApi] = useAddProductsMutation();
   const [images, setImages] = useState<File[]>([]);
 
   const { control, handleSubmit, reset } = useForm<FormValues>({
@@ -45,22 +45,10 @@ const AddProduct = () => {
       calories: "",
       stock: "",
       price: "",
-      deliveryFee: "",
       size: "",
       color: "",
     },
   });
-
-  const addProduct = (product: ProductType) => {
-    setProducts((prev) => [
-      ...prev,
-      {
-        ...product,
-        id: Number(prev.length + 1),
-        createdAt: new Date().toISOString(),
-      },
-    ]);
-  };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -69,33 +57,33 @@ const AddProduct = () => {
     }
   };
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = async (data: FormValues) => {
     try {
       if (images?.length === 0) {
         toast.error("At least one image is required!");
         return;
       }
 
-      addProduct({
-        id: Date.now(),
+      const dummyUrls = [
+        "https://randomuser.me/api/portraits/men/2.jpg",
+        "https://randomuser.me/api/portraits/men/3.jpg",
+      ];
+
+      const body = {
         name: data.name,
-        images: images.map((image) => URL.createObjectURL(image)),
-        category: { id: 1, name: data.category },
-        brand: { id: 1, name: data.brand },
-        description: data.description,
-        calories: Number(data.calories),
+        brandId: 1,
+        categoryId: 1,
         stock: Number(data.stock),
         price: Number(data.price),
         size: data.size ?? "",
-        color: data.color ?? "",
-        featuredImage: images.length > 0 ? URL.createObjectURL(images[0]) : "",
+        specs: "Lightweight, Breathable",
         goalId: 1,
-        brandId: 1,
-        categoryId: 1,
-        specs: "",
-        updatedAt: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-      });
+        featuredImage: dummyUrls[0],
+        images: dummyUrls,
+      };
+
+      await addProductApi(body).unwrap();
+      console.log("added", body);
 
       reset();
       setImages([]);
@@ -120,7 +108,12 @@ const AddProduct = () => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={handleSubmit(onSubmit, (err) => {
+          console.log(err, "error on form submit");
+        })}
+        className="space-y-6"
+      >
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Product Images
@@ -143,13 +136,24 @@ const AddProduct = () => {
                 key={index}
                 className="w-36 h-32 flex items-center justify-center border-2 border-dashed border-gray-500 rounded-lg p-2 relative"
               >
-                <Image
-                  src={URL.createObjectURL(file)}
-                  alt={`image-${index + 1}`}
-                  width={100}
-                  height={100}
-                  className="w-full h-full object-contain rounded-md shadow-md"
-                />
+                {(() => {
+                  let src = "/images/bottle.png";
+                  try {
+                    src = URL.createObjectURL(file);
+                  } catch {
+                    src = "/images/bottle.png";
+                  }
+                  return (
+                    <Image
+                      src={src}
+                      alt={`image-${index + 1}`}
+                      width={100}
+                      height={100}
+                      className="w-full h-full object-contain rounded-md shadow-md"
+                      unoptimized
+                    />
+                  );
+                })()}
               </div>
             ))}
           </div>
@@ -249,26 +253,6 @@ const AddProduct = () => {
         <div className="flex flex-col sm:flex-row gap-6">
           <div className="flex-1">
             <Controller
-              name="calories"
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <Input
-                  type="number"
-                  id="requiredCalories"
-                  label="Required Calories"
-                  value={field.value}
-                  setValue={field.onChange}
-                  variant={InputVariant.OUTLINE}
-                  size={InputSize.SMALL}
-                  placeholder="Enter required calories"
-                  required
-                />
-              )}
-            />
-          </div>
-          <div className="flex-1">
-            <Controller
               name="stock"
               control={control}
               rules={{ required: true }}
@@ -287,9 +271,6 @@ const AddProduct = () => {
               )}
             />
           </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-6">
           <div className="flex-1">
             <Controller
               name="size"
@@ -304,69 +285,6 @@ const AddProduct = () => {
                   variant={InputVariant.OUTLINE}
                   size={InputSize.SMALL}
                   placeholder="e.g. Small, Medium, Large"
-                />
-              )}
-            />
-          </div>
-          <div className="flex-1">
-            <Controller
-              name="color"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  type="text"
-                  id="color"
-                  label="Colors (Optional)"
-                  value={field.value ?? ""}
-                  setValue={field.onChange}
-                  variant={InputVariant.OUTLINE}
-                  size={InputSize.SMALL}
-                  placeholder="e.g. Red, Blue, Black"
-                />
-              )}
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-6">
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Description
-            </label>
-            <Controller
-              name="description"
-              control={control}
-              rules={{ required: true, minLength: 8 }}
-              render={({ field }) => (
-                <textarea
-                  id="description"
-                  minLength={8}
-                  value={field.value}
-                  onChange={field.onChange}
-                  placeholder="Enter description"
-                  rows={3}
-                  className="bg-transparent w-full p-2 rounded-lg text-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  required
-                />
-              )}
-            />
-          </div>
-          <div className="flex-1 mt-1">
-            <Controller
-              name="deliveryFee"
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <Input
-                  type="number"
-                  id="deliveryFee"
-                  label="Delivery Fee (In Euro)"
-                  value={field.value}
-                  setValue={field.onChange}
-                  variant={InputVariant.OUTLINE}
-                  size={InputSize.SMALL}
-                  placeholder="Enter delivery fee"
-                  required
                 />
               )}
             />
