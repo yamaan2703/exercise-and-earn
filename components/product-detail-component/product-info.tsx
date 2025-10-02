@@ -70,28 +70,50 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
             Product Extra Images
           </h2>
           <div className="flex flex-wrap gap-3">
-            {product.images && product.images.length > 0 ? (
-              <>
-                {product.images.map((image, index) => (
-                  <div
-                    key={index}
-                    className="bg-white/20 flex justify-center rounded-md"
-                  >
-                    <Image
-                      src={`/${image}`}
-                      alt={`image_${index}`}
-                      width={150}
-                      height={150}
-                      className="size-24 sm:size-32 rounded-md"
-                    />
-                  </div>
-                ))}
-              </>
-            ) : (
-              <p className="text-gray-300 text-sm mt-6 mx-auto">
-                No extra images!
-              </p>
-            )}
+            {(() => {
+              const isValidHttpUrl = (value: unknown) => {
+                if (typeof value !== "string" || value.trim().length === 0)
+                  return false;
+                try {
+                  const u = new URL(value);
+                  return u.protocol === "http:" || u.protocol === "https:";
+                } catch {
+                  return false;
+                }
+              };
+
+              const safeImages = Array.isArray(product.images)
+                ? product.images.filter((img) => isValidHttpUrl(img))
+                : [];
+
+              if (safeImages.length === 0) {
+                return (
+                  <p className="text-gray-300 text-sm mt-6 mx-auto">
+                    No extra images!
+                  </p>
+                );
+              }
+
+              return (
+                <>
+                  {safeImages.map((image, index) => (
+                    <div
+                      key={index}
+                      className="bg-white/20 flex justify-center rounded-md"
+                    >
+                      <Image
+                        src={image}
+                        alt={`image_${index}`}
+                        width={150}
+                        height={150}
+                        className="size-24 sm:size-32 rounded-md"
+                        unoptimized
+                      />
+                    </div>
+                  ))}
+                </>
+              );
+            })()}
           </div>
         </div>
       </div>

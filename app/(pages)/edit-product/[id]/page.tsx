@@ -13,11 +13,15 @@ import { useParams, useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
 import { AiOutlineMenu } from "react-icons/ai";
 import toast from "react-hot-toast";
-import { ProductType } from "@/types/interface";
 import Image from "next/image";
 import Button from "@/components/ui/button";
 import { FaArrowLeft } from "react-icons/fa";
 import { useForm, Controller } from "react-hook-form";
+import {
+  useGetProductbyIdQuery,
+  useUpdateProductMutation,
+} from "@/redux/slices/productSlice";
+import Loader from "@/components/ui/loader";
 
 type FormValues = {
   name: string;
@@ -33,12 +37,13 @@ type FormValues = {
 };
 
 const EditProduct = () => {
-  const { products, setProducts, setIsSidebarOpen, setStockHistory } =
-    useContext(AuthContext)!;
+  const { setIsSidebarOpen, setStockHistory } = useContext(AuthContext)!;
   const { id } = useParams();
   const router = useRouter();
-
-  const product = products.find((product) => product.id === Number(id));
+  const [updateProduct] = useUpdateProductMutation();
+  const { data, isLoading } = useGetProductbyIdQuery(Number(id));
+  const [images, setImages] = useState<(File | string)[]>([]);
+  const product = data?.product;
 
   const { control, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: {
@@ -56,6 +61,7 @@ const EditProduct = () => {
   });
 
   useEffect(() => {
+    console.log(product);
     if (product) {
       reset({
         name: product.name,
@@ -68,17 +74,15 @@ const EditProduct = () => {
             ? product.brand.name
             : product.brand,
         description: product.description ?? "",
-        calories: product.calories.toString(),
-        stock: product.stock.toString(),
-        price: product.price.toString(),
+        calories: product.calories,
+        stock: product.stock,
+        price: product.price,
         size: product.size ?? "",
         color: product.color ?? "",
       });
       setImages(product.images);
     }
   }, [product, reset]);
-
-  const [images, setImages] = useState<(File | string)[]>([]);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -91,7 +95,7 @@ const EditProduct = () => {
     setImages((prev) => prev.filter((_, ind) => ind !== index));
   };
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = async (data: FormValues) => {
     try {
       if (images.length === 0) {
         toast.error("At least one image is required!");
@@ -101,30 +105,21 @@ const EditProduct = () => {
       const oldStock = product?.stock ?? 0;
       const newStock = Number(data.stock);
 
-      const updatedProduct: ProductType = {
-        ...(product as ProductType),
+      const updatedBody = {
         name: data.name,
-        category: {
-          id: product?.category?.id ?? Date.now(),
-          name: data.category,
-        },
-        brand: { id: product?.brand?.id ?? Date.now(), name: data.brand },
-        description: data.description,
-        calories: Number(data.calories),
+        brandId: product?.brand?.id ?? 1,
+        categoryId: product?.category?.id ?? 1,
         stock: newStock,
         price: Number(data.price),
-        size: data.size,
-        color: data.color,
-        images: images.map((image) =>
-          typeof image === "string" ? image : URL.createObjectURL(image)
-        ),
+        size: data.size ?? "",
+        specs: "Updated product specs",
+        goalId: 1,
+        featuredImage: images[0],
+        images: images.map((image) => typeof image === "string" && image),
       };
 
-      setProducts((prev) =>
-        prev.map((product) =>
-          product.id === Number(id) ? updatedProduct : product
-        )
-      );
+      await updateProduct({ id: Number(id), ...updatedBody }).unwrap();
+      console.log(updatedBody);
 
       if (newStock > oldStock) {
         const addedStock = newStock - oldStock;
@@ -146,6 +141,12 @@ const EditProduct = () => {
     }
   };
 
+  if (isLoading)
+    return (
+      <p className="flex justify-center items-center min-h-[100vh]">
+        <Loader size="xl" />
+      </p>
+    );
   return product ? (
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
@@ -177,7 +178,7 @@ const EditProduct = () => {
               />
             </label>
 
-            {images.map((image, index) => (
+            {images?.map((image, index) => (
               <div
                 key={index}
                 className="w-36 h-32 border rounded-lg flex items-center justify-center relative"
@@ -189,17 +190,42 @@ const EditProduct = () => {
                 >
                   X
                 </button>
-                <Image
-                  src={
-                    typeof image === "string"
-                      ? image
-                      : URL.createObjectURL(image)
+                {(() => {
+                  const isValidHttpUrl = (value: unknown) => {
+                    if (typeof value !== "string" || value.trim().length === 0)
+                      return false;
+                    try {
+                      const url = new URL(value);
+                      return (
+                        url.protocol === "http:" || url.protocol === "https:"
+                      );
+                    } catch {
+                      return false;
+                    }
+                  };
+
+                  let src: string = "/images/bottle.png";
+                  if (typeof image === "string" && isValidHttpUrl(image)) {
+                    src = image;
+                  } else if (typeof image !== "string") {
+                    try {
+                      src = URL.createObjectURL(image);
+                    } catch {
+                      src = "/images/bottle.png";
+                    }
                   }
-                  alt={`product-image-${index}`}
-                  width={100}
-                  height={100}
-                  className="w-full h-full object-contain rounded-md"
-                />
+
+                  return (
+                    <Image
+                      src={src}
+                      alt={`product-image-${index}`}
+                      width={100}
+                      height={100}
+                      className="w-full h-full object-contain rounded-md"
+                      unoptimized
+                    />
+                  );
+                })()}
               </div>
             ))}
           </div>
@@ -300,27 +326,6 @@ const EditProduct = () => {
         <div className="flex flex-col sm:flex-row gap-6">
           <div className="flex-1">
             <Controller
-              name="calories"
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <Input
-                  type="number"
-                  id="requiredCalories"
-                  label="Required Calories"
-                  value={field.value}
-                  setValue={field.onChange}
-                  variant={InputVariant.OUTLINE}
-                  size={InputSize.SMALL}
-                  placeholder="Enter required calories"
-                  required
-                />
-              )}
-            />
-          </div>
-
-          <div className="flex-1">
-            <Controller
               name="stock"
               control={control}
               rules={{ required: true }}
@@ -339,9 +344,6 @@ const EditProduct = () => {
               )}
             />
           </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-6">
           <div className="flex-1">
             <Controller
               name="size"
@@ -356,25 +358,6 @@ const EditProduct = () => {
                   variant={InputVariant.OUTLINE}
                   size={InputSize.SMALL}
                   placeholder="e.g. Small, Medium, Large"
-                />
-              )}
-            />
-          </div>
-
-          <div className="flex-1">
-            <Controller
-              name="color"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  type="text"
-                  id="color"
-                  label="Colors (Optional)"
-                  value={field.value ?? ""}
-                  setValue={field.onChange}
-                  variant={InputVariant.OUTLINE}
-                  size={InputSize.SMALL}
-                  placeholder="e.g. Red, Blue, Black"
                 />
               )}
             />
@@ -399,27 +382,6 @@ const EditProduct = () => {
                   placeholder="Enter description"
                   rows={3}
                   className="bg-transparent w-full p-2 rounded-lg text-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  required
-                />
-              )}
-            />
-          </div>
-
-          <div className="flex-1 mt-1">
-            <Controller
-              name="deliveryFee"
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <Input
-                  type="number"
-                  id="deliveryFee"
-                  label="Delivery Fee (In Euro)"
-                  value={field.value}
-                  setValue={field.onChange}
-                  variant={InputVariant.OUTLINE}
-                  size={InputSize.SMALL}
-                  placeholder="Enter delivery fee"
                   required
                 />
               )}
