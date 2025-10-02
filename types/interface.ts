@@ -8,7 +8,6 @@ import {
   InputSize,
   InputVariant,
   OrderStatus,
-  StatusProduct,
   StatusUser,
 } from "./enums";
 import { IconType } from "react-icons/lib";
@@ -47,18 +46,59 @@ export interface ButtonProps {
   externalStyles?: string;
 }
 
+export interface DeviceType {
+  id: number;
+  userId: string;
+  deviceId: string;
+  lastSync: string;
+}
+
+export interface GoalType {
+  id: number;
+  calories: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RewardType {
+  id: number;
+  productId: number;
+  userId: string;
+  achieved: false;
+  achievedAt: string;
+  claimed: false;
+  claimedAt: string;
+  unlocked: false;
+  unlockedAt: string;
+}
+
 export interface UserType {
   id: string;
-  name: string;
-  gender: Gender;
+  name: string | null;
+  gender: Gender | null;
   email: string;
   status: StatusUser;
-  phone: string;
+  phone: string | null;
   createdAt: string;
-  dob: string;
-  photoUrl: string;
-  device: string;
-  address: string;
+  dob: string | null;
+  image: string | null;
+  address: string | null;
+  externalId: string;
+  customerId: string | null;
+  isAdmin: boolean;
+  allowPushNotification: boolean;
+  pushToken: string | null;
+  goal: GoalType | null;
+  goalId: number | null;
+  nextGoal: GoalType | null;
+  nextGoalId: number | null;
+  newGoalUnlocked: boolean;
+  achievedGoals: GoalType[];
+  balanceCalories: number;
+  earnedCalories: number;
+  device: DeviceType | null;
+  rewards: RewardType[];
+  updatedAt?: string;
 }
 
 export interface ProductType {
@@ -69,9 +109,8 @@ export interface ProductType {
   brand: { id: number; name: string };
   description: string | null;
   calories: number;
-  color?: string;
   size?: string;
-  specs?: string;
+  specs: string;
   stock: number;
   featuredImage: string;
   goalId: number;
@@ -123,12 +162,17 @@ export interface ChartComponentProps {
   width?: number | string;
 }
 
-export interface GoalItem {
-  id: string;
+export interface GoalProduct {
+  id: number;
+  name: string;
   calories: number;
-  reward: string;
 }
 
+export interface GoalItem {
+  id: number;
+  calories: number;
+  products: GoalProduct[];
+}
 export interface StockHistoryItem {
   productId: number;
   productName: string;

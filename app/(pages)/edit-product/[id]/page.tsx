@@ -25,15 +25,15 @@ import Loader from "@/components/ui/loader";
 
 type FormValues = {
   name: string;
-  category: string;
-  brand: string;
+  categoryId: string;
+  brandId: string;
+  goalId: string;
   description: string;
   calories: string;
   stock: string;
   price: string;
+  specs: string;
   size?: string;
-  color?: string;
-  deliveryFee: string;
 };
 
 const EditProduct = () => {
@@ -41,22 +41,22 @@ const EditProduct = () => {
   const { id } = useParams();
   const router = useRouter();
   const [updateProduct] = useUpdateProductMutation();
-  const { data, isLoading } = useGetProductbyIdQuery(Number(id));
+  const { data: getData, isLoading } = useGetProductbyIdQuery(Number(id));
   const [images, setImages] = useState<(File | string)[]>([]);
-  const product = data?.product;
+  const product = getData?.product;
 
   const { control, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: {
       name: "",
-      category: "",
-      brand: "",
+      categoryId: "",
+      brandId: "",
+      goalId: "",
       description: "",
       calories: "",
       stock: "",
       price: "",
       size: "",
-      color: "",
-      deliveryFee: "",
+      specs: "",
     },
   });
 
@@ -65,20 +65,15 @@ const EditProduct = () => {
     if (product) {
       reset({
         name: product.name,
-        category:
-          typeof product.category === "object"
-            ? product.category.name
-            : product.category,
-        brand:
-          typeof product.brand === "object"
-            ? product.brand.name
-            : product.brand,
+        categoryId: product.categoryId,
+        brandId: product.brandId,
+        goalId: product.goalId,
         description: product.description ?? "",
         calories: product.calories,
         stock: product.stock,
         price: product.price,
         size: product.size ?? "",
-        color: product.color ?? "",
+        specs: product.specs,
       });
       setImages(product.images);
     }
@@ -107,13 +102,14 @@ const EditProduct = () => {
 
       const updatedBody = {
         name: data.name,
-        brandId: product?.brand?.id ?? 1,
-        categoryId: product?.category?.id ?? 1,
+        brandId: Number(data.brandId),
+        categoryId: Number(data.categoryId),
+        goalId: Number(data.goalId),
         stock: newStock,
         price: Number(data.price),
         size: data.size ?? "",
-        specs: "Updated product specs",
-        goalId: 1,
+        specs: data.specs,
+        description: data.description,
         featuredImage: images[0],
         images: images.map((image) => typeof image === "string" && image),
       };
@@ -136,8 +132,10 @@ const EditProduct = () => {
 
       router.push(Routes.PRODUCTS_DETAIL(Number(id)));
       toast.success("Product updated successfully!");
-    } catch (error) {
+    } catch (error: unknown) {
+      const err = error as { data?: { message?: string } };
       console.log("error", error);
+      toast.error(err?.data?.message || "something went wrong");
     }
   };
 
@@ -259,19 +257,19 @@ const EditProduct = () => {
 
           <div className="flex-1">
             <Controller
-              name="category"
+              name="categoryId"
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
                 <Input
-                  type="text"
-                  id="category"
-                  label="Category"
+                  type="number"
+                  id="categoryId"
+                  label="Category Id"
                   value={field.value}
                   setValue={field.onChange}
                   variant={InputVariant.OUTLINE}
                   size={InputSize.SMALL}
-                  placeholder="Enter product category"
+                  placeholder="Enter category id"
                   required
                 />
               )}
@@ -282,19 +280,19 @@ const EditProduct = () => {
         <div className="flex flex-col sm:flex-row gap-6">
           <div className="flex-1">
             <Controller
-              name="brand"
+              name="brandId"
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
                 <Input
-                  type="text"
-                  id="brand"
-                  label="Brand"
+                  type="number"
+                  id="brandId"
+                  label="Brand Id"
                   value={field.value}
                   setValue={field.onChange}
                   variant={InputVariant.OUTLINE}
                   size={InputSize.SMALL}
-                  placeholder="Enter brand name"
+                  placeholder="Enter brand id"
                   required
                 />
               )}
@@ -339,6 +337,49 @@ const EditProduct = () => {
                   variant={InputVariant.OUTLINE}
                   size={InputSize.SMALL}
                   placeholder="Enter stock quantity"
+                  required
+                />
+              )}
+            />
+          </div>
+          <div className="flex-1">
+            <Controller
+              name="goalId"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Input
+                  type="number"
+                  id="goalId"
+                  label="Goal Id"
+                  value={field.value}
+                  setValue={field.onChange}
+                  variant={InputVariant.OUTLINE}
+                  size={InputSize.SMALL}
+                  placeholder="Enter goal Id"
+                  required
+                />
+              )}
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-6">
+          <div className="flex-1">
+            <Controller
+              name="specs"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Input
+                  type="text"
+                  id="specifications"
+                  label="Specs"
+                  value={field.value}
+                  setValue={field.onChange}
+                  variant={InputVariant.OUTLINE}
+                  size={InputSize.SMALL}
+                  placeholder="Enter product specifications"
                   required
                 />
               )}

@@ -5,6 +5,7 @@ import { userSlice } from "./slices/userSlice";
 import { TermsSlice } from "./slices/termsAndConditionSlice";
 import { PrivacySlice } from "./slices/privacyPolicySlice";
 import { productSlice } from "./slices/productSlice";
+import { goalSlice } from "./slices/goalSlice";
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     [TermsSlice.reducerPath]: TermsSlice.reducer,
     [PrivacySlice.reducerPath]: PrivacySlice.reducer,
     [productSlice.reducerPath]: productSlice.reducer,
+    [goalSlice.reducerPath]: goalSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({}).concat([
@@ -21,6 +23,7 @@ export const store = configureStore({
       TermsSlice.middleware,
       PrivacySlice.middleware,
       productSlice.middleware,
+      goalSlice.middleware,
     ]),
 });
 

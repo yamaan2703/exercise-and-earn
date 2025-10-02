@@ -24,6 +24,7 @@ import {
 } from "@/redux/slices/userSlice";
 import ConfirmationModal from "@/components/ui/modal/confirmation-modal";
 import Loader from "@/components/ui/loader";
+import UserGoals from "@/components/user-detail-component/user-goals";
 
 const UserDetailPage = () => {
   const { setIsSidebarOpen, activeModal, setActiveModal } =
@@ -69,13 +70,15 @@ const UserDetailPage = () => {
               <div className="flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
                 <div className="flex flex-col sm:flex-row items-center gap-6">
                   <div className="size-20 bg-white/20 rounded-full flex items-center justify-center">
-                    <Image
-                      src={user.image}
-                      alt={user.name}
-                      width={80}
-                      height={80}
-                      className="rounded-full"
-                    />
+                    {user.image && (
+                      <Image
+                        src={user.image}
+                        alt={user.name}
+                        width={80}
+                        height={80}
+                        className="rounded-full"
+                      />
+                    )}
                   </div>
                   <div>
                     <h1 className="text-3xl font-bold text-white mb-1">
@@ -119,9 +122,15 @@ const UserDetailPage = () => {
 
             {activeTab === UserDetailTab.PROFILE && <UserProfile user={user} />}
 
-            {activeTab === UserDetailTab.CALORIES && <UserCalories />}
+            {activeTab === UserDetailTab.CALORIES && (
+              <UserCalories user={user} />
+            )}
 
-            {activeTab === UserDetailTab.PRODUCTS && <UserClaimedProducts />}
+            {activeTab === UserDetailTab.REWARDS && (
+              <UserClaimedProducts user={user} />
+            )}
+
+            {activeTab === UserDetailTab.GOALS && <UserGoals user={user} />}
           </div>
 
           {activeModal && user?.status === StatusUser.INACTIVE && (

@@ -1,55 +1,47 @@
 "use client";
 import { AuthContext } from "@/context/AuthContext";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
+import { FaPlus, FaSearch } from "react-icons/fa";
 import {
-  InputVariant,
-  InputSize,
   ButtonVariant,
   ButtonSize,
   ButtonType,
+  InputVariant,
+  InputSize,
 } from "@/types/enums";
-import Input from "@/components/ui/input";
 import Button from "@/components/ui/button";
 import { GoalItem } from "@/types/interface";
-import ConfirmationModal from "@/components/ui/modal/confirmation-modal";
 import GoalModal from "@/components/ui/modal/goal-modal";
-
-const initialGoals = [
-  { id: "1", calories: 100, reward: "Water Bottle" },
-  { id: "2", calories: 200, reward: "Smart Watch" },
-];
+import { useGetGoalsQuery } from "@/redux/slices/goalSlice";
+import Loader from "@/components/ui/loader";
+import { useRouter } from "next/navigation";
+import { Routes } from "@/routes/Routes";
+import Input from "@/components/ui/input";
 
 const Goals = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
-  const [goalDeleteModal, setGoalDeleteModal] = useState(false);
-  const [calories, setCalories] = useState("");
-  const [reward, setReward] = useState("");
-  const [editCalories, setEditCalories] = useState("");
-  const [editReward, setEditReward] = useState("");
-  const [goals, setGoals] = useState<GoalItem[]>(initialGoals);
-  const [goalToDelete, setGoalToDelete] = useState<string>("");
-  const [editGoalModal, setEditGoalModal] = useState(false);
-  const [currentGoalId, setCurrentGoalId] = useState("");
+  const router = useRouter();
+  const { data, isLoading } = useGetGoalsQuery(null);
+  const [addGoalModal, setAddGoalModal] = useState(false);
+  const [searchGoal, setSearchGoal] = useState("");
+  const goals = data?.goals ?? [];
 
-  const handleAddGoal = () => {
-    if (!calories || !reward) return;
-    const newGoal: GoalItem = {
-      id: Date.now().toString(),
-      calories: Number(calories),
-      reward,
-    };
-    setGoals([...goals, newGoal]);
-    setCalories("");
-    setReward("");
-  };
+  useEffect(() => {
+    if (data) console.log(data);
+  }, [data]);
 
-  const handleDeleteGoal = (id: string) => {
-    setGoals(goals.filter((goal) => goal.id !== id));
-    setGoalDeleteModal(false);
-  };
+  const filteredGoals = goals.filter((goal: GoalItem) =>
+    goal.id.toString().includes(searchGoal.trim())
+  );
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[100vh]">
+        <Loader size="xl" />
+      </div>
+    );
+  }
   return (
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
@@ -64,113 +56,90 @@ const Goals = () => {
         </div>
       </div>
 
-      <div className="bg-[#0b2d29] border border-teal-500/20 rounded-xl p-4 mb-3">
-        <h2 className="text-lg font-semibold text-white mb-3">Add New Goal</h2>
-        <form className="flex flex-col sm:flex-row gap-2">
+      <div className="mb-3 flex justify-between gap-2">
+        <div className="max-w-[400px] w-full">
           <Input
-            placeholder="Calories..."
+            placeholder="Search goal by their id..."
             type="number"
-            id="calories"
-            value={calories}
-            setValue={setCalories}
+            id="search"
+            value={searchGoal}
+            setValue={setSearchGoal}
             variant={InputVariant.OUTLINE}
             size={InputSize.SMALL}
-            required
+            iconLeft={<FaSearch />}
           />
-          <Input
-            placeholder="Reward..."
-            type="text"
-            id="reward"
-            value={reward}
-            setValue={setReward}
-            variant={InputVariant.OUTLINE}
-            size={InputSize.SMALL}
-            required
-          />
-          <Button
-            type={ButtonType.BUTTON}
-            label="Add Goal"
-            onClick={handleAddGoal}
-            icon={FaPlus}
-            variant={ButtonVariant.THEME}
-            size={ButtonSize.SMALL}
-          />
-        </form>
+        </div>
+        <Button
+          type={ButtonType.BUTTON}
+          label="Add Goal"
+          onClick={() => setAddGoalModal(true)}
+          icon={FaPlus}
+          variant={ButtonVariant.THEME}
+          size={ButtonSize.SMALL}
+        />
       </div>
 
       <div className="bg-[#0b2d29] border border-teal-500/20 rounded-xl p-4">
         <h2 className="text-lg font-semibold text-white mb-4">
           Existing Goals
         </h2>
-        {goals.length > 0 ? (
-          <table className="w-full border-collapse text-sm sm:text-base">
-            <thead>
-              <tr className="text-teal-400 border-b border-teal-500/20">
-                <th className="py-2 text-left">Calories Burn</th>
-                <th className="py-2 text-left">Reward</th>
-                <th className="py-2 text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {goals.map((goal: GoalItem) => (
-                <tr
-                  key={goal.id}
-                  className="text-white border-b border-gray-700/50 hover:bg-[#11413a]/40 transition"
-                >
-                  <td className="py-2">{goal.calories} cal</td>
-                  <td className="py-2">{goal.reward}</td>
-                  <td className="py-2 flex justify-center gap-3">
-                    <button
-                      title="Edit"
-                      onClick={() => {
-                        setEditGoalModal(true);
-                        setEditCalories(goal.calories.toString());
-                        setEditReward(goal.reward);
-                        setCurrentGoalId(goal.id);
-                      }}
-                      className="text-white hover:text-gray-300 cursor-pointer"
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      title="Delete"
-                      onClick={() => {
-                        setGoalDeleteModal(true);
-                        setGoalToDelete(goal.id);
-                      }}
-                      className="text-white hover:text-gray-300 cursor-pointer"
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {filteredGoals.length > 0 ? (
+          <div className="space-y-4">
+            {filteredGoals.map((goal: GoalItem) => (
+              <div
+                key={goal.id}
+                className="bg-[#11413a]/40 border border-teal-500/10 rounded-lg p-4"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-teal-400 font-semibold text-base sm:text-lg">
+                    Goal #{goal.id}
+                  </h3>
+                  <span className="text-white font-medium">
+                    {goal.calories} cal
+                  </span>
+                </div>
+
+                {goal.products && goal.products.length > 0 ? (
+                  <div>
+                    <h4 className="text-gray-300 text-sm mb-2">
+                      Products ({goal.products.length}):
+                    </h4>
+                    <div className="space-y-2">
+                      {goal.products.map((product) => (
+                        <div
+                          key={product.id}
+                          className="bg-[#06211e]/60 rounded px-3 py-2 flex justify-between items-center text-sm"
+                        >
+                          <p
+                            onClick={() =>
+                              router.push(Routes.PRODUCTS_DETAIL(product.id))
+                            }
+                            className="text-white hover:underline cursor-pointer"
+                          >
+                            {product.name}
+                          </p>
+                          <span className="text-gray-400">
+                            {product.calories} cal
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-sm italic">
+                    No products assigned yet
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
         ) : (
           <p className="text-gray-400">No goals set yet.</p>
         )}
       </div>
-      {editGoalModal && (
-        <GoalModal
-          label="Edit Goal"
-          setGoals={setGoals}
-          setEditGoalModal={setEditGoalModal}
-          calories={editCalories}
-          setCalories={setEditCalories}
-          reward={editReward}
-          setReward={setEditReward}
-          buttonLabel="Edit Goal"
-          currentGoalId={currentGoalId}
-        />
-      )}
-      {goalDeleteModal && (
-        <ConfirmationModal
-          title="Confirm Goal Delete"
-          description="Are you sure you want to delete this goal?"
-          onClick={() => handleDeleteGoal(goalToDelete)}
-          onCancel={() => setGoalDeleteModal(false)}
-        />
+
+      {addGoalModal && (
+        <GoalModal label="Add Goal" setAddGoalModal={setAddGoalModal} />
       )}
     </div>
   );

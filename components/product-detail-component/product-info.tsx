@@ -32,6 +32,19 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
             <p>{product.calories}</p>
           </div>
 
+          <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
+            <p className="text-gray-300 font-medium flex items-center gap-2">
+              Price
+            </p>
+            <p>{product.price}</p>
+          </div>
+
+          <div className="flex justify-between gap-2 items-center py-3 border-b border-teal-500/10">
+            <p className="text-gray-300 font-medium flex items-center gap-2">
+              Specifications
+            </p>
+            <p>{product.specs}</p>
+          </div>
           {product.size && product.size.length > 0 && (
             <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
               <p className="text-gray-300 font-medium flex items-center gap-2">
@@ -41,20 +54,17 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
             </div>
           )}
 
-          {product.color && product.color.length > 0 && (
-            <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
-              <span className="text-gray-300 font-medium flex items-center gap-2">
-                Color
-              </span>
-              <p className="space-x-2">{product.color}</p>
-            </div>
-          )}
-
-          <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
+          <div className="flex justify-between gap-2 items-center py-3 border-b border-teal-500/10">
             <p className="text-gray-300 font-medium flex items-center gap-2">
               Created At
             </p>
             <p>{product.createdAt}</p>
+          </div>
+          <div className="flex justify-between gap-2 items-center py-3 border-b border-teal-500/10">
+            <p className="text-gray-300 font-medium flex items-center gap-2">
+              Updated At
+            </p>
+            <p>{product.updatedAt}</p>
           </div>
         </div>
       </div>

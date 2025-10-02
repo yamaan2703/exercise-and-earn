@@ -4,8 +4,9 @@ import { cn } from "@/lib/utils";
 import { ApexOptions } from "apexcharts";
 import { ChartFilter, ChartType } from "@/types/enums";
 import Chart from "../ui/chart";
+import { UserType } from "@/types/interface";
 
-const UserCalories = () => {
+const UserCalories = ({ user }: { user: UserType }) => {
   const [chartFilter, setChartFilter] = useState(ChartFilter.DAILY);
 
   const chartDataSets = {
@@ -93,26 +94,17 @@ const UserCalories = () => {
         <div className="space-y-3">
           <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
             <div className="flex justify-between items-center">
-              <h3 className="text-white font-semibold">
-                Total Earned Calories
-              </h3>
-              <p className="text-teal-400 font-medium">12,000</p>
+              <h3 className="text-white font-semibold">Earned Calories</h3>
+              <p className="text-teal-400 font-medium">{user.earnedCalories}</p>
             </div>
           </div>
 
           <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
             <div className="flex justify-between items-center">
-              <h3 className="text-white font-semibold">Available Calories</h3>
-              <p className="text-teal-400 font-medium">2,000</p>
-            </div>
-          </div>
-
-          <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
-            <div className="flex justify-between items-center">
-              <h3 className="text-white font-semibold">
-                Total Redeemed Calories
-              </h3>
-              <p className="text-teal-400 font-medium">10,000</p>
+              <h3 className="text-white font-semibold">Balanced Calories</h3>
+              <p className="text-teal-400 font-medium">
+                {user.balanceCalories}
+              </p>
             </div>
           </div>
         </div>

@@ -8,53 +8,44 @@ import {
   InputVariant,
 } from "@/types/enums";
 import Button from "../button";
-import { GoalItem } from "@/types/interface";
 import toast from "react-hot-toast";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { usePostGoalsMutation } from "@/redux/slices/goalSlice";
 
 interface GoalModalProps {
   label: string;
-  setGoals: Dispatch<SetStateAction<GoalItem[]>>;
-  setEditGoalModal: Dispatch<SetStateAction<boolean>>;
-  calories: string;
-  setCalories: Dispatch<SetStateAction<string>>;
-  reward: string;
-  setReward: Dispatch<SetStateAction<string>>;
-  buttonLabel: string;
-  currentGoalId: string;
+  setAddGoalModal: Dispatch<SetStateAction<boolean>>;
 }
 
-const GoalModal = (props: GoalModalProps) => {
-  const {
-    label,
-    setGoals,
-    setEditGoalModal,
-    calories,
-    setCalories,
-    reward,
-    setReward,
-    buttonLabel,
-    currentGoalId,
-  } = props;
+const GoalModal = ({ label, setAddGoalModal }: GoalModalProps) => {
+  const [calories, setCalories] = useState("");
+  const [postGoal, { isLoading }] = usePostGoalsMutation();
 
-  const handleEditGoal = () => {
-    if (!calories.trim() || !reward.trim()) {
-      toast.error("Both fields are required!");
+  const handleAddGoal = async () => {
+    if (!calories.trim()) {
+      toast.error("Calorie field is required!");
       return;
     }
 
-    setGoals((prev) =>
-      prev.map((goal) =>
-        goal.id === currentGoalId
-          ? { ...goal, calories: Number(calories), reward }
-          : goal
-      )
-    );
+    const calorieValue = Number(calories);
+    if (isNaN(calorieValue) || calorieValue <= 0) {
+      toast.error("Please enter a valid calorie value!");
+      return;
+    }
 
-    toast.success("Goal updated!");
-    setEditGoalModal(false);
-    setCalories("");
-    setReward("");
+    try {
+      const response = await postGoal({ calories: calorieValue }).unwrap();
+
+      if (response.success) {
+        toast.success("Goal added successfully!");
+        setAddGoalModal(false);
+        setCalories("");
+      }
+    } catch (error: unknown) {
+      const err = error as { data?: { message?: string } };
+      toast.error(err?.data?.message || "Something went wrong");
+      console.error("Error adding goal:", error);
+    }
   };
 
   return (
@@ -63,29 +54,19 @@ const GoalModal = (props: GoalModalProps) => {
         <div className="flex justify-between items-center gap-2 mb-3">
           <h2 className="text-lg font-semibold">{label}</h2>
           <button
-            onClick={() => setEditGoalModal(false)}
-            className="text-white hover:text-gray-400  cursor-pointer"
+            onClick={() => setAddGoalModal(false)}
+            className="text-white hover:text-gray-400 cursor-pointer text-xl leading-none"
           >
             X
           </button>
         </div>
         <div className="mt-5 space-y-3">
           <Input
-            id="question"
-            type="text"
-            placeholder="Enter question..."
+            id="calories"
+            type="number"
+            placeholder="Enter calories target..."
             value={calories}
             setValue={setCalories}
-            variant={InputVariant.DEFAULT}
-            size={InputSize.SMALL}
-            required
-          />
-          <Input
-            id="answer"
-            type="text"
-            placeholder="Enter answer..."
-            value={reward}
-            setValue={setReward}
             variant={InputVariant.DEFAULT}
             size={InputSize.SMALL}
             required
@@ -93,8 +74,8 @@ const GoalModal = (props: GoalModalProps) => {
           <Button
             type={ButtonType.BUTTON}
             externalStyles="mt-3"
-            label={buttonLabel}
-            onClick={handleEditGoal}
+            label={isLoading ? "Adding..." : "Add Goal"}
+            onClick={handleAddGoal}
             variant={ButtonVariant.THEME}
             size={ButtonSize.SMALL}
           />

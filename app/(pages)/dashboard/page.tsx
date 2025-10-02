@@ -2,50 +2,140 @@
 import Card from "@/components/ui/card";
 import { FaBoxOpen, FaClock, FaShoppingBag, FaUsers } from "react-icons/fa";
 import { ApexOptions } from "apexcharts";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { AiOutlineMenu } from "react-icons/ai";
 import { cn } from "@/lib/utils";
 import { ChartFilter, ChartType } from "@/types/enums";
 import Loader from "@/components/ui/loader";
 import Chart from "@/components/ui/chart";
+import { useGetUsersQuery } from "@/redux/slices/userSlice";
+import { useGetProductsQuery } from "@/redux/slices/productSlice";
+import { UserType } from "@/types/interface";
 
 const Dashboard = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
+  const { data, isLoading } = useGetUsersQuery(null);
+  const { data: productData, isLoading: isProductLoading } =
+    useGetProductsQuery(null);
   const [chartFilter, setChartFilter] = useState(ChartFilter.DAILY);
+  const users = data?.users;
 
-  const chartDataSets = {
-    [ChartFilter.DAILY]: {
-      series: [{ name: "Users", data: [22, 18, 25, 8, 28, 21, 14] }],
-      categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    },
-    [ChartFilter.WEEKLY]: {
-      series: [{ name: "Users", data: [120, 140, 90, 165] }],
-      categories: ["Week 1", "Week 2", "Week 3", "Week 4"],
-    },
-    [ChartFilter.MONTHLY]: {
-      series: [
-        {
-          name: "Users",
-          data: [500, 600, 450, 700, 650, 720, 800, 670, 680, 720, 400, 810],
+  const processUserData = useMemo(() => {
+    if (!users || users.length === 0) return null;
+
+    const usersByDate: { [key: string]: number } = {};
+
+    users.forEach((user: UserType) => {
+      if (user.createdAt) {
+        const date = new Date(user.createdAt);
+        const dateKey = date.toISOString().split("T")[0];
+        usersByDate[dateKey] = (usersByDate[dateKey] || 0) + 1;
+      }
+    });
+
+    return usersByDate;
+  }, [users]);
+
+  const chartDataSets = useMemo(() => {
+    if (!processUserData) {
+      return {
+        [ChartFilter.DAILY]: {
+          series: [{ name: "Users", data: [0, 0, 0, 0, 0, 0, 0] }],
+          categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
         },
-      ],
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
-    },
-  };
+        [ChartFilter.WEEKLY]: {
+          series: [{ name: "Users", data: [0, 0, 0, 0] }],
+          categories: ["Week 1", "Week 2", "Week 3", "Week 4"],
+        },
+        [ChartFilter.MONTHLY]: {
+          series: [{ name: "Users", data: Array(12).fill(0) }],
+          categories: [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ],
+        },
+      };
+    }
+    const last7Days = Array.from({ length: 7 }, (_, i) => {
+      const date = new Date();
+      date.setDate(date.getDate() - (6 - i));
+      return date;
+    });
+
+    const dailyData = last7Days.map((date) => {
+      const dateKey = date.toISOString().split("T")[0];
+      return processUserData[dateKey] || 0;
+    });
+
+    const dailyCategories = last7Days.map((date) =>
+      date.toLocaleDateString("en-US", { weekday: "short" })
+    );
+
+    const weeklyData: number[] = [];
+    const weeklyCategories: string[] = [];
+
+    for (let i = 3; i >= 0; i--) {
+      let count = 0;
+      for (let j = 0; j < 7; j++) {
+        const date = new Date();
+        date.setDate(date.getDate() - (i * 7 + j));
+        const dateKey = date.toISOString().split("T")[0];
+        count += processUserData[dateKey] || 0;
+      }
+      weeklyData.push(count);
+      weeklyCategories.push(`Week ${4 - i}`);
+    }
+
+    const monthlyData = Array(12).fill(0);
+    const currentYear = new Date().getFullYear();
+
+    Object.keys(processUserData).forEach((dateKey) => {
+      const date = new Date(dateKey);
+      if (date.getFullYear() === currentYear) {
+        const month = date.getMonth();
+        monthlyData[month] += processUserData[dateKey];
+      }
+    });
+
+    return {
+      [ChartFilter.DAILY]: {
+        series: [{ name: "Users", data: dailyData }],
+        categories: dailyCategories,
+      },
+      [ChartFilter.WEEKLY]: {
+        series: [{ name: "Users", data: weeklyData }],
+        categories: weeklyCategories,
+      },
+      [ChartFilter.MONTHLY]: {
+        series: [{ name: "Users", data: monthlyData }],
+        categories: [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ],
+      },
+    };
+  }, [processUserData]);
 
   const currentData = chartDataSets[chartFilter];
 
@@ -123,6 +213,20 @@ const Dashboard = () => {
     } as ApexOptions,
   };
 
+  const userStats = useMemo(() => {
+    if (!users || users.length === 0) {
+      return { active: 0, inactive: 0 };
+    }
+
+    const activeUsers = users.filter((user: UserType) => {
+      return user.status === "ACTIVE";
+    }).length;
+
+    const inactiveUsers = users.length - activeUsers;
+
+    return { active: activeUsers, inactive: inactiveUsers };
+  }, [users]);
+
   const chartOptions: ApexOptions = {
     chart: {
       type: "pie",
@@ -135,16 +239,7 @@ const Dashboard = () => {
     colors: ["#14b8a6", "#9ca3af"],
   };
 
-  const chartSeries = [15, 10];
-
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    setLoading(true);
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, []);
+  const chartSeries = [userStats.active, userStats.inactive];
 
   return (
     <div className="p-1">
@@ -161,8 +256,16 @@ const Dashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 mb-8">
-        <Card title="Total Users" value={25} Icon={FaUsers} />
-        <Card title="Total Products" value={25} Icon={FaShoppingBag} />
+        <Card
+          title="Total Users"
+          value={isLoading ? "..." : users.length}
+          Icon={FaUsers}
+        />
+        <Card
+          title="Total Products"
+          value={isProductLoading ? "..." : productData.totalCount}
+          Icon={FaShoppingBag}
+        />
         <Card title="Orders Placed" value={6} Icon={FaBoxOpen} />
         <Card title="Orders Pending" value={4} Icon={FaClock} />
       </div>
@@ -192,9 +295,9 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="p-2">
-            {loading ? (
+            {isLoading ? (
               <p className="flex justify-center items-center gap-2 text-xl mt-20">
-                <Loader /> Loading...
+                <Loader size="xl" />
               </p>
             ) : (
               <Chart
@@ -210,9 +313,9 @@ const Dashboard = () => {
           <h2 className="text-lg font-semibold mb-4 text-center">
             User Statistics
           </h2>
-          {loading ? (
+          {isLoading ? (
             <p className="flex justify-center items-center gap-2 text-xl mt-10">
-              <Loader /> Loading...
+              <Loader size="xl" />
             </p>
           ) : (
             <Chart
