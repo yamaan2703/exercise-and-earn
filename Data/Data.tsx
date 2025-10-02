@@ -21,9 +21,9 @@ import {
 } from "react-icons/fa";
 import { FaBoxArchive } from "react-icons/fa6";
 import { LuNotebookText } from "react-icons/lu";
-import { MdDashboard } from "react-icons/md";
+import { MdCategory, MdDashboard } from "react-icons/md";
 import { BiSolidHelpCircle } from "react-icons/bi";
-import { TbTargetArrow } from "react-icons/tb";
+import { TbBrandDatabricks, TbTargetArrow } from "react-icons/tb";
 
 export const sidebarMenu = [
   {
@@ -45,6 +45,16 @@ export const sidebarMenu = [
     label: "Goals",
     to: Routes.GOALS,
     icon: <TbTargetArrow />,
+  },
+  {
+    label: "Brands",
+    to: Routes.BRAND,
+    icon: <TbBrandDatabricks />,
+  },
+  {
+    label: "Category",
+    to: Routes.CATEGORY,
+    icon: <MdCategory />,
   },
   {
     label: "Orders",

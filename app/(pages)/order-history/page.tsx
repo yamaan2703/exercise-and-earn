@@ -2,6 +2,7 @@
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import { AuthContext } from "@/context/AuthContext";
+import { useGetOrdersQuery } from "@/redux/slices/orderSlice";
 import { Routes } from "@/routes/Routes";
 import {
   ButtonSize,
@@ -25,6 +26,11 @@ const OrderHistory = () => {
   const [openFilter, setOpenFilter] = useState(false);
   const [filterStatus, setFilterStatus] = useState<OrderStatus[]>([]);
   const filterRef = useRef<HTMLInputElement | null>(null);
+  const { data } = useGetOrdersQuery(null);
+
+  useEffect(() => {
+    if (data) console.log(data);
+  }, [data]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

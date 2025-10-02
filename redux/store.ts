@@ -6,6 +6,9 @@ import { TermsSlice } from "./slices/termsAndConditionSlice";
 import { PrivacySlice } from "./slices/privacyPolicySlice";
 import { productSlice } from "./slices/productSlice";
 import { goalSlice } from "./slices/goalSlice";
+import { orderSlice } from "./slices/orderSlice";
+import { brandSlice } from "./slices/brandSlice";
+import { categorySlice } from "./slices/categorySlice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +18,9 @@ export const store = configureStore({
     [PrivacySlice.reducerPath]: PrivacySlice.reducer,
     [productSlice.reducerPath]: productSlice.reducer,
     [goalSlice.reducerPath]: goalSlice.reducer,
+    [orderSlice.reducerPath]: orderSlice.reducer,
+    [brandSlice.reducerPath]: brandSlice.reducer,
+    [categorySlice.reducerPath]: categorySlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({}).concat([
@@ -24,6 +30,9 @@ export const store = configureStore({
       PrivacySlice.middleware,
       productSlice.middleware,
       goalSlice.middleware,
+      orderSlice.middleware,
+      brandSlice.middleware,
+      categorySlice.middleware,
     ]),
 });
 
