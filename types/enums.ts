@@ -17,11 +17,12 @@ export enum Gender {
 export enum UserDetailTab {
   PROFILE = "profile",
   CALORIES = "calories",
-  PRODUCTS = "products",
+  REWARDS = "rewards",
+  GOALS = "goals",
 }
 
 export enum ProductDetailTab {
-  INFO = "info",
+  INFO = "information",
   STOCK = "stock",
 }
 

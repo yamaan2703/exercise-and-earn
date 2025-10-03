@@ -2,6 +2,7 @@
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import { AuthContext } from "@/context/AuthContext";
+import { useGetOrdersQuery } from "@/redux/slices/orderSlice";
 import { Routes } from "@/routes/Routes";
 import {
   ButtonSize,
@@ -25,6 +26,11 @@ const OrderHistory = () => {
   const [openFilter, setOpenFilter] = useState(false);
   const [filterStatus, setFilterStatus] = useState<OrderStatus[]>([]);
   const filterRef = useRef<HTMLInputElement | null>(null);
+  const { data } = useGetOrdersQuery(null);
+
+  useEffect(() => {
+    if (data) console.log(data);
+  }, [data]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -51,15 +57,16 @@ const OrderHistory = () => {
 
   const applyFilter = (order: OrderType) => {
     const searchMatch =
-      order.user.name.toLowerCase().includes(orderSearch.toLowerCase()) ||
-      order.product.name.toLowerCase().includes(orderSearch.toLowerCase()) ||
-      order.orderNumber.toString().includes(orderSearch);
+      order.user?.name?.toLowerCase().includes(orderSearch.toLowerCase()) ||
+      order.product?.name?.toLowerCase().includes(orderSearch.toLowerCase()) ||
+      order.orderNumber?.toString().includes(orderSearch);
 
     const statusMatch =
       filterStatus.length === 0 || filterStatus.includes(order.orderStatus);
 
     return searchMatch && statusMatch;
   };
+
   return (
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
@@ -123,24 +130,25 @@ const OrderHistory = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {orders
-          .filter((order) => order.orderStatus !== OrderStatus.PENDING)
+          ?.filter((order) => order.orderStatus !== OrderStatus.PENDING)
           .filter(applyFilter)
           .map((order) => (
             <div
-              key={order.product.id}
+              key={`${order.product?.id}-${order.orderNumber}`}
               className="bg-[#0d332e] p-4 rounded-xl border border-teal-500/20 shadow-lg hover:shadow-xl hover:border-teal-400 transition-all duration-300 flex flex-col"
             >
               <div className="flex justify-between items-center">
                 <div
                   className="flex items-center gap-3 cursor-pointer group"
                   onClick={() =>
+                    order.product?.id &&
                     router.push(Routes.PRODUCTS_DETAIL(order.product.id))
                   }
                 >
                   <div className="size-12 bg-teal-600/20 rounded-lg">
                     <Image
                       src="/images/watch.png"
-                      alt={order.product.name}
+                      alt={order.product?.name || "Product"}
                       width={150}
                       height={150}
                       className="size-12 object-contains"
@@ -148,10 +156,10 @@ const OrderHistory = () => {
                   </div>
                   <div className="space-y-[2px]">
                     <h3 className="font-semibold text-white text-lg group-hover:underline transition">
-                      {order.product.name}
+                      {order.product?.name || "Unknown Product"}
                     </h3>
                     <p className="text-gray-300 text-xs">
-                      Order Number: {order.orderNumber}
+                      Order Number: {order.orderNumber || "N/A"}
                     </p>
                   </div>
                 </div>
@@ -166,22 +174,26 @@ const OrderHistory = () => {
                   </h4>
                   <p className="text-white">
                     Name:{" "}
-                    <span
-                      className="text-gray-300 cursor-pointer hover:underline"
-                      onClick={() =>
-                        router.push(Routes.USERS_DETAIL(order.user.id))
-                      }
-                    >
-                      {order.user.name}
-                    </span>
+                    {order.user ? (
+                      <span
+                        className="text-gray-300 cursor-pointer hover:underline"
+                        onClick={() =>
+                          router.push(Routes.USERS_DETAIL(order.user.id))
+                        }
+                      >
+                        {order.user.name || "Unknown"}
+                      </span>
+                    ) : (
+                      <span className="text-gray-300">N/A</span>
+                    )}
                   </p>
                   <p className="text-gray-300">
                     <span className="text-white">Email:</span>{" "}
-                    {order.user.email}
+                    {order.user?.email || "N/A"}
                   </p>
                   <p className="text-gray-300 max-w-72">
-                    <span className="text-white">Address:</span>
-                    {order.user.address}
+                    <span className="text-white">Address:</span>{" "}
+                    {order.user?.address || "N/A"}
                   </p>
                 </div>
 
@@ -191,18 +203,12 @@ const OrderHistory = () => {
                   </h4>
                   <p className="text-gray-300">
                     <span className="text-white">Required Calories:</span>{" "}
-                    {order.product.calories}
+                    {order.product?.calories || 0}
                   </p>
-                  {order.product.size && (
+                  {order.product?.size && order.product.size.length > 0 && (
                     <p className="text-gray-300">
                       <span className="text-white">Size:</span>{" "}
                       {order.product.size[0]}
-                    </p>
-                  )}
-                  {order.product.color && (
-                    <p className="text-gray-300">
-                      <span className="text-white">Color:</span>{" "}
-                      {order.product.color[0]}
                     </p>
                   )}
                   <p className="text-gray-300">
@@ -210,7 +216,7 @@ const OrderHistory = () => {
                   </p>
                   <p className="text-gray-300">
                     <span className="text-white">Payment Type:</span>{" "}
-                    {order.paymentType}
+                    {order.paymentType || "N/A"}
                   </p>
                 </div>
               </div>
@@ -224,10 +230,12 @@ const OrderHistory = () => {
                   </p>
 
                   <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-400 border border-green-500/40">
-                    {order.orderStatus}
+                    {order.orderStatus || "Unknown"}
                   </span>
                 </div>
-                <span className="text-xs text-gray-400">{order.date}</span>
+                <span className="text-xs text-gray-400">
+                  {order.date || "N/A"}
+                </span>
               </div>
             </div>
           ))}

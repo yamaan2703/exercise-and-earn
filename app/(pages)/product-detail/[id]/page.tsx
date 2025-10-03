@@ -33,10 +33,10 @@ const ProductDetailPage = () => {
   }, [data]);
 
   useEffect(() => {
-    if (product?.availableStock !== undefined && product.availableStock <= 5) {
-      toast.error(`Only ${product.availableStock} stock left. Hurry up!`);
+    if (product && product.stock <= 5) {
+      toast.error(`Only ${product.stock} stock left. Hurry up!`);
     }
-  }, [product?.availableStock]);
+  }, [product, product?.stock]);
 
   if (isLoading)
     return (
@@ -75,7 +75,6 @@ const ProductDetailPage = () => {
                       )
                         return false;
                       try {
-                        // Allow only http/https absolute URLs
                         const u = new URL(value);
                         return (
                           u.protocol === "http:" || u.protocol === "https:"
@@ -105,9 +104,7 @@ const ProductDetailPage = () => {
                   <h1 className="text-3xl font-bold text-white mb-1">
                     {product.name}
                   </h1>
-                  <p className="text-teal-100 text-lg">
-                    {product.category.name}
-                  </p>
+                  <p className="text-teal-100 text-lg">Id: #{product.id}</p>
                 </div>
               </div>
             </div>

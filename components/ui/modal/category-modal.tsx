@@ -10,41 +10,35 @@ import {
 import Button from "../button";
 import toast from "react-hot-toast";
 import { Dispatch, SetStateAction, useState } from "react";
-import { usePostGoalsMutation } from "@/redux/slices/goalSlice";
+import { usePostCategoryMutation } from "@/redux/slices/categorySlice";
 
-interface GoalModalProps {
+interface CategoryModalProps {
   label: string;
-  setAddGoalModal: Dispatch<SetStateAction<boolean>>;
+  setAddCategoryModal: Dispatch<SetStateAction<boolean>>;
 }
 
-const GoalModal = ({ label, setAddGoalModal }: GoalModalProps) => {
-  const [calories, setCalories] = useState("");
-  const [postGoal, { isLoading }] = usePostGoalsMutation();
+const CategoryModal = ({ label, setAddCategoryModal }: CategoryModalProps) => {
+  const [name, setName] = useState("");
+  const [postCategory, { isLoading }] = usePostCategoryMutation();
 
-  const handleAddGoal = async () => {
-    if (!calories.trim()) {
-      toast.error("Calorie field is required!");
-      return;
-    }
-
-    const calorieValue = Number(calories);
-    if (isNaN(calorieValue) || calorieValue <= 0) {
-      toast.error("Please enter a valid calorie value!");
+  const handleAddCategory = async () => {
+    if (!name.trim()) {
+      toast.error("Category name is required!");
       return;
     }
 
     try {
-      const response = await postGoal({ calories: calorieValue }).unwrap();
+      const response = await postCategory({ name: name.trim() }).unwrap();
 
       if (response.success) {
-        toast.success("Goal added successfully!");
-        setAddGoalModal(false);
-        setCalories("");
+        toast.success("Category added successfully!");
+        setAddCategoryModal(false);
+        setName("");
       }
     } catch (error: unknown) {
       const err = error as { data?: { message?: string } };
       toast.error(err?.data?.message || "Something went wrong");
-      console.error("Error adding goal:", error);
+      console.error("Error adding category:", error);
     }
   };
 
@@ -54,7 +48,7 @@ const GoalModal = ({ label, setAddGoalModal }: GoalModalProps) => {
         <div className="flex justify-between items-center gap-2 mb-3">
           <h2 className="text-lg font-semibold">{label}</h2>
           <button
-            onClick={() => setAddGoalModal(false)}
+            onClick={() => setAddCategoryModal(false)}
             className="text-white hover:text-gray-400 cursor-pointer text-xl leading-none"
           >
             X
@@ -62,11 +56,11 @@ const GoalModal = ({ label, setAddGoalModal }: GoalModalProps) => {
         </div>
         <div className="mt-5 space-y-3">
           <Input
-            id="calories"
-            type="number"
-            placeholder="Enter calories target..."
-            value={calories}
-            setValue={setCalories}
+            id="name"
+            type="text"
+            placeholder="Enter category name..."
+            value={name}
+            setValue={setName}
             variant={InputVariant.DEFAULT}
             size={InputSize.SMALL}
             required
@@ -74,8 +68,8 @@ const GoalModal = ({ label, setAddGoalModal }: GoalModalProps) => {
           <Button
             type={ButtonType.BUTTON}
             externalStyles="mt-3"
-            label={isLoading ? "Adding..." : "Add Goal"}
-            onClick={handleAddGoal}
+            label={isLoading ? "Adding..." : "Add Category"}
+            onClick={handleAddCategory}
             variant={ButtonVariant.THEME}
             size={ButtonSize.SMALL}
           />
@@ -85,4 +79,4 @@ const GoalModal = ({ label, setAddGoalModal }: GoalModalProps) => {
   );
 };
 
-export default GoalModal;
+export default CategoryModal;

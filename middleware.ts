@@ -14,6 +14,8 @@ export function middleware(request: NextRequest) {
     Routes.PRODUCTS,
     Routes.ADD_PRODUCT,
     Routes.GOALS,
+    Routes.BRAND,
+    Routes.CATEGORY,
     Routes.ORDERS,
     Routes.ORDER_HISTORY,
     Routes.STOCK_HISTORY,
@@ -29,7 +31,9 @@ export function middleware(request: NextRequest) {
   const isDynamicPrivateRoute =
     pathname.startsWith("/user-detail/") ||
     pathname.startsWith("/product-detail/") ||
-    pathname.startsWith("edit-product");
+    pathname.startsWith("edit-product/") ||
+    pathname.startsWith("/brand/") ||
+    pathname.startsWith("/category/");
 
   if (token && isPublicRoute) {
     return NextResponse.redirect(new URL(Routes.DASHBOARD, request.url));

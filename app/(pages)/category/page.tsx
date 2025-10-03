@@ -11,28 +11,34 @@ import {
   InputSize,
 } from "@/types/enums";
 import Button from "@/components/ui/button";
-import { GoalItem } from "@/types/interface";
-import GoalModal from "@/components/ui/modal/goal-modal";
-import { useGetGoalsQuery } from "@/redux/slices/goalSlice";
+import { useGetCategoryQuery } from "@/redux/slices/categorySlice";
 import Loader from "@/components/ui/loader";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
 import Input from "@/components/ui/input";
+import CategoryModal from "@/components/ui/modal/category-modal";
+import { ProductType } from "@/types/interface";
 
-const Goals = () => {
+interface Category {
+  id: number;
+  name: string;
+  products: ProductType[];
+}
+
+const Category = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
   const router = useRouter();
-  const { data, isLoading } = useGetGoalsQuery(null);
-  const [addGoalModal, setAddGoalModal] = useState(false);
-  const [searchGoal, setSearchGoal] = useState("");
-  const goals = data?.goals ?? [];
+  const { data, isLoading } = useGetCategoryQuery(null);
+  const [addCategoryModal, setAddCategoryModal] = useState(false);
+  const [searchCategory, setSearchCategory] = useState("");
+  const categories = data?.categories ?? [];
 
   useEffect(() => {
     if (data) console.log(data);
   }, [data]);
 
-  const filteredGoals = goals.filter((goal: GoalItem) =>
-    goal.id.toString().includes(searchGoal.trim())
+  const filteredCategories = categories.filter((category: Category) =>
+    category.id.toString().includes(searchCategory.trim())
   );
 
   if (isLoading) {
@@ -42,11 +48,12 @@ const Goals = () => {
       </div>
     );
   }
+
   return (
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
         <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-500 after:rounded-full after:mt-1">
-          Goals
+          Categories
         </h1>
         <div
           onClick={() => setIsSidebarOpen(true)}
@@ -59,11 +66,11 @@ const Goals = () => {
       <div className="mb-3 flex justify-between gap-2">
         <div className="max-w-[400px] w-full">
           <Input
-            placeholder="Search goal by their id..."
+            placeholder="Search category by id..."
             type="number"
             id="search"
-            value={searchGoal}
-            setValue={setSearchGoal}
+            value={searchCategory}
+            setValue={setSearchCategory}
             variant={InputVariant.OUTLINE}
             size={InputSize.SMALL}
             iconLeft={<FaSearch />}
@@ -71,8 +78,8 @@ const Goals = () => {
         </div>
         <Button
           type={ButtonType.BUTTON}
-          label="Add Goal"
-          onClick={() => setAddGoalModal(true)}
+          label="Add Category"
+          onClick={() => setAddCategoryModal(true)}
           icon={FaPlus}
           variant={ButtonVariant.THEME}
           size={ButtonSize.SMALL}
@@ -81,31 +88,34 @@ const Goals = () => {
 
       <div className="bg-[#0b2d29] border border-teal-500/20 rounded-xl p-4">
         <h2 className="text-lg font-semibold text-white mb-4">
-          Existing Goals
+          Existing Categories
         </h2>
-        {filteredGoals.length > 0 ? (
+        {filteredCategories.length > 0 ? (
           <div className="space-y-4">
-            {filteredGoals.map((goal: GoalItem) => (
+            {filteredCategories.map((category: Category) => (
               <div
-                key={goal.id}
-                className="bg-[#11413a]/40 border border-teal-500/10 rounded-lg p-4"
+                key={category.id}
+                className="bg-[#11413a]/40 border border-teal-500/10 rounded-lg p-4 hover:border-teal-500/30 transition-colors"
               >
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-teal-400 font-semibold text-base sm:text-lg">
-                    Goal #{goal.id}
+                <div
+                  onClick={() => router.push(Routes.CATEGORYID(category.id))}
+                  className="flex flex-col mb-2"
+                >
+                  <h3 className="text-teal-400 font-semibold text-base sm:text-lg cursor-pointer hover:underline">
+                    {category.name}
                   </h3>
-                  <span className="text-white font-medium">
-                    {goal.calories} cal
-                  </span>
+                  <h3 className="font-semibold text-base sm:text-lg">
+                    # {category.id}
+                  </h3>
                 </div>
 
-                {goal.products && goal.products.length > 0 ? (
+                {category.products && category.products.length > 0 ? (
                   <div>
                     <h4 className="text-gray-300 text-sm mb-2">
-                      Products ({goal.products.length}):
+                      Products ({category.products.length}):
                     </h4>
                     <div className="space-y-2">
-                      {goal.products.map((product) => (
+                      {category.products.map((product) => (
                         <div
                           key={product.id}
                           className="bg-[#06211e]/60 rounded px-3 py-2 flex justify-between items-center text-sm"
@@ -134,15 +144,18 @@ const Goals = () => {
             ))}
           </div>
         ) : (
-          <p className="text-gray-400">No goals set yet.</p>
+          <p className="text-gray-400">No categories found.</p>
         )}
       </div>
 
-      {addGoalModal && (
-        <GoalModal label="Add Goal" setAddGoalModal={setAddGoalModal} />
+      {addCategoryModal && (
+        <CategoryModal
+          label="Add Category"
+          setAddCategoryModal={setAddCategoryModal}
+        />
       )}
     </div>
   );
 };
 
-export default Goals;
+export default Category;

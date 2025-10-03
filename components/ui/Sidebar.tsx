@@ -111,7 +111,7 @@ function Sidebar() {
         </h1>
       </div>
 
-      <div className="flex-1 px-4 py-6 space-y-2 h-[calc(100vh-100px)] overflow-y-auto scrollbar-custom">
+      <div className="flex-1 px-4 py-6 space-y-2 h-[calc(100vh-100px)] overflow-y-auto scrollbar-hide">
         <nav className="flex flex-col space-y-2">{renderLinks(links)}</nav>
       </div>
 

@@ -4,43 +4,52 @@ import { cn } from "@/lib/utils";
 import { ApexOptions } from "apexcharts";
 import { ChartFilter, ChartType } from "@/types/enums";
 import Chart from "../ui/chart";
+import { UserType } from "@/types/interface";
 
-const UserCalories = () => {
+const UserCalories = ({ user }: { user: UserType }) => {
   const [chartFilter, setChartFilter] = useState(ChartFilter.DAILY);
 
+  // 🔹 Dynamic chart data using API values (earnedCalories & balanceCalories)
+  // replace chartDataSets with this
   const chartDataSets = {
     [ChartFilter.DAILY]: {
-      series: [{ name: "Calories", data: [220, 180, 250, 300, 280, 260, 200] }],
+      series: [
+        {
+          name: "Earned Calories",
+          data: [200, 250, 300, 220, 280, 260, user.earnedCalories],
+        },
+        {
+          name: "Balanced Calories",
+          data: [150, 180, 200, 210, 190, 230, user.balanceCalories],
+        },
+      ],
       categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
     },
     [ChartFilter.WEEKLY]: {
-      series: [{ name: "Calories", data: [1200, 1400, 1100, 1800] }],
+      series: [
+        {
+          name: "Earned Calories",
+          data: [1000, 1200, 850, user.earnedCalories],
+        },
+        {
+          name: "Balanced Calories",
+          data: [800, 950, 750, user.balanceCalories],
+        },
+      ],
       categories: ["Week 1", "Week 2", "Week 3", "Week 4"],
     },
     [ChartFilter.MONTHLY]: {
       series: [
         {
-          name: "Calories",
-          data: [
-            5000, 6000, 4500, 7000, 6500, 7200, 8000, 7600, 6800, 7200, 7500,
-            8100,
-          ],
+          name: "Earned Calories",
+          data: [5000, 6000, 7000, 6500, user.earnedCalories],
+        },
+        {
+          name: "Balanced Calories",
+          data: [4000, 5200, 6000, 5800, user.balanceCalories],
         },
       ],
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
+      categories: ["Jan", "Feb", "Mar", "Apr", "May"],
     },
   };
 
@@ -48,23 +57,17 @@ const UserCalories = () => {
 
   const chartOptions: ApexOptions = {
     chart: {
-      type: "area",
+      type: "line",
       height: 350,
       background: "transparent",
       toolbar: { show: false },
     },
-    plotOptions: {
-      bar: { columnWidth: "60%", borderRadius: 6 },
-    },
+    stroke: { curve: "smooth", width: 3 },
     dataLabels: {
       enabled: true,
-      style: {
-        fontSize: "12px",
-        colors: ["#14B8A6"],
-      },
-      offsetY: -10,
+      style: { fontSize: "12px", colors: ["#14B8A6", "#FBBF24"] },
     },
-    colors: ["#14B8A6"],
+    colors: ["#14B8A6", "#FBBF24"], // earned = teal, balance = yellow
     xaxis: {
       categories: currentData.categories,
       labels: { style: { colors: "#fff", fontSize: "11px" } },
@@ -84,40 +87,37 @@ const UserCalories = () => {
       theme: "dark",
       y: { formatter: (val: number) => val + " cal" },
     },
+    legend: {
+      labels: { colors: "#fff" },
+    },
   };
+
   return (
     <>
+      {/* Summary section */}
       <div className="bg-[#0b2d29] rounded-xl p-3 sm:p-4 border border-teal-500/20">
         <h2 className="text-xl font-bold text-white mb-4">Calories Details</h2>
 
         <div className="space-y-3">
           <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
             <div className="flex justify-between items-center">
-              <h3 className="text-white font-semibold">
-                Total Earned Calories
-              </h3>
-              <p className="text-teal-400 font-medium">12,000</p>
+              <h3 className="text-white font-semibold">Earned Calories</h3>
+              <p className="text-teal-400 font-medium">{user.earnedCalories}</p>
             </div>
           </div>
 
           <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
             <div className="flex justify-between items-center">
-              <h3 className="text-white font-semibold">Available Calories</h3>
-              <p className="text-teal-400 font-medium">2,000</p>
-            </div>
-          </div>
-
-          <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
-            <div className="flex justify-between items-center">
-              <h3 className="text-white font-semibold">
-                Total Redeemed Calories
-              </h3>
-              <p className="text-teal-400 font-medium">10,000</p>
+              <h3 className="text-white font-semibold">Balanced Calories</h3>
+              <p className="text-teal-400 font-medium">
+                {user.balanceCalories}
+              </p>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Chart section */}
       <div>
         <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mx-3 mb-4 mt-8">
           <h1 className="text-xl font-medium">Chart Analytics</h1>
@@ -142,7 +142,7 @@ const UserCalories = () => {
         <Chart
           options={chartOptions}
           series={currentData.series}
-          type={ChartType.AREA}
+          type={ChartType.LINE}
           height={350}
         />
       </div>

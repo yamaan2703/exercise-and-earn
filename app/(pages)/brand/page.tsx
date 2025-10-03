@@ -11,28 +11,34 @@ import {
   InputSize,
 } from "@/types/enums";
 import Button from "@/components/ui/button";
-import { GoalItem } from "@/types/interface";
-import GoalModal from "@/components/ui/modal/goal-modal";
-import { useGetGoalsQuery } from "@/redux/slices/goalSlice";
+import { useGetBrandsQuery } from "@/redux/slices/brandSlice";
 import Loader from "@/components/ui/loader";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
 import Input from "@/components/ui/input";
+import BrandModal from "@/components/ui/modal/brand-modal";
+import { ProductType } from "@/types/interface";
 
-const Goals = () => {
+interface Brand {
+  id: number;
+  name: string;
+  products: ProductType[];
+}
+
+const Brands = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
   const router = useRouter();
-  const { data, isLoading } = useGetGoalsQuery(null);
-  const [addGoalModal, setAddGoalModal] = useState(false);
-  const [searchGoal, setSearchGoal] = useState("");
-  const goals = data?.goals ?? [];
+  const { data, isLoading } = useGetBrandsQuery(null);
+  const [addBrandModal, setAddBrandModal] = useState(false);
+  const [searchBrand, setSearchBrand] = useState("");
+  const brands = data?.brands ?? [];
 
   useEffect(() => {
     if (data) console.log(data);
   }, [data]);
 
-  const filteredGoals = goals.filter((goal: GoalItem) =>
-    goal.id.toString().includes(searchGoal.trim())
+  const filteredBrands = brands.filter((brand: Brand) =>
+    brand.id.toString().includes(searchBrand.trim())
   );
 
   if (isLoading) {
@@ -46,7 +52,7 @@ const Goals = () => {
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
         <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-500 after:rounded-full after:mt-1">
-          Goals
+          Brands
         </h1>
         <div
           onClick={() => setIsSidebarOpen(true)}
@@ -59,11 +65,11 @@ const Goals = () => {
       <div className="mb-3 flex justify-between gap-2">
         <div className="max-w-[400px] w-full">
           <Input
-            placeholder="Search goal by their id..."
+            placeholder="Search brand by id..."
             type="number"
             id="search"
-            value={searchGoal}
-            setValue={setSearchGoal}
+            value={searchBrand}
+            setValue={setSearchBrand}
             variant={InputVariant.OUTLINE}
             size={InputSize.SMALL}
             iconLeft={<FaSearch />}
@@ -71,8 +77,8 @@ const Goals = () => {
         </div>
         <Button
           type={ButtonType.BUTTON}
-          label="Add Goal"
-          onClick={() => setAddGoalModal(true)}
+          label="Add Brand"
+          onClick={() => setAddBrandModal(true)}
           icon={FaPlus}
           variant={ButtonVariant.THEME}
           size={ButtonSize.SMALL}
@@ -81,31 +87,34 @@ const Goals = () => {
 
       <div className="bg-[#0b2d29] border border-teal-500/20 rounded-xl p-4">
         <h2 className="text-lg font-semibold text-white mb-4">
-          Existing Goals
+          Existing Brands
         </h2>
-        {filteredGoals.length > 0 ? (
+        {filteredBrands.length > 0 ? (
           <div className="space-y-4">
-            {filteredGoals.map((goal: GoalItem) => (
+            {filteredBrands.map((brand: Brand) => (
               <div
-                key={goal.id}
-                className="bg-[#11413a]/40 border border-teal-500/10 rounded-lg p-4"
+                key={brand.id}
+                className="bg-[#11413a]/40 border border-teal-500/10 rounded-lg p-4 hover:border-teal-500/30 transition-colors"
               >
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-teal-400 font-semibold text-base sm:text-lg">
-                    Goal #{goal.id}
+                <div
+                  onClick={() => router.push(Routes.BRANDID(brand.id))}
+                  className="flex flex-col mb-2"
+                >
+                  <h3 className="text-teal-400 font-semibold text-base sm:text-lg cursor-pointer hover:underline">
+                    {brand.name}
                   </h3>
-                  <span className="text-white font-medium">
-                    {goal.calories} cal
-                  </span>
+                  <h3 className="font-semibold text-base sm:text-lg">
+                    # {brand.id}
+                  </h3>
                 </div>
 
-                {goal.products && goal.products.length > 0 ? (
+                {brand.products && brand.products.length > 0 ? (
                   <div>
                     <h4 className="text-gray-300 text-sm mb-2">
-                      Products ({goal.products.length}):
+                      Products ({brand.products.length}):
                     </h4>
                     <div className="space-y-2">
-                      {goal.products.map((product) => (
+                      {brand.products.map((product) => (
                         <div
                           key={product.id}
                           className="bg-[#06211e]/60 rounded px-3 py-2 flex justify-between items-center text-sm"
@@ -134,15 +143,15 @@ const Goals = () => {
             ))}
           </div>
         ) : (
-          <p className="text-gray-400">No goals set yet.</p>
+          <p className="text-gray-400">No brands found.</p>
         )}
       </div>
 
-      {addGoalModal && (
-        <GoalModal label="Add Goal" setAddGoalModal={setAddGoalModal} />
+      {addBrandModal && (
+        <BrandModal label="Add Brand" setAddBrandModal={setAddBrandModal} />
       )}
     </div>
   );
 };
 
-export default Goals;
+export default Brands;

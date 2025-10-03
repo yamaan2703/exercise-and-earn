@@ -10,6 +10,11 @@ const UserProfile = ({ user }: { user: UserType }) => {
         </h2>
 
         <div className="space-y-2">
+          <div className="flex justify-between gap-2 items-center py-3 border-b border-teal-500/10">
+            <span className="text-gray-300">Id</span>
+            <span>{user.id}</span>
+          </div>
+
           <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
             <span className="text-gray-300">Name</span>
             <span>{user.name}</span>
@@ -29,7 +34,7 @@ const UserProfile = ({ user }: { user: UserType }) => {
             <span>{user.phone}</span>
           </div>
 
-          <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
+          <div className="flex justify-between gap-2 items-center py-3 border-b border-teal-500/10">
             <span className="text-gray-300 font-medium flex items-center gap-2">
               Created At
             </span>
@@ -44,9 +49,14 @@ const UserProfile = ({ user }: { user: UserType }) => {
         </h2>
 
         <div className="space-y-2">
-          <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
-            <span className="text-gray-300 font-medium">Connected Device</span>
-            <span>{user.device}</span>
+          <div className="flex justify-between items-center gap-2 py-3 border-b border-teal-500/10">
+            <span className="text-gray-300 font-medium">External Id</span>
+            <span>{user.externalId}</span>
+          </div>
+
+          <div className="flex justify-between items-center gap-2 py-3 border-b border-teal-500/10">
+            <span className="text-gray-300 font-medium">Device Id</span>
+            <span>{user.device?.deviceId}</span>
           </div>
 
           <div className="flex justify-between gap-4 items-center py-3 border-b border-teal-500/10">

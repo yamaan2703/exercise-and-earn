@@ -1,68 +1,74 @@
-import { dummyProducts } from "@/Data/Data";
+import { UserType, RewardType } from "@/types/interface";
 import { Routes } from "@/routes/Routes";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const UserClaimedProducts = () => {
+const UserClaimedProducts = ({ user }: { user: UserType }) => {
   const router = useRouter();
+
   return (
     <div className="bg-[#0b2d29] rounded-xl p-3 sm:p-4 border border-teal-500/20">
-      <h2 className="text-xl font-bold text-white mb-4">Claimed Products</h2>
+      <h2 className="text-xl font-bold text-white mb-4">Rewards</h2>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        {dummyProducts.slice(0, 6).map((product, index) => {
-          return (
+      {user.rewards.length > 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {user.rewards.map((reward: RewardType) => (
             <div
-              key={index}
-              className="bg-[#11413a] rounded-lg border border-teal-500/10 "
+              key={reward.id}
+              className="bg-[#11413a] rounded-lg border border-teal-500/10 p-3"
             >
-              <div className="bg-white/20 m-2 w-20 flex justify-center rounded-md">
-                <Image
-                  src={
-                    typeof product.images[0] === "string"
-                      ? product.images[0]
-                      : URL.createObjectURL(product.images[0])
-                  }
-                  alt={product.name}
-                  width={80}
-                  height={80}
-                  className="size-12 p-1"
-                />
-              </div>
               <h3
-                className="text-white px-3 pb-2 font-semibold cursor-pointer hover:underline"
-                onClick={() => router.push(Routes.PRODUCTS_DETAIL(product.id))}
+                className="text-white font-semibold cursor-pointer hover:underline mb-2"
+                onClick={() =>
+                  router.push(Routes.PRODUCTS_DETAIL(reward.productId))
+                }
               >
-                {product.name}
+                Reward #{reward.id}
               </h3>
 
-              <div className="text-gray-300 text-sm px-3 pb-3 space-y-1">
-                <p className="text-gray-300">
-                  <span className="text-white">Calorie Required: </span>
-                  {product.calories} cal
+              <div className="text-gray-300 text-sm space-y-1">
+                <p>
+                  <span className="text-white">Product ID:</span>{" "}
+                  {reward.productId}
                 </p>
-                {product.size && (
-                  <p className="text-gray-300">
-                    <span className="text-white">Size:</span> {product.size}
+                <p>
+                  <span className="text-white">Achieved:</span>{" "}
+                  {reward.achieved ? "Yes" : "No"}
+                </p>
+                <p>
+                  <span className="text-white">Claimed:</span>{" "}
+                  {reward.claimed ? "Yes" : "No"}
+                </p>
+                <p>
+                  <span className="text-white">Unlocked:</span>{" "}
+                  {reward.unlocked ? "Yes" : "No"}
+                </p>
+
+                {reward.achievedAt && (
+                  <p>
+                    <span className="text-white">Achieved At:</span>{" "}
+                    {new Date(reward.achievedAt).toLocaleDateString()}
                   </p>
                 )}
-                {product.color && (
-                  <p className="text-gray-300">
-                    <span className="text-white">Color:</span> {product.color}
+                {reward.claimedAt && (
+                  <p>
+                    <span className="text-white">Claimed At:</span>{" "}
+                    {new Date(reward.claimedAt).toLocaleDateString()}
                   </p>
                 )}
-                <p className="text-gray-300">
-                  <span className="text-white">Delivery Fee:</span> €5
-                </p>
-                <p className="text-gray-300">
-                  <span className="text-white">Payment Type:</span> Cash
-                </p>
+                {reward.unlockedAt && (
+                  <p>
+                    <span className="text-white">Unlocked At:</span>{" "}
+                    {new Date(reward.unlockedAt).toLocaleDateString()}
+                  </p>
+                )}
               </div>
             </div>
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <p className="mt-2">No rewards yet!</p>
+      )}
     </div>
   );
 };

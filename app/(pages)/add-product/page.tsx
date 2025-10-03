@@ -20,14 +20,14 @@ import { useAddProductsMutation } from "@/redux/slices/productSlice";
 
 type FormValues = {
   name: string;
-  category: string;
-  brand: string;
-  description: string;
+  categoryId: string;
+  brandId: string;
+  goalId: string;
   calories: string;
   stock: string;
   price: string;
+  specs: string;
   size?: string;
-  color?: string;
 };
 
 const AddProduct = () => {
@@ -39,14 +39,14 @@ const AddProduct = () => {
   const { control, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: {
       name: "",
-      category: "",
-      brand: "",
-      description: "",
+      categoryId: "",
+      brandId: "",
+      goalId: "",
       calories: "",
       stock: "",
       price: "",
+      specs: "",
       size: "",
-      color: "",
     },
   });
 
@@ -71,13 +71,13 @@ const AddProduct = () => {
 
       const body = {
         name: data.name,
-        brandId: 1,
-        categoryId: 1,
+        brandId: Number(data.brandId),
+        categoryId: Number(data.categoryId),
+        goalId: Number(data.goalId),
         stock: Number(data.stock),
         price: Number(data.price),
         size: data.size ?? "",
-        specs: "Lightweight, Breathable",
-        goalId: 1,
+        specs: data.specs,
         featuredImage: dummyUrls[0],
         images: dummyUrls,
       };
@@ -89,8 +89,10 @@ const AddProduct = () => {
       setImages([]);
       router.push(Routes.PRODUCTS);
       toast.success("Product added successfully!");
-    } catch (error) {
+    } catch (error: unknown) {
+      const err = error as { data?: { message?: string } };
       console.log("error", error);
+      toast.error(err?.data?.message || "Something went wrong");
     }
   };
 
@@ -187,19 +189,19 @@ const AddProduct = () => {
           </div>
           <div className="flex-1">
             <Controller
-              name="category"
+              name="categoryId"
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
                 <Input
-                  type="text"
-                  id="category"
-                  label="Category"
+                  type="number"
+                  id="categoryId"
+                  label="Category Id"
                   value={field.value}
                   setValue={field.onChange}
                   variant={InputVariant.OUTLINE}
                   size={InputSize.SMALL}
-                  placeholder="Enter product category"
+                  placeholder="Enter category id"
                   required
                 />
               )}
@@ -210,19 +212,19 @@ const AddProduct = () => {
         <div className="flex flex-col sm:flex-row gap-6">
           <div className="flex-1">
             <Controller
-              name="brand"
+              name="brandId"
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
                 <Input
-                  type="text"
-                  id="brand"
-                  label="Brand"
+                  type="number"
+                  id="brandId"
+                  label="Brand Id"
                   value={field.value}
                   setValue={field.onChange}
                   variant={InputVariant.OUTLINE}
                   size={InputSize.SMALL}
-                  placeholder="Enter brand name"
+                  placeholder="Enter brand id"
                   required
                 />
               )}
@@ -273,6 +275,49 @@ const AddProduct = () => {
           </div>
           <div className="flex-1">
             <Controller
+              name="goalId"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Input
+                  type="number"
+                  id="goalId"
+                  label="Goal Id"
+                  value={field.value}
+                  setValue={field.onChange}
+                  variant={InputVariant.OUTLINE}
+                  size={InputSize.SMALL}
+                  placeholder="Enter goal Id"
+                  required
+                />
+              )}
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-6">
+          <div className="flex-1">
+            <Controller
+              name="specs"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Input
+                  type="text"
+                  id="specifications"
+                  label="Specs"
+                  value={field.value}
+                  setValue={field.onChange}
+                  variant={InputVariant.OUTLINE}
+                  size={InputSize.SMALL}
+                  placeholder="Enter product specifications"
+                  required
+                />
+              )}
+            />
+          </div>
+          <div className="flex-1">
+            <Controller
               name="size"
               control={control}
               render={({ field }) => (
@@ -290,7 +335,6 @@ const AddProduct = () => {
             />
           </div>
         </div>
-
         <div>
           <Button
             label="Add Product"
