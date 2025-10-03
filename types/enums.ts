@@ -33,7 +33,7 @@ export enum ChartFilter {
 }
 
 export enum OrderStatus {
-  PENDING = "Pending",
+  PROCESSING = "Processing",
   SHIPPED = "Shipped",
   DELIVERED = "Delivered",
 }
@@ -78,4 +78,9 @@ export enum ChartType {
   AREA = "area",
   PIE = "pie",
   DONUT = "donut",
+}
+
+export enum OrderTabType {
+  ORDER = "Orders",
+  ORDERHISTORY = "Order history",
 }

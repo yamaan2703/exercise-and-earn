@@ -22,6 +22,7 @@ import {
   useUpdateProductMutation,
 } from "@/redux/slices/productSlice";
 import Loader from "@/components/ui/loader";
+import { getCookie } from "@/lib/cookies";
 
 type FormValues = {
   name: string;
@@ -44,6 +45,7 @@ const EditProduct = () => {
   const { data: getData, isLoading } = useGetProductbyIdQuery(Number(id));
   const [images, setImages] = useState<(File | string)[]>([]);
   const product = getData?.product;
+  const token = getCookie("token");
 
   const { control, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: {
@@ -79,6 +81,46 @@ const EditProduct = () => {
     }
   }, [product, reset]);
 
+  const uploadImage = async (file: File) => {
+    try {
+      const presignedResponse = await fetch(
+        "https://exercise-and-earn-backend-production.up.railway.app/cloudinary/presignedurl",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ fileName: [file.name] }),
+        }
+      );
+
+      if (!presignedResponse.ok) throw new Error("Failed to get presigned URL");
+
+      const presignedData = await presignedResponse.json();
+      const { url, fields } = presignedData[0];
+
+      const formData = new FormData();
+      Object.entries(fields).forEach(([key, value]) => {
+        formData.append(key, value as string);
+      });
+      formData.append("file", file);
+
+      const uploadResponse = await fetch(url, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) throw new Error("File upload failed");
+
+      return `${url}/${fields.key}`;
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast.error("Image upload failed");
+      throw error;
+    }
+  };
+
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const filesArray = Array.from(e.target.files);
@@ -97,6 +139,16 @@ const EditProduct = () => {
         return;
       }
 
+      const uploadedUrls: string[] = [];
+      for (const img of images) {
+        if (typeof img === "string") {
+          uploadedUrls.push(img);
+        } else {
+          const uploadedUrl = await uploadImage(img);
+          uploadedUrls.push(uploadedUrl);
+        }
+      }
+
       const oldStock = product?.stock ?? 0;
       const newStock = Number(data.stock);
 
@@ -110,8 +162,8 @@ const EditProduct = () => {
         size: data.size ?? "",
         specs: data.specs,
         description: data.description,
-        featuredImage: images[0],
-        images: images.map((image) => typeof image === "string" && image),
+        featuredImage: uploadedUrls[0],
+        images: uploadedUrls,
       };
 
       await updateProduct({ id: Number(id), ...updatedBody }).unwrap();
@@ -188,42 +240,18 @@ const EditProduct = () => {
                 >
                   X
                 </button>
-                {(() => {
-                  const isValidHttpUrl = (value: unknown) => {
-                    if (typeof value !== "string" || value.trim().length === 0)
-                      return false;
-                    try {
-                      const url = new URL(value);
-                      return (
-                        url.protocol === "http:" || url.protocol === "https:"
-                      );
-                    } catch {
-                      return false;
-                    }
-                  };
-
-                  let src: string = "/images/bottle.png";
-                  if (typeof image === "string" && isValidHttpUrl(image)) {
-                    src = image;
-                  } else if (typeof image !== "string") {
-                    try {
-                      src = URL.createObjectURL(image);
-                    } catch {
-                      src = "/images/bottle.png";
-                    }
+                <Image
+                  src={
+                    typeof image === "string"
+                      ? image
+                      : URL.createObjectURL(image)
                   }
-
-                  return (
-                    <Image
-                      src={src}
-                      alt={`product-image-${index}`}
-                      width={100}
-                      height={100}
-                      className="w-full h-full object-contain rounded-md"
-                      unoptimized
-                    />
-                  );
-                })()}
+                  alt={`product-image-${index}`}
+                  width={100}
+                  height={100}
+                  className="w-full h-full object-contain rounded-md"
+                  unoptimized
+                />
               </div>
             ))}
           </div>
@@ -417,7 +445,6 @@ const EditProduct = () => {
               render={({ field }) => (
                 <textarea
                   id="description"
-                  minLength={8}
                   value={field.value}
                   onChange={field.onChange}
                   placeholder="Enter description"

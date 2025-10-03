@@ -14,8 +14,6 @@ import { Routes } from "@/routes/Routes";
 import { useRouter } from "next/navigation";
 
 interface AuthContextType {
-  adminEmail: string;
-  adminPassword: string;
   isSidebarOpen: boolean;
   setIsSidebarOpen: (value: boolean) => void;
   logoutModal: boolean;
@@ -35,8 +33,6 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const router = useRouter();
-  const adminEmail = "admin@gmail.com";
-  const adminPassword = "123456789";
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [logoutModal, setLogoutModal] = useState(false);
   const [activeModal, setActiveModal] = useState(false);
@@ -55,8 +51,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   return (
     <AuthContext.Provider
       value={{
-        adminEmail,
-        adminPassword,
         isSidebarOpen,
         setIsSidebarOpen,
         logoutModal,

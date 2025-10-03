@@ -58,13 +58,13 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
             <p className="text-gray-300 font-medium flex items-center gap-2">
               Created At
             </p>
-            <p>{product.createdAt}</p>
+            <p>{new Date(product.createdAt).toLocaleDateString()}</p>
           </div>
           <div className="flex justify-between gap-2 items-center py-3 border-b border-teal-500/10">
             <p className="text-gray-300 font-medium flex items-center gap-2">
               Updated At
             </p>
-            <p>{product.updatedAt}</p>
+            <p>{new Date(product.updatedAt).toLocaleDateString()}</p>
           </div>
         </div>
       </div>
@@ -80,50 +80,27 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
             Product Extra Images
           </h2>
           <div className="flex flex-wrap gap-3">
-            {(() => {
-              const isValidHttpUrl = (value: unknown) => {
-                if (typeof value !== "string" || value.trim().length === 0)
-                  return false;
-                try {
-                  const u = new URL(value);
-                  return u.protocol === "http:" || u.protocol === "https:";
-                } catch {
-                  return false;
-                }
-              };
-
-              const safeImages = Array.isArray(product.images)
-                ? product.images.filter((img) => isValidHttpUrl(img))
-                : [];
-
-              if (safeImages.length === 0) {
-                return (
-                  <p className="text-gray-300 text-sm mt-6 mx-auto">
-                    No extra images!
-                  </p>
-                );
-              }
-
-              return (
-                <>
-                  {safeImages.map((image, index) => (
-                    <div
-                      key={index}
-                      className="bg-white/20 flex justify-center rounded-md"
-                    >
-                      <Image
-                        src={image}
-                        alt={`image_${index}`}
-                        width={150}
-                        height={150}
-                        className="size-24 sm:size-32 rounded-md"
-                        unoptimized
-                      />
-                    </div>
-                  ))}
-                </>
-              );
-            })()}
+            {product.images && product.images.length > 0 ? (
+              product.images.map((image, index) => (
+                <div
+                  key={index}
+                  className="bg-white/20 flex justify-center rounded-md"
+                >
+                  <Image
+                    src={image}
+                    alt={`image_${index}`}
+                    width={150}
+                    height={150}
+                    className="size-24 sm:size-32 rounded-md"
+                    unoptimized
+                  />
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-300 text-sm mt-6 mx-auto">
+                No extra images!
+              </p>
+            )}
           </div>
         </div>
       </div>

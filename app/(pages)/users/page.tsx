@@ -56,7 +56,13 @@ const Users = () => {
     { title: "Name", dataIndex: "name", sorter: true, width: "10%" },
     { title: "Email", dataIndex: "email", width: "15%" },
     { title: "Phone", dataIndex: "phone", width: "15%" },
-    { title: "Created At", dataIndex: "createdAt", sorter: true, width: "15%" },
+    {
+      title: "Created At",
+      dataIndex: "createdAt",
+      sorter: true,
+      width: "15%",
+      render: (createdAt: string) => new Date(createdAt).toLocaleDateString(),
+    },
     {
       title: "Gender",
       dataIndex: "gender",
@@ -99,13 +105,17 @@ const Users = () => {
               setActiveModal(true);
               setSelectedUser(record);
             }}
-            disabled={record.status === StatusUser.INACTIVE}
             title="update user status"
             className={cn(
               "p-1 text-white hover:text-gray-300 transition cursor-pointer",
-              record.status === StatusUser.INACTIVE &&
+              (record.status === StatusUser.INACTIVE ||
+                record.status === StatusUser.BANNED) &&
                 "opacity-50 cursor-not-allowed"
             )}
+            disabled={
+              record.status === StatusUser.INACTIVE ||
+              record.status === StatusUser.BANNED
+            }
           >
             <PoweroffOutlined />
           </button>
@@ -115,7 +125,12 @@ const Users = () => {
               setSelectedUser(record);
             }}
             title="ban user"
-            className="p-1 text-white hover:text-gray-300 transition cursor-pointer"
+            className={cn(
+              "p-1 text-white hover:text-gray-300 transition cursor-pointer",
+              record.status === StatusUser.BANNED &&
+                "opacity-50 cursor-not-allowed"
+            )}
+            disabled={record.status === StatusUser.BANNED}
           >
             <StopOutlined />
           </button>
@@ -160,7 +175,7 @@ const Users = () => {
       ) : (
         <DynamicTable<UserType>
           columns={columns}
-          data={data.users}
+          data={data.users.filter((user: UserType) => !user.isAdmin)}
           searchValue={searchUsers}
           searchableFields={["name", "email", "phone"]}
           rowKey="id"

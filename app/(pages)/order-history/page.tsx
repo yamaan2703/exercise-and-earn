@@ -107,7 +107,7 @@ const OrderHistory = () => {
             <div className="absolute right-0 mt-2 bg-[#0d332e] border border-teal-500/30 rounded-lg shadow-lg pl-3 pr-8 pt-2 pb-3 z-50">
               <div className="flex flex-col gap-2 text-sm text-gray-300">
                 {Object.values(OrderStatus)
-                  .filter((status) => status !== OrderStatus.PENDING)
+                  .filter((status) => status !== OrderStatus.PROCESSING)
                   .map((status) => (
                     <label
                       key={status}
@@ -128,9 +128,9 @@ const OrderHistory = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {orders
-          ?.filter((order) => order.orderStatus !== OrderStatus.PENDING)
+          ?.filter((order) => order.orderStatus !== OrderStatus.PROCESSING)
           .filter(applyFilter)
           .map((order) => (
             <div

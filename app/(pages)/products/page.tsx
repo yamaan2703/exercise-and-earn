@@ -75,7 +75,13 @@ const Products = () => {
       },
       width: "13%",
     },
-    { title: "Created At", dataIndex: "createdAt", sorter: true, width: "15%" },
+    {
+      title: "Created At",
+      dataIndex: "createdAt",
+      sorter: true,
+      width: "15%",
+      render: (createdAt: string) => new Date(createdAt).toLocaleDateString(),
+    },
     {
       title: "Actions",
       key: "actions",

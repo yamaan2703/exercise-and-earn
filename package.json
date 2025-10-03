@@ -16,6 +16,7 @@
     "antd": "^5.27.3",
     "antd-style": "^3.7.1",
     "apexcharts": "^5.3.5",
+    "axios": "^1.12.2",
     "chart.js": "^4.5.0",
     "clsx": "^2.1.1",
     "js-cookie": "^3.0.5",

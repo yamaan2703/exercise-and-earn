@@ -37,10 +37,11 @@ const StockHistory = () => {
       sorter: true,
     },
     {
-      title: "Created At",
+      title: "Updated At",
       dataIndex: "createdAt",
       key: "createdAt",
       sorter: true,
+      render: (createdAt: string) => new Date(createdAt).toLocaleDateString(),
     },
     {
       title: "Actions",

@@ -89,7 +89,6 @@ const UserDetailPage = () => {
                 </div>
                 <div className="flex flex-col gap-1">
                   <span
-                    onClick={() => setActiveModal(true)}
                     className={`px-4 py-2 rounded-full text-center text-sm font-semibold ${
                       user.status === StatusUser.ACTIVE
                         ? "bg-green-500/20 text-green-300 border border-green-500"
@@ -131,6 +130,18 @@ const UserDetailPage = () => {
             )}
 
             {activeTab === UserDetailTab.GOALS && <UserGoals user={user} />}
+
+            {user.status === StatusUser.INACTIVE && (
+              <div className="mt-4">
+                <Button
+                  type={ButtonType.BUTTON}
+                  label="Activate User"
+                  variant={ButtonVariant.THEME}
+                  size={ButtonSize.SMALL}
+                  onClick={() => setActiveModal(true)}
+                />
+              </div>
+            )}
           </div>
 
           {activeModal && user?.status === StatusUser.INACTIVE && (
