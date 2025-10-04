@@ -258,12 +258,12 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 mb-8">
         <Card
           title="Total Users"
-          value={isLoading ? "..." : users.length}
+          value={isLoading ? "..." : users?.length}
           Icon={FaUsers}
         />
         <Card
           title="Total Products"
-          value={isProductLoading ? "..." : productData.totalCount}
+          value={isProductLoading ? "..." : productData?.totalCount}
           Icon={FaShoppingBag}
         />
         <Card title="Orders Placed" value={6} Icon={FaBoxOpen} />

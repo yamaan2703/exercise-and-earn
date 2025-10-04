@@ -149,7 +149,7 @@ const EditProduct = () => {
         }
       }
 
-      const oldStock = product?.stock ?? 0;
+      const oldStock = product?.stock;
       const newStock = Number(data.stock);
 
       const updatedBody = {
@@ -169,14 +169,14 @@ const EditProduct = () => {
       await updateProduct({ id: Number(id), ...updatedBody }).unwrap();
       console.log(updatedBody);
 
-      if (newStock > oldStock) {
-        const addedStock = newStock - oldStock;
+      if (newStock !== oldStock) {
+        const stockChanged = newStock - oldStock;
         setStockHistory((prev) => [
           ...prev,
           {
-            productId: product?.id ?? 0,
+            productId: product?.id,
             productName: data.name,
-            addedStock,
+            stockChanged,
             createdAt: new Date().toLocaleString(),
           },
         ]);

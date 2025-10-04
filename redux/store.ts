@@ -9,6 +9,7 @@ import { goalSlice } from "./slices/goalSlice";
 import { orderSlice } from "./slices/orderSlice";
 import { brandSlice } from "./slices/brandSlice";
 import { categorySlice } from "./slices/categorySlice";
+import { FaqSlice } from "./slices/faqSlice";
 
 export const store = configureStore({
   reducer: {
@@ -21,6 +22,7 @@ export const store = configureStore({
     [orderSlice.reducerPath]: orderSlice.reducer,
     [brandSlice.reducerPath]: brandSlice.reducer,
     [categorySlice.reducerPath]: categorySlice.reducer,
+    [FaqSlice.reducerPath]: FaqSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({}).concat([
@@ -33,6 +35,7 @@ export const store = configureStore({
       orderSlice.middleware,
       brandSlice.middleware,
       categorySlice.middleware,
+      FaqSlice.middleware,
     ]),
 });
 
