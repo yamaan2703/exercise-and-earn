@@ -10,41 +10,34 @@ import {
 import Button from "../button";
 import { FaqModalProps } from "@/types/interface";
 import toast from "react-hot-toast";
+import { usePostFaqMutation } from "@/redux/slices/faqSlice";
 
 const FaqModal = (props: FaqModalProps) => {
-  const {
-    label,
-    setFaqs,
-    setFaqModal,
-    question,
-    setQuestion,
-    answer,
-    setAnswer,
-    buttonLabel,
-    currentFaqId,
-  } = props;
+  const { label, setFaqModal, question, setQuestion, answer, setAnswer } =
+    props;
+  const [postFaq, { isLoading }] = usePostFaqMutation();
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!question.trim() || !answer.trim()) {
       toast.error("Both fields are required!");
       return;
     }
 
-    if (currentFaqId) {
-      setFaqs((prev) =>
-        prev.map((faq) =>
-          faq.id === currentFaqId ? { ...faq, question, answer } : faq
-        )
-      );
-      toast.success("Faq updated!");
-    } else {
-      setFaqs((prev) => [...prev, { id: prev.length + 1, question, answer }]);
-      toast.success("Faq added!");
-    }
+    try {
+      const payload = { content: JSON.stringify({ question, answer }) };
+      const res = await postFaq(payload).unwrap();
 
-    setFaqModal(false);
-    setQuestion("");
-    setAnswer("");
+      if (res.success) {
+        toast.success("FAQ added!");
+        setFaqModal(false);
+        setQuestion("");
+        setAnswer("");
+      } else {
+        toast.error(res.error || "Failed to add FAQ");
+      }
+    } catch (err) {
+      toast.error("Something went wrong!");
+    }
   };
 
   return (
@@ -54,7 +47,7 @@ const FaqModal = (props: FaqModalProps) => {
           <h2 className="text-lg font-semibold">{label}</h2>
           <button
             onClick={() => setFaqModal(false)}
-            className="text-white hover:text-gray-400  cursor-pointer"
+            className="text-white hover:text-gray-400 cursor-pointer"
           >
             X
           </button>
@@ -83,7 +76,7 @@ const FaqModal = (props: FaqModalProps) => {
           <Button
             type={ButtonType.BUTTON}
             externalStyles="mt-3"
-            label={buttonLabel}
+            label={isLoading ? "Saving..." : label}
             onClick={handleSave}
             variant={ButtonVariant.THEME}
             size={ButtonSize.SMALL}

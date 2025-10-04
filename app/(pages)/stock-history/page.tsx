@@ -13,15 +13,11 @@ import { Routes } from "@/routes/Routes";
 
 const StockHistory = () => {
   const router = useRouter();
-  const { setIsSidebarOpen, products, stockHistory } = useContext(AuthContext)!;
+  const { setIsSidebarOpen, stockHistory } = useContext(AuthContext)!;
   const [searchStockHistory, setSearchStockHistory] = useState("");
 
   const handleView = (record: StockHistoryItem) => {
-    const product = products.find((product) => product.id === record.productId);
-
-    if (product) {
-      router.push(Routes.PRODUCTS_DETAIL(product.id));
-    }
+    router.push(Routes.PRODUCTS_DETAIL(record.productId));
   };
 
   const columns = [
@@ -31,16 +27,17 @@ const StockHistory = () => {
       key: "productName",
     },
     {
-      title: "Added Stock",
-      dataIndex: "addedStock",
-      key: "addedStock",
+      title: "Stock Changed",
+      dataIndex: "stockChanged",
+      key: "stockChanged",
       sorter: true,
     },
     {
-      title: "Created At",
+      title: "Updated At",
       dataIndex: "createdAt",
       key: "createdAt",
       sorter: true,
+      render: (createdAt: string) => new Date(createdAt).toLocaleDateString(),
     },
     {
       title: "Actions",
@@ -90,7 +87,7 @@ const StockHistory = () => {
         data={[...stockHistory].reverse()}
         searchValue={searchStockHistory}
         searchableFields={["productName"]}
-        rowKey="id"
+        rowKey="productId"
       />
     </div>
   );

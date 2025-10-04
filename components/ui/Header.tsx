@@ -16,7 +16,6 @@ const Header = () => {
   const router = useRouter();
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -68,7 +67,7 @@ const Header = () => {
             <div className="absolute right-0 mt-2 w-52 bg-teal-800 rounded-xl shadow-lg py-3 px-4 z-50">
               <div className="mb-3">
                 <p className="font-medium text-white">Admin</p>
-                <p className="text-sm text-gray-300">{adminEmail}</p>
+                <p className="text-sm text-gray-300">admin@mail.com</p>
               </div>
 
               <Button

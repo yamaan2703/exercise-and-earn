@@ -144,14 +144,11 @@ export interface FaqType {
 
 export interface FaqModalProps {
   label: string;
-  setFaqs: Dispatch<SetStateAction<FaqType[]>>;
   setFaqModal: Dispatch<SetStateAction<boolean>>;
   question: string;
   setQuestion: Dispatch<SetStateAction<string>>;
   answer: string;
   setAnswer: Dispatch<SetStateAction<string>>;
-  buttonLabel: string;
-  currentFaqId: number | null;
 }
 
 export interface ChartComponentProps {
@@ -173,9 +170,10 @@ export interface GoalItem {
   calories: number;
   products: GoalProduct[];
 }
+
 export interface StockHistoryItem {
   productId: number;
   productName: string;
-  addedStock: number;
+  stockChanged: number;
   createdAt: string;
 }

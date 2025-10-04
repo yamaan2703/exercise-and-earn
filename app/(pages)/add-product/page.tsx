@@ -17,6 +17,7 @@ import Image from "next/image";
 import { useForm, Controller } from "react-hook-form";
 import Button from "@/components/ui/button";
 import { useAddProductsMutation } from "@/redux/slices/productSlice";
+import { getCookie } from "@/lib/cookies";
 
 type FormValues = {
   name: string;
@@ -35,6 +36,7 @@ const AddProduct = () => {
   const router = useRouter();
   const [addProductApi] = useAddProductsMutation();
   const [images, setImages] = useState<File[]>([]);
+  const token = getCookie("token");
 
   const { control, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: {
@@ -57,17 +59,58 @@ const AddProduct = () => {
     }
   };
 
+  const uploadImage = async (file: File) => {
+    try {
+      const presignedResponse = await fetch(
+        "https://exercise-and-earn-backend-production.up.railway.app/cloudinary/presignedurl",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ fileName: [file.name] }),
+        }
+      );
+
+      if (!presignedResponse.ok) throw new Error("Failed to get presigned URL");
+
+      const presignedData = await presignedResponse.json();
+      const { url, fields } = presignedData[0];
+
+      const formData = new FormData();
+      Object.entries(fields).forEach(([key, value]) => {
+        formData.append(key, value as string);
+      });
+      formData.append("file", file);
+
+      const uploadResponse = await fetch(url, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) throw new Error("File upload failed");
+
+      const fileUrl = `${url}/${fields.key}`;
+      return fileUrl;
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast.error("Image upload failed");
+      throw error;
+    }
+  };
+
   const onSubmit = async (data: FormValues) => {
     try {
       if (images?.length === 0) {
         toast.error("At least one image is required!");
         return;
       }
-
-      const dummyUrls = [
-        "https://randomuser.me/api/portraits/men/2.jpg",
-        "https://randomuser.me/api/portraits/men/3.jpg",
-      ];
+      const uploadedUrls: string[] = [];
+      for (const file of images) {
+        const uploadedUrl = await uploadImage(file);
+        uploadedUrls.push(uploadedUrl);
+      }
 
       const body = {
         name: data.name,
@@ -78,12 +121,12 @@ const AddProduct = () => {
         price: Number(data.price),
         size: data.size ?? "",
         specs: data.specs,
-        featuredImage: dummyUrls[0],
-        images: dummyUrls,
+        featuredImage: uploadedUrls[0],
+        images: uploadedUrls,
       };
 
       await addProductApi(body).unwrap();
-      console.log("added", body);
+      console.log("product added", body);
 
       reset();
       setImages([]);
@@ -138,31 +181,22 @@ const AddProduct = () => {
                 key={index}
                 className="w-36 h-32 flex items-center justify-center border-2 border-dashed border-gray-500 rounded-lg p-2 relative"
               >
-                {(() => {
-                  let src = "/images/bottle.png";
-                  try {
-                    src = URL.createObjectURL(file);
-                  } catch {
-                    src = "/images/bottle.png";
-                  }
-                  return (
-                    <Image
-                      src={src}
-                      alt={`image-${index + 1}`}
-                      width={100}
-                      height={100}
-                      className="w-full h-full object-contain rounded-md shadow-md"
-                      unoptimized
-                    />
-                  );
-                })()}
+                <Image
+                  src={URL.createObjectURL(file)}
+                  alt={`image-${index + 1}`}
+                  width={100}
+                  height={100}
+                  className="w-full h-full object-contain rounded-md shadow-md"
+                  unoptimized
+                />
               </div>
             ))}
           </div>
           <p className="mt-2 text-xs max-w-[600px] text-gray-400">
-            Product image must in a JPG or PNG format, clear with a plain
-            background, and the full product must be visible. Avoid colorful or
-            busy backgrounds to keep the product visible in the app
+            The first image will be the Featured Image. Product image must in a
+            JPG or PNG format, clear with a plain background, and the full
+            product must be visible. Avoid colorful or busy backgrounds to keep
+            the product visible in the app
           </p>
         </div>
 
