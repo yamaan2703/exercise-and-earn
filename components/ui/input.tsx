@@ -53,8 +53,8 @@ const Input = ({
           id={id}
           type={type}
           required={required}
-          value={value}
-          minLength={3}
+          value={value ?? ""}
+          // minLength={3}
           onChange={(e) => setValue(e.target.value)}
           placeholder={placeholder}
           className={clsx(

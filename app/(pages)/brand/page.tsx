@@ -17,13 +17,7 @@ import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
 import Input from "@/components/ui/input";
 import BrandModal from "@/components/ui/modal/brand-modal";
-import { ProductType } from "@/types/interface";
-
-interface Brand {
-  id: number;
-  name: string;
-  products: ProductType[];
-}
+import { BrandItem } from "@/types/interface";
 
 const Brands = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
@@ -37,7 +31,7 @@ const Brands = () => {
     if (data) console.log(data);
   }, [data]);
 
-  const filteredBrands = brands.filter((brand: Brand) =>
+  const filteredBrands = brands.filter((brand: BrandItem) =>
     brand.id.toString().includes(searchBrand.trim())
   );
 
@@ -91,7 +85,7 @@ const Brands = () => {
         </h2>
         {filteredBrands.length > 0 ? (
           <div className="space-y-4">
-            {filteredBrands.map((brand: Brand) => (
+            {filteredBrands.map((brand: BrandItem) => (
               <div
                 key={brand.id}
                 className="bg-[#11413a]/40 border border-teal-500/10 rounded-lg p-4 hover:border-teal-500/30 transition-colors"

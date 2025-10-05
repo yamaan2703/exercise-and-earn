@@ -13,7 +13,6 @@ export const Routes = {
   CATEGORY: "/category",
   CATEGORYID: (id: number) => `/category/${id}`,
   ORDERS: "/orders",
-  ORDER_HISTORY: "/order-history",
   STOCK_HISTORY: "/stock-history",
   PRIVACY_POLICY: "/privacy-policy",
   TERMS_AND_CONDITIONS: "/terms-and-conditions",

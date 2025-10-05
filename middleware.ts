@@ -17,7 +17,6 @@ export function middleware(request: NextRequest) {
     Routes.BRAND,
     Routes.CATEGORY,
     Routes.ORDERS,
-    Routes.ORDER_HISTORY,
     Routes.STOCK_HISTORY,
     Routes.PRIVACY_POLICY,
     Routes.TERMS_AND_CONDITIONS,

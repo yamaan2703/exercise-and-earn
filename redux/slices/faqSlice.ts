@@ -13,6 +13,7 @@ export const FaqSlice = createApi({
       return headers;
     },
   }),
+  tagTypes: ["Faqs"],
   endpoints: (builder) => ({
     postFaq: builder.mutation({
       query: (data) => ({
@@ -20,12 +21,14 @@ export const FaqSlice = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Faqs"],
     }),
 
     getFaq: builder.query({
       query: (type: string) => ({
         url: `/html-content/${type}`,
       }),
+      providesTags: ["Faqs"],
     }),
   }),
 });

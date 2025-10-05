@@ -18,6 +18,10 @@ import { useForm, Controller } from "react-hook-form";
 import Button from "@/components/ui/button";
 import { useAddProductsMutation } from "@/redux/slices/productSlice";
 import { getCookie } from "@/lib/cookies";
+import { useGetBrandsQuery } from "@/redux/slices/brandSlice";
+import { useGetCategoryQuery } from "@/redux/slices/categorySlice";
+import { useGetGoalsQuery } from "@/redux/slices/goalSlice";
+import { BrandItem, CategoryItem, GoalItem } from "@/types/interface";
 
 type FormValues = {
   name: string;
@@ -34,9 +38,18 @@ type FormValues = {
 const AddProduct = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
   const router = useRouter();
-  const [addProductApi] = useAddProductsMutation();
-  const [images, setImages] = useState<File[]>([]);
   const token = getCookie("token");
+  const [images, setImages] = useState<File[]>([]);
+  const [addProductApi] = useAddProductsMutation();
+  const { data: brandData } = useGetBrandsQuery(null);
+  const { data: categoryData } = useGetCategoryQuery(null);
+  const { data: goalData } = useGetGoalsQuery(null);
+
+  const brands = brandData?.brands ?? [];
+  const categories = categoryData?.categories ?? [];
+  const goals = goalData?.goals ?? [];
+
+  // const sizeOptions = [
 
   const { control, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: {
@@ -133,9 +146,13 @@ const AddProduct = () => {
       router.push(Routes.PRODUCTS);
       toast.success("Product added successfully!");
     } catch (error: unknown) {
-      const err = error as { data?: { message?: string } };
+      const err = error as {
+        data?: { success: boolean; error?: string; message?: string };
+      };
       console.log("error", error);
-      toast.error(err?.data?.message || "Something went wrong");
+      toast.error(
+        err?.data?.error || err?.data?.message || "Something went wrong"
+      );
     }
   };
 
@@ -227,17 +244,22 @@ const AddProduct = () => {
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
-                <Input
-                  type="number"
-                  id="categoryId"
-                  label="Category Id"
-                  value={field.value}
-                  setValue={field.onChange}
-                  variant={InputVariant.OUTLINE}
-                  size={InputSize.SMALL}
-                  placeholder="Enter category id"
-                  required
-                />
+                <div>
+                  <label className="block text-sm text-gray-300 mb-2">
+                    Category
+                  </label>
+                  <select
+                    {...field}
+                    className="w-full bg-[#0b2d29] text-white border border-teal-500/30 rounded-lg p-2"
+                  >
+                    <option value="">Select a category</option>
+                    {categories.map((category: CategoryItem) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               )}
             />
           </div>
@@ -250,17 +272,22 @@ const AddProduct = () => {
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
-                <Input
-                  type="number"
-                  id="brandId"
-                  label="Brand Id"
-                  value={field.value}
-                  setValue={field.onChange}
-                  variant={InputVariant.OUTLINE}
-                  size={InputSize.SMALL}
-                  placeholder="Enter brand id"
-                  required
-                />
+                <div>
+                  <label className="block text-sm text-gray-300 mb-2">
+                    Brand
+                  </label>
+                  <select
+                    {...field}
+                    className="w-full bg-[#0b2d29] text-white border border-teal-500/30 rounded-lg p-2 pr-2"
+                  >
+                    <option value="">Select a brand</option>
+                    {brands.map((brand: BrandItem) => (
+                      <option key={brand.id} value={brand.id}>
+                        {brand.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               )}
             />
           </div>
@@ -313,17 +340,22 @@ const AddProduct = () => {
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
-                <Input
-                  type="number"
-                  id="goalId"
-                  label="Goal Id"
-                  value={field.value}
-                  setValue={field.onChange}
-                  variant={InputVariant.OUTLINE}
-                  size={InputSize.SMALL}
-                  placeholder="Enter goal Id"
-                  required
-                />
+                <div>
+                  <label className="block text-sm text-gray-300 mb-2">
+                    Goal
+                  </label>
+                  <select
+                    {...field}
+                    className="w-full bg-[#0b2d29] text-white border border-teal-500/30 rounded-lg p-2"
+                  >
+                    <option value="">Select a goal</option>
+                    {goals.map((goal: GoalItem) => (
+                      <option key={goal.id} value={goal.id}>
+                        {goal.calories} cal
+                      </option>
+                    ))}
+                  </select>
+                </div>
               )}
             />
           </div>

@@ -8,6 +8,8 @@ const RewardCard = ({ reward }: { reward: RewardType }) => {
   const router = useRouter();
   const { data, isLoading } = useGetProductbyIdQuery(reward.productId);
 
+  const product = data?.product ?? [];
+
   if (isLoading) {
     return (
       <div className="bg-[#11413a] rounded-lg border border-teal-500/10 p-3 flex items-center justify-center">
@@ -23,9 +25,6 @@ const RewardCard = ({ reward }: { reward: RewardType }) => {
       </div>
     );
   }
-
-  const product = data.product;
-
   return (
     <div className="bg-[#11413a] rounded-lg border border-teal-500/10 p-3">
       <h3
@@ -37,9 +36,6 @@ const RewardCard = ({ reward }: { reward: RewardType }) => {
 
       <div className="text-gray-300 text-sm space-y-1">
         <p>
-          <span className="text-white">Product ID:</span> {reward.productId}
-        </p>
-        <p>
           <span className="text-white">Name:</span> {product.name}
         </p>
         <p>
@@ -47,6 +43,9 @@ const RewardCard = ({ reward }: { reward: RewardType }) => {
         </p>
         <p>
           <span className="text-white">Category:</span> {product.category?.name}
+        </p>
+        <p>
+          <span className="text-white">Calories:</span> {product.calories}
         </p>
         <p>
           <span className="text-white">Specs:</span> {product.specs}

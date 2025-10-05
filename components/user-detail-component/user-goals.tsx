@@ -13,10 +13,6 @@ const UserGoals = ({ user }: { user: UserType }) => {
         {goal ? (
           <div className="space-y-2">
             <div className="flex justify-between py-3 border-b border-teal-500/10">
-              <span className="text-gray-300">ID</span>
-              <span>{goal.id}</span>
-            </div>
-            <div className="flex justify-between py-3 border-b border-teal-500/10">
               <span className="text-gray-300">Calories</span>
               <span>{goal.calories}</span>
             </div>
@@ -41,10 +37,6 @@ const UserGoals = ({ user }: { user: UserType }) => {
         </h2>
         {nextGoal ? (
           <div className="space-y-2">
-            <div className="flex justify-between py-3 border-b border-teal-500/10">
-              <span className="text-gray-300">ID</span>
-              <span>{nextGoal.id}</span>
-            </div>
             <div className="flex justify-between py-3 border-b border-teal-500/10">
               <span className="text-gray-300">Calories</span>
               <span>{nextGoal.calories}</span>
@@ -75,10 +67,6 @@ const UserGoals = ({ user }: { user: UserType }) => {
                 key={achieved.id}
                 className="p-3 rounded-lg bg-[#11413a]/40 border border-teal-500/10"
               >
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-300">ID</span>
-                  <span>{achieved.id}</span>
-                </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-300">Calories</span>
                   <span>{achieved.calories}</span>
