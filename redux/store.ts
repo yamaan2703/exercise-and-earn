@@ -25,7 +25,10 @@ export const store = configureStore({
     [FaqSlice.reducerPath]: FaqSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({}).concat([
+    getDefaultMiddleware({
+      serializableCheck: false,
+      immutableCheck: false,
+    }).concat([
       loginSlice.middleware,
       userSlice.middleware,
       TermsSlice.middleware,

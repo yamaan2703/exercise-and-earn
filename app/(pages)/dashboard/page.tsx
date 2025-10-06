@@ -6,20 +6,31 @@ import { useContext, useMemo, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { AiOutlineMenu } from "react-icons/ai";
 import { cn } from "@/lib/utils";
-import { ChartFilter, ChartType } from "@/types/enums";
+import { ChartFilter, ChartType, OrderStatus } from "@/types/enums";
 import Loader from "@/components/ui/loader";
 import Chart from "@/components/ui/chart";
 import { useGetUsersQuery } from "@/redux/slices/userSlice";
 import { useGetProductsQuery } from "@/redux/slices/productSlice";
-import { UserType } from "@/types/interface";
+import { OrderType, UserType } from "@/types/interface";
+import { useGetOrdersQuery } from "@/redux/slices/orderSlice";
 
 const Dashboard = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
+  const [chartFilter, setChartFilter] = useState(ChartFilter.WEEKLY);
   const { data, isLoading } = useGetUsersQuery(null);
   const { data: productData, isLoading: isProductLoading } =
     useGetProductsQuery(null);
-  const [chartFilter, setChartFilter] = useState(ChartFilter.DAILY);
-  const users = data?.users;
+  const { data: ordersData, isLoading: isOrderLoading } =
+    useGetOrdersQuery(null);
+  const users = data?.users.filter((user: UserType) => !user.isAdmin);
+
+  const ordersPlaced = ordersData?.orders?.filter(
+    (order: OrderType) => order.status !== OrderStatus.PROCESSING
+  );
+
+  const ordersPending = ordersData?.orders?.filter(
+    (order: OrderType) => order.status === OrderStatus.PROCESSING
+  );
 
   const processUserData = useMemo(() => {
     if (!users || users.length === 0) return null;
@@ -65,6 +76,10 @@ const Dashboard = () => {
             "Dec",
           ],
         },
+        [ChartFilter.YEARLY]: {
+          series: [{ name: "Users", data: [0] }],
+          categories: [new Date().getFullYear().toString()],
+        },
       };
     }
     const last7Days = Array.from({ length: 7 }, (_, i) => {
@@ -108,6 +123,16 @@ const Dashboard = () => {
       }
     });
 
+    const yearlyCount: Record<number, number> = {};
+    Object.keys(processUserData).forEach((dateKey) => {
+      const date = new Date(dateKey);
+      const year = date.getFullYear();
+      yearlyCount[year] = (yearlyCount[year] || 0) + processUserData[dateKey];
+    });
+
+    const yearlyCategories = Object.keys(yearlyCount).sort((a, b) => +a - +b);
+    const yearlyData = yearlyCategories.map((year) => yearlyCount[+year]);
+
     return {
       [ChartFilter.DAILY]: {
         series: [{ name: "Users", data: dailyData }],
@@ -133,6 +158,10 @@ const Dashboard = () => {
           "Nov",
           "Dec",
         ],
+      },
+      [ChartFilter.YEARLY]: {
+        series: [{ name: "Users", data: yearlyData }],
+        categories: yearlyCategories,
       },
     };
   }, [processUserData]);
@@ -266,8 +295,16 @@ const Dashboard = () => {
           value={isProductLoading ? "..." : productData?.totalCount}
           Icon={FaShoppingBag}
         />
-        <Card title="Orders Placed" value={6} Icon={FaBoxOpen} />
-        <Card title="Orders Pending" value={4} Icon={FaClock} />
+        <Card
+          title="Orders Placed"
+          value={isOrderLoading ? "..." : ordersPlaced.length}
+          Icon={FaBoxOpen}
+        />
+        <Card
+          title="Orders Pending"
+          value={isOrderLoading ? "..." : ordersPending.length}
+          Icon={FaClock}
+        />
       </div>
 
       <div className="flex flex-col md:flex-row gap-2 items-center">
@@ -278,7 +315,7 @@ const Dashboard = () => {
               Registrations 2025
             </h1>
             <div className="flex justify-end gap-2">
-              {["daily", "weekly", "monthly"].map((filter) => (
+              {["weekly", "monthly", "yearly"].map((filter) => (
                 <button
                   key={filter}
                   onClick={() => setChartFilter(filter as ChartFilter)}

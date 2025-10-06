@@ -53,7 +53,7 @@ const Users = () => {
   };
 
   const columns: ColumnsType<UserType> = [
-    { title: "Name", dataIndex: "name", sorter: true, width: "10%" },
+    { title: "Name", dataIndex: "name", width: "10%" },
     { title: "Email", dataIndex: "email", width: "15%" },
     { title: "Phone", dataIndex: "phone", width: "15%" },
     {
@@ -175,7 +175,7 @@ const Users = () => {
       ) : (
         <DynamicTable<UserType>
           columns={columns}
-          data={data.users.filter((user: UserType) => !user.isAdmin)}
+          data={data?.users?.filter((user: UserType) => !user.isAdmin)}
           searchValue={searchUsers}
           searchableFields={["name", "email", "phone"]}
           rowKey="id"

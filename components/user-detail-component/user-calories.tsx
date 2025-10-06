@@ -9,8 +9,6 @@ import { UserType } from "@/types/interface";
 const UserCalories = ({ user }: { user: UserType }) => {
   const [chartFilter, setChartFilter] = useState(ChartFilter.DAILY);
 
-  // 🔹 Dynamic chart data using API values (earnedCalories & balanceCalories)
-  // replace chartDataSets with this
   const chartDataSets = {
     [ChartFilter.DAILY]: {
       series: [
@@ -50,6 +48,19 @@ const UserCalories = ({ user }: { user: UserType }) => {
         },
       ],
       categories: ["Jan", "Feb", "Mar", "Apr", "May"],
+    },
+    [ChartFilter.YEARLY]: {
+      series: [
+        {
+          name: "Earned Calories",
+          data: [5000, 6000, 7000, 6500, user.earnedCalories],
+        },
+        {
+          name: "Balanced Calories",
+          data: [4000, 5200, 6000, 5800, user.balanceCalories],
+        },
+      ],
+      categories: [new Date().getFullYear().toString()],
     },
   };
 

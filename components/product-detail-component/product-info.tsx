@@ -15,14 +15,14 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
             <p className="text-gray-300 font-medium flex items-center gap-2">
               Category
             </p>
-            <p>{product.category.name}</p>
+            <p>{product?.category?.name}</p>
           </div>
 
           <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
             <p className="text-gray-300 font-medium flex items-center gap-2">
               Brand
             </p>
-            <p>{product.brand.name}</p>
+            <p>{product?.brand?.name}</p>
           </div>
 
           <div className="flex justify-between items-center py-3 border-b border-teal-500/10">

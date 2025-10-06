@@ -17,13 +17,7 @@ import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
 import Input from "@/components/ui/input";
 import CategoryModal from "@/components/ui/modal/category-modal";
-import { ProductType } from "@/types/interface";
-
-interface Category {
-  id: number;
-  name: string;
-  products: ProductType[];
-}
+import { CategoryItem } from "@/types/interface";
 
 const Category = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
@@ -37,7 +31,7 @@ const Category = () => {
     if (data) console.log(data);
   }, [data]);
 
-  const filteredCategories = categories.filter((category: Category) =>
+  const filteredCategories = categories.filter((category: CategoryItem) =>
     category.id.toString().includes(searchCategory.trim())
   );
 
@@ -92,7 +86,7 @@ const Category = () => {
         </h2>
         {filteredCategories.length > 0 ? (
           <div className="space-y-4">
-            {filteredCategories.map((category: Category) => (
+            {filteredCategories.map((category: CategoryItem) => (
               <div
                 key={category.id}
                 className="bg-[#11413a]/40 border border-teal-500/10 rounded-lg p-4 hover:border-teal-500/30 transition-colors"

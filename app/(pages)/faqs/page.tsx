@@ -4,7 +4,7 @@ import FaqModal from "@/components/ui/modal/faq-modal";
 import { AuthContext } from "@/context/AuthContext";
 import { ButtonSize, ButtonType, ButtonVariant } from "@/types/enums";
 import { FaqType } from "@/types/interface";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import Loader from "@/components/ui/loader";
@@ -16,9 +16,12 @@ const Faqs = () => {
   const [addFaqModal, setAddFaqModal] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
-
+  // const [answer, setAnswer] = useState("");
   const { data, isLoading, isError } = useGetFaqQuery("faq");
+
+  useEffect(() => {
+    if (data) console.log(data);
+  }, [data]);
 
   const toggleFaq = (id: number) => {
     setOpenFaq(openFaq === id ? null : id);
@@ -36,7 +39,9 @@ const Faqs = () => {
     toast.error("Failed to fetch FAQs");
   }
 
-  const faqs: FaqType[] = data?.data || [];
+  const faqs: FaqType[] = data?.content
+    ? [{ id: 1, question: data.content, answer: "No answer provided yet" }]
+    : [];
 
   return (
     <div className="p-1">
@@ -57,7 +62,7 @@ const Faqs = () => {
           label="Add Faq"
           onClick={() => {
             setQuestion("");
-            setAnswer("");
+            // setAnswer("");
             setAddFaqModal(true);
           }}
           variant={ButtonVariant.THEME}
@@ -102,8 +107,8 @@ const Faqs = () => {
           setFaqModal={setAddFaqModal}
           question={question}
           setQuestion={setQuestion}
-          answer={answer}
-          setAnswer={setAnswer}
+          // answer={answer}
+          // setAnswer={setAnswer}
         />
       )}
     </div>

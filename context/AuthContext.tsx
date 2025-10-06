@@ -7,7 +7,7 @@ import {
   SetStateAction,
 } from "react";
 import { OrderType, ProductType, StockHistoryItem } from "@/types/interface";
-import { dummyProducts, initialOrders } from "@/Data/Data";
+import { dummyProducts } from "@/Data/Data";
 import toast from "react-hot-toast";
 import { removeCookie } from "@/lib/cookies";
 import { Routes } from "@/routes/Routes";
@@ -20,8 +20,6 @@ interface AuthContextType {
   setLogoutModal: (value: boolean) => void;
   activeModal: boolean;
   setActiveModal: (value: boolean) => void;
-  orders: OrderType[];
-  setOrders: Dispatch<SetStateAction<OrderType[]>>;
   products: ProductType[];
   setProducts: Dispatch<SetStateAction<ProductType[]>>;
   stockHistory: StockHistoryItem[];
@@ -36,7 +34,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [logoutModal, setLogoutModal] = useState(false);
   const [activeModal, setActiveModal] = useState(false);
-  const [orders, setOrders] = useState(initialOrders);
   const [products, setProducts] = useState(dummyProducts);
   const [stockHistory, setStockHistory] = useState<StockHistoryItem[]>([]);
 
@@ -57,8 +54,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         setLogoutModal,
         activeModal,
         setActiveModal,
-        orders,
-        setOrders,
         products,
         setProducts,
         stockHistory,

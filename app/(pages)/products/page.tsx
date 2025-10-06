@@ -51,7 +51,7 @@ const Products = () => {
   };
 
   const columns: ColumnsType<ProductType> = [
-    { title: "Product Name", dataIndex: "name", sorter: true, width: "15%" },
+    { title: "Product Name", dataIndex: "name", width: "15%" },
     { title: "Category", dataIndex: ["category", "name"], width: "15%" },
     { title: "Brand", dataIndex: ["brand", "name"], width: "15%" },
     {

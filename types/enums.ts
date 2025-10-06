@@ -30,12 +30,13 @@ export enum ChartFilter {
   DAILY = "daily",
   WEEKLY = "weekly",
   MONTHLY = "monthly",
+  YEARLY = "yearly",
 }
 
 export enum OrderStatus {
-  PROCESSING = "Processing",
-  SHIPPED = "Shipped",
-  DELIVERED = "Delivered",
+  PROCESSING = "PROCESSING",
+  SHIPPED = "SHIPPED",
+  DELIVERED = "DELIVERED",
 }
 
 export enum InputVariant {

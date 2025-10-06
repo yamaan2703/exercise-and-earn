@@ -13,29 +13,29 @@ import toast from "react-hot-toast";
 import { usePostFaqMutation } from "@/redux/slices/faqSlice";
 
 const FaqModal = (props: FaqModalProps) => {
-  const { label, setFaqModal, question, setQuestion, answer, setAnswer } =
-    props;
+  const { label, setFaqModal, question, setQuestion } = props;
   const [postFaq, { isLoading }] = usePostFaqMutation();
 
   const handleSave = async () => {
-    if (!question.trim() || !answer.trim()) {
-      toast.error("Both fields are required!");
+    if (!question.trim()) {
+      toast.error("Question is required!");
       return;
     }
 
     try {
-      const payload = { content: JSON.stringify({ question, answer }) };
+      const payload = { content: question };
       const res = await postFaq(payload).unwrap();
 
       if (res.success) {
-        toast.success("FAQ added!");
+        toast.success(res.message || "FAQ added!");
         setFaqModal(false);
         setQuestion("");
-        setAnswer("");
+        // setAnswer("");
       } else {
         toast.error(res.error || "Failed to add FAQ");
       }
     } catch (err) {
+      console.log(err);
       toast.error("Something went wrong!");
     }
   };
@@ -63,7 +63,7 @@ const FaqModal = (props: FaqModalProps) => {
             size={InputSize.SMALL}
             required
           />
-          <Input
+          {/* <Input
             id="answer"
             type="text"
             placeholder="Enter answer..."
@@ -71,8 +71,7 @@ const FaqModal = (props: FaqModalProps) => {
             setValue={setAnswer}
             variant={InputVariant.DEFAULT}
             size={InputSize.SMALL}
-            required
-          />
+          /> */}
           <Button
             type={ButtonType.BUTTON}
             externalStyles="mt-3"

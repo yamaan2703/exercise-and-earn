@@ -120,14 +120,16 @@ export interface ProductType {
   updatedAt: string;
   createdAt: string;
 }
-
 export interface OrderType {
-  product: ProductType;
+  id: number;
+  address: string;
+  deliveryCharges: number;
+  totalAmount: number;
+  status: OrderStatus;
+  createdAt: string;
+  products: ProductType[];
   user: UserType;
-  orderNumber: number;
-  orderStatus: OrderStatus;
-  date: string;
-  paymentType: string;
+  userId: string;
 }
 
 export interface CardProps {
@@ -147,8 +149,8 @@ export interface FaqModalProps {
   setFaqModal: Dispatch<SetStateAction<boolean>>;
   question: string;
   setQuestion: Dispatch<SetStateAction<string>>;
-  answer: string;
-  setAnswer: Dispatch<SetStateAction<string>>;
+  // answer: string;
+  // setAnswer: Dispatch<SetStateAction<string>>;
 }
 
 export interface ChartComponentProps {
@@ -176,4 +178,16 @@ export interface StockHistoryItem {
   productName: string;
   stockChanged: number;
   createdAt: string;
+}
+
+export interface BrandItem {
+  id: number;
+  name: string;
+  products: ProductType[];
+}
+
+export interface CategoryItem {
+  id: number;
+  name: string;
+  products: ProductType[];
 }

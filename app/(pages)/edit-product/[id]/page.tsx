@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, useContext, useEffect, useState } from "react";
+import React, { ChangeEvent, useContext, useEffect, useMemo, useState } from "react";
 import {
   ButtonSize,
   ButtonType,
@@ -23,6 +23,10 @@ import {
 } from "@/redux/slices/productSlice";
 import Loader from "@/components/ui/loader";
 import { getCookie } from "@/lib/cookies";
+import { useGetGoalsQuery } from "@/redux/slices/goalSlice";
+import { useGetCategoryQuery } from "@/redux/slices/categorySlice";
+import { useGetBrandsQuery } from "@/redux/slices/brandSlice";
+import { BrandItem, CategoryItem, GoalItem } from "@/types/interface";
 
 type FormValues = {
   name: string;
@@ -41,11 +45,18 @@ const EditProduct = () => {
   const { setIsSidebarOpen, setStockHistory } = useContext(AuthContext)!;
   const { id } = useParams();
   const router = useRouter();
+  const token = getCookie("token");
+  const [images, setImages] = useState<(File | string)[]>([]);
   const [updateProduct] = useUpdateProductMutation();
   const { data: getData, isLoading } = useGetProductbyIdQuery(Number(id));
-  const [images, setImages] = useState<(File | string)[]>([]);
-  const product = getData?.product;
-  const token = getCookie("token");
+  const { data: brandData } = useGetBrandsQuery(null);
+  const { data: categoryData } = useGetCategoryQuery(null);
+  const { data: goalData } = useGetGoalsQuery(null);
+
+  const product = useMemo(() => getData?.product ?? [], [getData]);
+  const brands = brandData?.brands ?? [];
+  const categories = categoryData?.categories ?? [];
+  const goals = goalData?.goals ?? [];
 
   const { control, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: {
@@ -63,22 +74,21 @@ const EditProduct = () => {
   });
 
   useEffect(() => {
-    console.log(product);
-    if (product) {
-      reset({
-        name: product.name,
-        categoryId: product.categoryId,
-        brandId: product.brandId,
-        goalId: product.goalId,
-        description: product.description ?? "",
-        calories: product.calories,
-        stock: product.stock,
-        price: product.price,
-        size: product.size ?? "",
-        specs: product.specs,
-      });
-      setImages(product.images);
-    }
+    if (!product?.id) return;
+
+    reset({
+      name: product.name,
+      categoryId: product.categoryId,
+      brandId: product.brandId,
+      goalId: product.goalId,
+      description: product.description ?? "",
+      calories: product.calories,
+      stock: product.stock,
+      price: product.price,
+      size: product.size ?? "",
+      specs: product.specs,
+    });
+    setImages(product.images);
   }, [product, reset]);
 
   const uploadImage = async (file: File) => {
@@ -185,9 +195,13 @@ const EditProduct = () => {
       router.push(Routes.PRODUCTS_DETAIL(Number(id)));
       toast.success("Product updated successfully!");
     } catch (error: unknown) {
-      const err = error as { data?: { message?: string } };
+      const err = error as {
+        data?: { success: boolean; error?: string; message?: string };
+      };
       console.log("error", error);
-      toast.error(err?.data?.message || "something went wrong");
+      toast.error(
+        err?.data?.error || err?.data?.message || "something went wrong"
+      );
     }
   };
 
@@ -256,8 +270,10 @@ const EditProduct = () => {
             ))}
           </div>
           <p className="mt-2 text-xs text-gray-400">
-            Product image must be JPG or PNG, clear with a plain background, and
-            the full product must be visible.
+            The first image will be the Featured Image. Product image must in a
+            JPG or PNG format, clear with a plain background, and the full
+            product must be visible. Avoid colorful or busy backgrounds to keep
+            the product visible in the app
           </p>
         </div>
 
@@ -289,17 +305,22 @@ const EditProduct = () => {
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
-                <Input
-                  type="number"
-                  id="categoryId"
-                  label="Category Id"
-                  value={field.value}
-                  setValue={field.onChange}
-                  variant={InputVariant.OUTLINE}
-                  size={InputSize.SMALL}
-                  placeholder="Enter category id"
-                  required
-                />
+                <div>
+                  <label className="block text-sm text-gray-300 mb-2">
+                    Category
+                  </label>
+                  <select
+                    {...field}
+                    className="w-full bg-[#0b2d29] text-white border border-teal-500/30 rounded-lg p-2"
+                  >
+                    <option value="">Select a category</option>
+                    {categories.map((category: CategoryItem) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               )}
             />
           </div>
@@ -312,17 +333,22 @@ const EditProduct = () => {
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
-                <Input
-                  type="number"
-                  id="brandId"
-                  label="Brand Id"
-                  value={field.value}
-                  setValue={field.onChange}
-                  variant={InputVariant.OUTLINE}
-                  size={InputSize.SMALL}
-                  placeholder="Enter brand id"
-                  required
-                />
+                <div>
+                  <label className="block text-sm text-gray-300 mb-2">
+                    Brand
+                  </label>
+                  <select
+                    {...field}
+                    className="w-full bg-[#0b2d29] text-white border border-teal-500/30 rounded-lg p-2 pr-2"
+                  >
+                    <option value="">Select a brand</option>
+                    {brands.map((brand: BrandItem) => (
+                      <option key={brand.id} value={brand.id}>
+                        {brand.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               )}
             />
           </div>
@@ -376,17 +402,22 @@ const EditProduct = () => {
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
-                <Input
-                  type="number"
-                  id="goalId"
-                  label="Goal Id"
-                  value={field.value}
-                  setValue={field.onChange}
-                  variant={InputVariant.OUTLINE}
-                  size={InputSize.SMALL}
-                  placeholder="Enter goal Id"
-                  required
-                />
+                <div>
+                  <label className="block text-sm text-gray-300 mb-2">
+                    Goal
+                  </label>
+                  <select
+                    {...field}
+                    className="w-full bg-[#0b2d29] text-white border border-teal-500/30 rounded-lg p-2"
+                  >
+                    <option value="">Select a goal</option>
+                    {goals.map((goal: GoalItem) => (
+                      <option key={goal.id} value={goal.id}>
+                        {goal.calories} cal
+                      </option>
+                    ))}
+                  </select>
+                </div>
               )}
             />
           </div>
