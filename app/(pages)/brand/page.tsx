@@ -1,8 +1,11 @@
 "use client";
-import { AuthContext } from "@/context/AuthContext";
 import React, { useContext, useEffect, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { FaPlus, FaSearch } from "react-icons/fa";
+import { FaPlus, FaSearch, FaEye, FaTrash } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
+import { Routes } from "@/routes/Routes";
+import { BrandItem } from "@/types/interface";
 import {
   ButtonVariant,
   ButtonSize,
@@ -11,29 +14,81 @@ import {
   InputSize,
 } from "@/types/enums";
 import Button from "@/components/ui/button";
-import { useGetBrandsQuery } from "@/redux/slices/brandSlice";
-import Loader from "@/components/ui/loader";
-import { useRouter } from "next/navigation";
-import { Routes } from "@/routes/Routes";
 import Input from "@/components/ui/input";
+import Loader from "@/components/ui/loader";
 import BrandModal from "@/components/ui/modal/brand-modal";
-import { BrandItem } from "@/types/interface";
+import DynamicTable from "@/components/ui/table";
+import ConfirmationModal from "@/components/ui/modal/confirmation-modal";
+import {
+  useDeleteBrandMutation,
+  useGetBrandsQuery,
+} from "@/redux/slices/brandSlice";
+import { cn } from "@/lib/utils";
+import type { ColumnsType } from "antd/es/table";
 
 const Brands = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
   const router = useRouter();
-  const { data, isLoading } = useGetBrandsQuery(null);
+
+  const { data, isLoading, isError } = useGetBrandsQuery(null);
+  const [deleteBrand] = useDeleteBrandMutation();
+
   const [addBrandModal, setAddBrandModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [selectedBrand, setSelectedBrand] = useState<BrandItem | null>(null);
   const [searchBrand, setSearchBrand] = useState("");
+
   const brands = data?.brands ?? [];
 
   useEffect(() => {
     if (data) console.log(data);
   }, [data]);
 
-  const filteredBrands = brands.filter((brand: BrandItem) =>
-    brand.id.toString().includes(searchBrand.trim())
-  );
+  const handleView = (brand: BrandItem) => {
+    router.push(Routes.BRANDID(brand.id));
+  };
+
+  const columns: ColumnsType<BrandItem> = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      sorter: true,
+      width: "15%",
+    },
+    {
+      title: "Brand Name",
+      dataIndex: "name",
+      sorter: true,
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      width: "15%",
+      render: (record: BrandItem) => (
+        <div className="flex gap-2">
+          <button
+            onClick={() => handleView(record)}
+            title="View Brand"
+            className="p-1 text-white hover:text-gray-300 transition cursor-pointer"
+          >
+            <FaEye />
+          </button>
+          <button
+            onClick={() => {
+              setDeleteModal(true);
+              setSelectedBrand(record);
+            }}
+            title="Delete Brand"
+            className={cn(
+              "p-1 text-white hover:text-gray-300 transition cursor-pointer"
+            )}
+          >
+            <FaTrash />
+          </button>
+        </div>
+      ),
+    },
+  ];
 
   if (isLoading) {
     return (
@@ -42,8 +97,17 @@ const Brands = () => {
       </div>
     );
   }
+
+  if (isError) {
+    return (
+      <p className="text-center text-red-500 mt-10">
+        Failed to load brands. Please try again.
+      </p>
+    );
+  }
+
   return (
-    <div className="p-1">
+    <div className="space-y-2 p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
         <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-500 after:rounded-full after:mt-1">
           Brands
@@ -59,8 +123,8 @@ const Brands = () => {
       <div className="mb-3 flex justify-between gap-2">
         <div className="max-w-[400px] w-full">
           <Input
-            placeholder="Search brand by id..."
-            type="number"
+            placeholder="Search brand by name or ID..."
+            type="text"
             id="search"
             value={searchBrand}
             setValue={setSearchBrand}
@@ -79,70 +143,29 @@ const Brands = () => {
         />
       </div>
 
-      <div className="bg-[#0b2d29] border border-teal-500/20 rounded-xl p-4">
-        <h2 className="text-lg font-semibold text-white mb-4">
-          Existing Brands
-        </h2>
-        {filteredBrands.length > 0 ? (
-          <div className="space-y-4">
-            {filteredBrands.map((brand: BrandItem) => (
-              <div
-                key={brand.id}
-                className="bg-[#11413a]/40 border border-teal-500/10 rounded-lg p-4 hover:border-teal-500/30 transition-colors"
-              >
-                <div
-                  onClick={() => router.push(Routes.BRANDID(brand.id))}
-                  className="flex flex-col mb-2"
-                >
-                  <h3 className="text-teal-400 font-semibold text-base sm:text-lg cursor-pointer hover:underline">
-                    {brand.name}
-                  </h3>
-                  <h3 className="font-semibold text-base sm:text-lg">
-                    # {brand.id}
-                  </h3>
-                </div>
-
-                {brand.products && brand.products.length > 0 ? (
-                  <div>
-                    <h4 className="text-gray-300 text-sm mb-2">
-                      Products ({brand.products.length}):
-                    </h4>
-                    <div className="space-y-2">
-                      {brand.products.map((product) => (
-                        <div
-                          key={product.id}
-                          className="bg-[#06211e]/60 rounded px-3 py-2 flex justify-between items-center text-sm"
-                        >
-                          <p
-                            onClick={() =>
-                              router.push(Routes.PRODUCTS_DETAIL(product.id))
-                            }
-                            className="text-white hover:underline cursor-pointer"
-                          >
-                            {product.name}
-                          </p>
-                          <span className="text-gray-400">
-                            {product.calories} cal
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-gray-500 text-sm italic">
-                    No products assigned yet
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-400">No brands found.</p>
-        )}
-      </div>
+      <DynamicTable<BrandItem>
+        columns={columns}
+        data={brands}
+        searchValue={searchBrand}
+        searchableFields={["id", "name"]}
+        rowKey="id"
+        scroll={{ x: 600 }}
+      />
 
       {addBrandModal && (
         <BrandModal label="Add Brand" setAddBrandModal={setAddBrandModal} />
+      )}
+
+      {deleteModal && selectedBrand && (
+        <ConfirmationModal
+          title="Delete Brand"
+          description={`Are you sure you want to delete brand "${selectedBrand.name}"? This action cannot be undone.`}
+          onClick={() => {
+            deleteBrand(selectedBrand.id);
+            setDeleteModal(false);
+          }}
+          onCancel={() => setDeleteModal(false)}
+        />
       )}
     </div>
   );

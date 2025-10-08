@@ -86,7 +86,6 @@ const StockHistory = () => {
         columns={columns}
         data={[...stockHistory].reverse()}
         searchValue={searchStockHistory}
-        searchableFields={["productName"]}
         rowKey="productId"
       />
     </div>

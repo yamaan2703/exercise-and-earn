@@ -1,5 +1,11 @@
 "use client";
-import React, { ChangeEvent, useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  ChangeEvent,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   ButtonSize,
   ButtonType,
@@ -39,6 +45,7 @@ type FormValues = {
   price: string;
   specs: string;
   size?: string;
+  color?: string;
 };
 
 const EditProduct = () => {
@@ -58,7 +65,12 @@ const EditProduct = () => {
   const categories = categoryData?.categories ?? [];
   const goals = goalData?.goals ?? [];
 
-  const { control, handleSubmit, reset } = useForm<FormValues>({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>({
     defaultValues: {
       name: "",
       categoryId: "",
@@ -70,6 +82,7 @@ const EditProduct = () => {
       price: "",
       size: "",
       specs: "",
+      color: "",
     },
   });
 
@@ -87,6 +100,7 @@ const EditProduct = () => {
       price: product.price,
       size: product.size ?? "",
       specs: product.specs,
+      color: product.color ?? "",
     });
     setImages(product.images);
   }, [product, reset]);
@@ -171,6 +185,7 @@ const EditProduct = () => {
         price: Number(data.price),
         size: data.size ?? "",
         specs: data.specs,
+        color: data.color ?? "",
         description: data.description,
         featuredImage: uploadedUrls[0],
         images: uploadedUrls,
@@ -185,7 +200,6 @@ const EditProduct = () => {
           ...prev,
           {
             productId: product?.id,
-            productName: data.name,
             stockChanged,
             createdAt: new Date().toLocaleString(),
           },
@@ -196,11 +210,15 @@ const EditProduct = () => {
       toast.success("Product updated successfully!");
     } catch (error: unknown) {
       const err = error as {
-        data?: { success: boolean; error?: string; message?: string };
+        data?: {
+          success: boolean;
+          error?: string;
+          message?: string | string[];
+        };
       };
       console.log("error", error);
       toast.error(
-        err?.data?.error || err?.data?.message || "something went wrong"
+        err?.data?.message?.[0] || err?.data?.error || "something went wrong"
       );
     }
   };
@@ -225,7 +243,10 @@ const EditProduct = () => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={handleSubmit(onSubmit, (err) => console.log(err))}
+        className="space-y-6"
+      >
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Product Images
@@ -269,7 +290,7 @@ const EditProduct = () => {
               </div>
             ))}
           </div>
-          <p className="mt-2 text-xs text-gray-400">
+          <p className="mt-2 text-xs max-w-[600px] text-gray-400">
             The first image will be the Featured Image. Product image must in a
             JPG or PNG format, clear with a plain background, and the full
             product must be visible. Avoid colorful or busy backgrounds to keep
@@ -282,7 +303,7 @@ const EditProduct = () => {
             <Controller
               name="name"
               control={control}
-              rules={{ required: true }}
+              rules={{ required: "Please enter product name" }}
               render={({ field }) => (
                 <Input
                   type="text"
@@ -293,17 +314,19 @@ const EditProduct = () => {
                   variant={InputVariant.OUTLINE}
                   size={InputSize.SMALL}
                   placeholder="Enter product name"
-                  required
                 />
               )}
             />
+            {errors.name && (
+              <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+            )}
           </div>
 
           <div className="flex-1">
             <Controller
               name="categoryId"
               control={control}
-              rules={{ required: true }}
+              rules={{ required: "Please select a category." }}
               render={({ field }) => (
                 <div>
                   <label className="block text-sm text-gray-300 mb-2">
@@ -320,6 +343,11 @@ const EditProduct = () => {
                       </option>
                     ))}
                   </select>
+                  {errors.categoryId && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.categoryId.message}
+                    </p>
+                  )}
                 </div>
               )}
             />
@@ -331,7 +359,7 @@ const EditProduct = () => {
             <Controller
               name="brandId"
               control={control}
-              rules={{ required: true }}
+              rules={{ required: "Please select a brand." }}
               render={({ field }) => (
                 <div>
                   <label className="block text-sm text-gray-300 mb-2">
@@ -348,6 +376,11 @@ const EditProduct = () => {
                       </option>
                     ))}
                   </select>
+                  {errors.brandId && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.brandId.message}
+                    </p>
+                  )}
                 </div>
               )}
             />
@@ -357,7 +390,7 @@ const EditProduct = () => {
             <Controller
               name="price"
               control={control}
-              rules={{ required: true }}
+              rules={{ required: "Please enter price" }}
               render={({ field }) => (
                 <Input
                   type="number"
@@ -368,10 +401,14 @@ const EditProduct = () => {
                   variant={InputVariant.OUTLINE}
                   size={InputSize.SMALL}
                   placeholder="Enter product price"
-                  required
                 />
               )}
             />
+            {errors.price && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.price.message}
+              </p>
+            )}
           </div>
         </div>
 
@@ -380,7 +417,7 @@ const EditProduct = () => {
             <Controller
               name="stock"
               control={control}
-              rules={{ required: true }}
+              rules={{ required: "Please enter stock quantity" }}
               render={({ field }) => (
                 <Input
                   type="number"
@@ -391,16 +428,20 @@ const EditProduct = () => {
                   variant={InputVariant.OUTLINE}
                   size={InputSize.SMALL}
                   placeholder="Enter stock quantity"
-                  required
                 />
               )}
             />
+            {errors.stock && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.stock.message}
+              </p>
+            )}
           </div>
           <div className="flex-1">
             <Controller
               name="goalId"
               control={control}
-              rules={{ required: true }}
+              rules={{ required: "Please select a goal." }}
               render={({ field }) => (
                 <div>
                   <label className="block text-sm text-gray-300 mb-2">
@@ -417,6 +458,11 @@ const EditProduct = () => {
                       </option>
                     ))}
                   </select>
+                  {errors.goalId && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.goalId.message}
+                    </p>
+                  )}
                 </div>
               )}
             />
@@ -424,26 +470,6 @@ const EditProduct = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-6">
-          <div className="flex-1">
-            <Controller
-              name="specs"
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <Input
-                  type="text"
-                  id="specifications"
-                  label="Specs"
-                  value={field.value}
-                  setValue={field.onChange}
-                  variant={InputVariant.OUTLINE}
-                  size={InputSize.SMALL}
-                  placeholder="Enter product specifications"
-                  required
-                />
-              )}
-            />
-          </div>
           <div className="flex-1">
             <Controller
               name="size"
@@ -462,6 +488,24 @@ const EditProduct = () => {
               )}
             />
           </div>
+          <div className="flex-1">
+            <Controller
+              name="color"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  type="text"
+                  id="color"
+                  label="Color"
+                  value={field.value ?? ""}
+                  setValue={field.onChange}
+                  variant={InputVariant.OUTLINE}
+                  size={InputSize.SMALL}
+                  placeholder="Enter product color"
+                />
+              )}
+            />
+          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-6">
@@ -472,7 +516,7 @@ const EditProduct = () => {
             <Controller
               name="description"
               control={control}
-              rules={{ required: true }}
+              rules={{ required: "Please enter some description." }}
               render={({ field }) => (
                 <textarea
                   id="description"
@@ -481,10 +525,38 @@ const EditProduct = () => {
                   placeholder="Enter description"
                   rows={3}
                   className="bg-transparent w-full p-2 rounded-lg text-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  required
                 />
               )}
             />
+            {errors.description && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.description.message}
+              </p>
+            )}
+          </div>
+          <div className="flex-1">
+            <Controller
+              name="specs"
+              control={control}
+              rules={{ required: "Please enter product specifications." }}
+              render={({ field }) => (
+                <Input
+                  type="text"
+                  id="specifications"
+                  label="Specs"
+                  value={field.value}
+                  setValue={field.onChange}
+                  variant={InputVariant.OUTLINE}
+                  size={InputSize.SMALL}
+                  placeholder="Enter product specifications"
+                />
+              )}
+            />
+            {errors.specs && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.specs.message}
+              </p>
+            )}
           </div>
         </div>
 

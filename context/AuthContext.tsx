@@ -5,9 +5,9 @@ import {
   PropsWithChildren,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from "react";
-import { OrderType, ProductType, StockHistoryItem } from "@/types/interface";
-import { dummyProducts } from "@/Data/Data";
+import { ProductType, StockHistoryItem } from "@/types/interface";
 import toast from "react-hot-toast";
 import { removeCookie } from "@/lib/cookies";
 import { Routes } from "@/routes/Routes";
@@ -20,8 +20,6 @@ interface AuthContextType {
   setLogoutModal: (value: boolean) => void;
   activeModal: boolean;
   setActiveModal: (value: boolean) => void;
-  products: ProductType[];
-  setProducts: Dispatch<SetStateAction<ProductType[]>>;
   stockHistory: StockHistoryItem[];
   setStockHistory: Dispatch<SetStateAction<StockHistoryItem[]>>;
   handleLogoutClick: () => void;
@@ -34,8 +32,17 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [logoutModal, setLogoutModal] = useState(false);
   const [activeModal, setActiveModal] = useState(false);
-  const [products, setProducts] = useState(dummyProducts);
-  const [stockHistory, setStockHistory] = useState<StockHistoryItem[]>([]);
+  const [stockHistory, setStockHistory] = useState<StockHistoryItem[]>(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("stockHistory");
+      return stored ? JSON.parse(stored) : [];
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("stockHistory", JSON.stringify(stockHistory));
+  }, [stockHistory]);
 
   const handleLogoutClick = () => {
     toast.success("Logged out successfully!");
@@ -54,8 +61,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         setLogoutModal,
         activeModal,
         setActiveModal,
-        products,
-        setProducts,
         stockHistory,
         setStockHistory,
         handleLogoutClick,

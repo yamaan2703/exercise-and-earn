@@ -58,6 +58,7 @@ const BrandModal = ({ label, setAddBrandModal }: BrandModalProps) => {
           <Input
             id="name"
             type="text"
+            label="Name"
             placeholder="Enter brand name..."
             value={name}
             setValue={setName}

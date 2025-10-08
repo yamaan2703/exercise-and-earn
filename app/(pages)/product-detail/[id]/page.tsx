@@ -16,13 +16,13 @@ import { AuthContext } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
 import ProductInfo from "@/components/product-detail-component/product-info";
 import ProductStock from "@/components/product-detail-component/product-stock";
-import toast from "react-hot-toast";
 import { useGetProductbyIdQuery } from "@/redux/slices/productSlice";
 import Loader from "@/components/ui/loader";
 
 const ProductDetailPage = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
   const [activeTab, setActiveTab] = useState(ProductDetailTab.INFO);
+  const [stockNotification, setStockNotification] = useState(true);
   const { id } = useParams();
   const router = useRouter();
   const { data, isLoading } = useGetProductbyIdQuery(Number(id));
@@ -31,18 +31,6 @@ const ProductDetailPage = () => {
   useEffect(() => {
     if (data) console.log(data);
   }, [data]);
-
-  useEffect(() => {
-    if (product && product.stock <= 5) {
-      toast(`Only ${product.stock} left in stock!`, {
-        icon: "🟡",
-        style: {
-          background: "#333",
-          color: "#fff",
-        },
-      });
-    }
-  }, [product, product?.stock]);
 
   if (isLoading)
     return (
@@ -54,6 +42,19 @@ const ProductDetailPage = () => {
     <div className="min-h-screen p-1">
       {product ? (
         <div className="">
+          {product.stock <= 5 && stockNotification && (
+            <div className="bg-red-600 border border-red-600/40 rounded-lg p-1 mb-4 flex items-center">
+              <p className="text-red-200 text-base font-semibold flex-1 text-center">
+                Only {product.stock} left in stock! Hurry up before it runs out!
+              </p>
+              <p
+                onClick={() => setStockNotification(false)}
+                className="mr-1 text-lg text-red-100 hover:text-white font-bold cursor-pointer"
+              >
+                X
+              </p>
+            </div>
+          )}
           <div className="flex justify-between items-center gap-2 mb-6">
             <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-500 after:rounded-full after:mt-1">
               Product Detail

@@ -109,7 +109,8 @@ export interface ProductType {
   brand: { id: number; name: string };
   description: string | null;
   calories: number;
-  size?: string;
+  sizes?: string;
+  colors?: string;
   specs: string;
   stock: number;
   featuredImage: string;
@@ -149,8 +150,8 @@ export interface FaqModalProps {
   setFaqModal: Dispatch<SetStateAction<boolean>>;
   question: string;
   setQuestion: Dispatch<SetStateAction<string>>;
-  // answer: string;
-  // setAnswer: Dispatch<SetStateAction<string>>;
+  answer: string;
+  setAnswer: Dispatch<SetStateAction<string>>;
 }
 
 export interface ChartComponentProps {
@@ -175,7 +176,6 @@ export interface GoalItem {
 
 export interface StockHistoryItem {
   productId: number;
-  productName: string;
   stockChanged: number;
   createdAt: string;
 }

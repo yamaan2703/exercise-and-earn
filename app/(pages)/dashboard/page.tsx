@@ -297,12 +297,12 @@ const Dashboard = () => {
         />
         <Card
           title="Orders Placed"
-          value={isOrderLoading ? "..." : ordersPlaced.length}
+          value={isOrderLoading ? "..." : ordersPlaced?.length}
           Icon={FaBoxOpen}
         />
         <Card
           title="Orders Pending"
-          value={isOrderLoading ? "..." : ordersPending.length}
+          value={isOrderLoading ? "..." : ordersPending?.length}
           Icon={FaClock}
         />
       </div>

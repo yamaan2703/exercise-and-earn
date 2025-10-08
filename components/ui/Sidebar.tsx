@@ -2,7 +2,7 @@
 import { ReactElement, useContext, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { sidebarMenu as links } from "@/Data/Data";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,6 @@ interface MenuLink {
   label: string;
   icon: ReactElement;
   children?: MenuLink[];
-  ml?: number;
 }
 
 interface OpenMenus {
@@ -25,8 +24,9 @@ interface OpenMenus {
 function Sidebar() {
   const { isSidebarOpen, setIsSidebarOpen, setLogoutModal } =
     useContext(AuthContext)!;
-  const pathname = usePathname();
   const [openMenus, setOpenMenus] = useState<OpenMenus>({});
+  const pathname = usePathname();
+  const router = useRouter();
 
   const toggleMenu = (key: string) => {
     setOpenMenus((prev) => ({
@@ -43,32 +43,38 @@ function Sidebar() {
       const isMenuOpen = openMenus[key];
       const hasChildren = link.children && link.children.length > 0;
 
-      const marginLeftClass = link.ml ? `ml-${link.ml}` : "";
-
       return (
-        <div key={key} className={`space-y-1 ${marginLeftClass}`}>
+        <div key={key} className="space-y-1 ">
           {hasChildren ? (
             <>
               <button
-                onClick={() => toggleMenu(key)}
+                onClick={() => {
+                  router.push(link.to);
+                }}
                 className={cn(
                   "flex items-center justify-between w-full text-[12px] sm:text-[15px] px-3 py-2 rounded-lg transition duration-300",
                   pathname.startsWith(link.to)
-                    ? "bg-[#C7E5C9] text-gray-900 shadow-md"
-                    : "text-gray-600 hover:bg-[#EDF8ED] hover:text-green-900"
+                    ? "text-white bg-green-700/20 border-r-2 border-l-2"
+                    : "text-gray-400 hover:bg-white hover:text-[#06211E]"
                 )}
               >
-                <span className="flex items-center space-x-3">
+                <p className="flex items-center space-x-3">
                   <span className="text-xl">{link.icon}</span>
                   <span className="font-medium">{link.label}</span>
-                </span>
-                <span>
-                  {isMenuOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
+                </p>
+                <span onClick={() => toggleMenu(key)}>
+                  {isMenuOpen ? (
+                    <MdKeyboardArrowUp className="size-6" />
+                  ) : (
+                    <MdKeyboardArrowDown className="size-6" />
+                  )}
                 </span>
               </button>
-              {isMenuOpen &&
-                link.children &&
-                renderLinks(link.children as MenuLink[])}
+              <p className="px-4 space-y-2">
+                {isMenuOpen &&
+                  link.children &&
+                  renderLinks(link.children as MenuLink[])}
+              </p>
             </>
           ) : (
             <Link href={link.to} onClick={() => setIsSidebarOpen(false)}>

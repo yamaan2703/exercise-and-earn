@@ -16,7 +16,7 @@ const Faqs = () => {
   const [addFaqModal, setAddFaqModal] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [question, setQuestion] = useState("");
-  // const [answer, setAnswer] = useState("");
+  const [answer, setAnswer] = useState("");
   const { data, isLoading, isError } = useGetFaqQuery("faq");
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const Faqs = () => {
   }
 
   const faqs: FaqType[] = data?.content
-    ? [{ id: 1, question: data.content, answer: "No answer provided yet" }]
+    ? [{ id: 1, question: data.content, answer: answer }]
     : [];
 
   return (
@@ -62,7 +62,7 @@ const Faqs = () => {
           label="Add Faq"
           onClick={() => {
             setQuestion("");
-            // setAnswer("");
+            setAnswer("");
             setAddFaqModal(true);
           }}
           variant={ButtonVariant.THEME}
@@ -107,8 +107,8 @@ const Faqs = () => {
           setFaqModal={setAddFaqModal}
           question={question}
           setQuestion={setQuestion}
-          // answer={answer}
-          // setAnswer={setAnswer}
+          answer={answer}
+          setAnswer={setAnswer}
         />
       )}
     </div>

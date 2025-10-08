@@ -1,70 +1,150 @@
 "use client";
-import React, { useState } from "react";
-import { cn } from "@/lib/utils";
+import React, { useState, useEffect } from "react";
 import { ApexOptions } from "apexcharts";
-import { ChartFilter, ChartType } from "@/types/enums";
+import { ChartType } from "@/types/enums";
 import Chart from "../ui/chart";
 import { UserType } from "@/types/interface";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { FaCalendarAlt } from "react-icons/fa";
+
+interface CalorieDataPoint {
+  date: Date;
+  earnedCalories: number;
+  balanceCalories: number;
+}
 
 const UserCalories = ({ user }: { user: UserType }) => {
-  const [chartFilter, setChartFilter] = useState(ChartFilter.DAILY);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
-  const chartDataSets = {
-    [ChartFilter.DAILY]: {
-      series: [
-        {
-          name: "Earned Calories",
-          data: [200, 250, 300, 220, 280, 260, user.earnedCalories],
-        },
-        {
-          name: "Balanced Calories",
-          data: [150, 180, 200, 210, 190, 230, user.balanceCalories],
-        },
-      ],
-      categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  // Full dataset with dates (replace this with actual data from your backend)
+  const allCalorieData: CalorieDataPoint[] = [
+    {
+      date: new Date(2025, 8, 3), // July 3
+      earnedCalories: 200,
+      balanceCalories: 150,
     },
-    [ChartFilter.WEEKLY]: {
-      series: [
-        {
-          name: "Earned Calories",
-          data: [1000, 1200, 850, user.earnedCalories],
-        },
-        {
-          name: "Balanced Calories",
-          data: [800, 950, 750, user.balanceCalories],
-        },
-      ],
-      categories: ["Week 1", "Week 2", "Week 3", "Week 4"],
+    {
+      date: new Date(2025, 8, 4), // July 4
+      earnedCalories: 250,
+      balanceCalories: 180,
     },
-    [ChartFilter.MONTHLY]: {
-      series: [
-        {
-          name: "Earned Calories",
-          data: [5000, 6000, 7000, 6500, user.earnedCalories],
-        },
-        {
-          name: "Balanced Calories",
-          data: [4000, 5200, 6000, 5800, user.balanceCalories],
-        },
-      ],
-      categories: ["Jan", "Feb", "Mar", "Apr", "May"],
+    {
+      date: new Date(2025, 8, 5), // July 5
+      earnedCalories: 300,
+      balanceCalories: 200,
     },
-    [ChartFilter.YEARLY]: {
-      series: [
-        {
-          name: "Earned Calories",
-          data: [5000, 6000, 7000, 6500, user.earnedCalories],
-        },
-        {
-          name: "Balanced Calories",
-          data: [4000, 5200, 6000, 5800, user.balanceCalories],
-        },
-      ],
-      categories: [new Date().getFullYear().toString()],
+    {
+      date: new Date(2025, 8, 6), // July 6
+      earnedCalories: 220,
+      balanceCalories: 210,
     },
+    {
+      date: new Date(2025, 8, 7), // July 7
+      earnedCalories: 280,
+      balanceCalories: 190,
+    },
+    {
+      date: new Date(2025, 8, 8), // July 8
+      earnedCalories: 260,
+      balanceCalories: 230,
+    },
+    {
+      date: new Date(2025, 8, 9), // July 9
+      earnedCalories: 320,
+      balanceCalories: 250,
+    },
+    {
+      date: new Date(2025, 8, 10), // July 10
+      earnedCalories: 290,
+      balanceCalories: 240,
+    },
+    {
+      date: new Date(2025, 8, 11), // July 11
+      earnedCalories: 310,
+      balanceCalories: 260,
+    },
+    {
+      date: new Date(2025, 8, 12), // July 12
+      earnedCalories: user.earnedCalories,
+      balanceCalories: user.balanceCalories,
+    },
+  ];
+
+  // Filter data based on selected date range
+  const getFilteredData = () => {
+    let dataToFilter = [...allCalorieData];
+
+    // If both dates are selected, filter the data
+    if (startDate && endDate) {
+      dataToFilter = dataToFilter.filter((item) => {
+        const itemDate = new Date(item.date);
+        itemDate.setHours(0, 0, 0, 0);
+        const start = new Date(startDate);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+
+        return itemDate >= start && itemDate <= end;
+      });
+    }
+
+    // If no data after filtering, return empty arrays
+    if (dataToFilter.length === 0) {
+      return {
+        series: [
+          { name: "Earned Calories", data: [] },
+          { name: "Balanced Calories", data: [] },
+        ],
+        categories: [],
+      };
+    }
+
+    // Extract data for chart
+    const earnedData = dataToFilter.map((item) => item.earnedCalories);
+    const balanceData = dataToFilter.map((item) => item.balanceCalories);
+    const categories = dataToFilter.map((item) =>
+      item.date.toLocaleDateString("en-US", { month: "short", day: "numeric" })
+    );
+
+    return {
+      series: [
+        { name: "Earned Calories", data: earnedData },
+        { name: "Balanced Calories", data: balanceData },
+      ],
+      categories,
+    };
   };
 
-  const currentData = chartDataSets[chartFilter];
+  const filteredData = getFilteredData();
+
+  // Calculate totals for the filtered period
+  const getTotals = () => {
+    if (filteredData.series[0].data.length === 0) {
+      return { totalEarned: 0, totalBalance: 0, avgEarned: 0, avgBalance: 0 };
+    }
+
+    const totalEarned = filteredData.series[0].data.reduce(
+      (sum, val) => sum + val,
+      0
+    );
+    const totalBalance = filteredData.series[1].data.reduce(
+      (sum, val) => sum + val,
+      0
+    );
+    const count = filteredData.series[0].data.length;
+
+    return {
+      totalEarned,
+      totalBalance,
+      avgEarned: Math.round(totalEarned / count),
+      avgBalance: Math.round(totalBalance / count),
+    };
+  };
+
+  const totals = getTotals();
 
   const chartOptions: ApexOptions = {
     chart: {
@@ -78,9 +158,9 @@ const UserCalories = ({ user }: { user: UserType }) => {
       enabled: true,
       style: { fontSize: "12px", colors: ["#14B8A6", "#FBBF24"] },
     },
-    colors: ["#14B8A6", "#FBBF24"], // earned = teal, balance = yellow
+    colors: ["#14B8A6", "#FBBF24"],
     xaxis: {
-      categories: currentData.categories,
+      categories: filteredData.categories,
       labels: { style: { colors: "#fff", fontSize: "11px" } },
       axisBorder: { show: false },
       axisTicks: { show: false },
@@ -103,26 +183,70 @@ const UserCalories = ({ user }: { user: UserType }) => {
     },
   };
 
+  // Close calendar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest(".calendar-container")) {
+        setIsCalendarOpen(false);
+      }
+    };
+
+    if (isCalendarOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isCalendarOpen]);
+
+  // Clear filter function
+  const clearFilter = () => {
+    setStartDate(null);
+    setEndDate(null);
+  };
+
   return (
     <>
       {/* Summary section */}
       <div className="bg-[#0b2d29] rounded-xl p-3 sm:p-4 border border-teal-500/20">
         <h2 className="text-xl font-bold text-white mb-4">Calories Details</h2>
 
-        <div className="space-y-3">
+        <div className="grid grid-cols-2 gap-3">
           <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
-            <div className="flex justify-between items-center">
-              <h3 className="text-white font-semibold">Earned Calories</h3>
-              <p className="text-teal-400 font-medium">{user.earnedCalories}</p>
+            <div className="flex flex-col gap-1">
+              <h3 className="text-white/80 text-sm">
+                {startDate && endDate ? "Average Earned" : "Earned Calories"}
+              </h3>
+              <p className="text-teal-400 font-bold text-2xl">
+                {startDate && endDate ? totals.avgEarned : user.earnedCalories}
+              </p>
+              {startDate && endDate && (
+                <p className="text-white/60 text-xs">
+                  Total: {totals.totalEarned} cal
+                </p>
+              )}
             </div>
           </div>
 
           <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
-            <div className="flex justify-between items-center">
-              <h3 className="text-white font-semibold">Balanced Calories</h3>
-              <p className="text-teal-400 font-medium">
-                {user.balanceCalories}
+            <div className="flex flex-col gap-1">
+              <h3 className="text-white/80 text-sm">
+                {startDate && endDate
+                  ? "Average Balanced"
+                  : "Balanced Calories"}
+              </h3>
+              <p className="text-amber-400 font-bold text-2xl">
+                {startDate && endDate
+                  ? totals.avgBalance
+                  : user.balanceCalories}
               </p>
+              {startDate && endDate && (
+                <p className="text-white/60 text-xs">
+                  Total: {totals.totalBalance} cal
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -132,30 +256,74 @@ const UserCalories = ({ user }: { user: UserType }) => {
       <div>
         <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mx-3 mb-4 mt-8">
           <h1 className="text-xl font-medium">Chart Analytics</h1>
-          <div className="flex justify-end gap-2">
-            {["daily", "weekly", "monthly"].map((filter) => (
+
+          <div className="relative calendar-container">
+            <div className="flex items-center gap-2">
+              {startDate && endDate && (
+                <button
+                  onClick={clearFilter}
+                  className="text-sm text-teal-400 hover:text-teal-300 underline"
+                >
+                  Clear Filter
+                </button>
+              )}
               <button
-                key={filter}
-                onClick={() => setChartFilter(filter as ChartFilter)}
-                className={cn(
-                  "px-3 py-1 rounded-md text-sm cursor-pointer transition",
-                  chartFilter === filter
-                    ? "bg-teal-600 text-white"
-                    : "bg-[#11413a] text-gray-300 hover:bg-teal-700/40 hover:text-white"
-                )}
+                onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+                className="flex items-center gap-2 bg-[#11413a] text-white px-3 py-2 rounded-md hover:bg-teal-700/30 transition border border-teal-500/20"
               >
-                {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                <FaCalendarAlt className="text-teal-400" />
+                <span className="text-sm">
+                  {startDate && endDate
+                    ? `${startDate.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })} - ${endDate.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })}`
+                    : "Select Date Range"}
+                </span>
               </button>
-            ))}
+            </div>
+
+            {isCalendarOpen && (
+              <div className="absolute top-12 right-0 z-50 bg-[#0b2d29] border border-teal-500/20 rounded-lg shadow-xl p-3">
+                <DatePicker
+                  selectsRange
+                  startDate={startDate}
+                  endDate={endDate}
+                  onChange={(update: [Date | null, Date | null]) => {
+                    const [start, end] = update;
+                    setStartDate(start);
+                    setEndDate(end);
+                    // Close calendar when both dates are selected
+                    if (start && end) {
+                      setIsCalendarOpen(false);
+                    }
+                  }}
+                  inline
+                  maxDate={new Date()}
+                  className="rounded-lg"
+                />
+              </div>
+            )}
           </div>
         </div>
 
-        <Chart
-          options={chartOptions}
-          series={currentData.series}
-          type={ChartType.LINE}
-          height={350}
-        />
+        {filteredData.categories.length > 0 ? (
+          <Chart
+            options={chartOptions}
+            series={filteredData.series}
+            type={ChartType.LINE}
+            height={350}
+          />
+        ) : (
+          <div className="flex items-center justify-center h-[350px] bg-[#0b2d29] rounded-lg border border-teal-500/20">
+            <p className="text-white/60">
+              No data available for the selected date range
+            </p>
+          </div>
+        )}
       </div>
     </>
   );

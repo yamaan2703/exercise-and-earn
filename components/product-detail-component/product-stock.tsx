@@ -1,19 +1,47 @@
-import { ProductType } from "@/types/interface";
-import React from "react";
+"use client";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
+import { ProductType, StockHistoryItem } from "@/types/interface";
+import DynamicTable from "../ui/table";
 
 const ProductStock = ({ product }: { product: ProductType }) => {
-  return (
-    <div className="bg-[#0b2d29] rounded-xl p-3 sm:p-4 border border-teal-500/20">
-      <h2 className="text-xl font-bold text-white mb-4">Product Details</h2>
+  const { stockHistory } = useContext(AuthContext)!;
 
-      <div className="space-y-3">
-        <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
+  const filteredHistory = stockHistory.filter(
+    (item) => item.productId === product.id
+  );
+
+  const columns = [
+    {
+      title: "Stock Changed",
+      dataIndex: "stockChanged",
+      key: "stockChanged",
+      sorter: true,
+    },
+    {
+      title: "Updated At",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      sorter: true,
+      render: (createdAt: string) => new Date(createdAt).toLocaleDateString(),
+    },
+  ];
+  return (
+    <div>
+      <div className="space-y-3 mb-4">
+        <div className="bg-[#0b2d29] p-3 rounded-lg border border-teal-500/10">
           <div className="flex justify-between items-center">
             <h3 className="text-white font-semibold">Total Stock</h3>
             <p className="text-teal-400 font-medium">{product.stock}</p>
           </div>
         </div>
       </div>
+
+      <DynamicTable<StockHistoryItem>
+        columns={columns}
+        data={[...filteredHistory].reverse()}
+        rowKey="productId"
+      />
     </div>
   );
 };
