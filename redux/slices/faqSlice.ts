@@ -15,22 +15,46 @@ export const FaqSlice = createApi({
   }),
   tagTypes: ["Faqs"],
   endpoints: (builder) => ({
+    getFaqs: builder.query({
+      query: () => ({
+        url: "/faq",
+      }),
+      providesTags: ["Faqs"],
+    }),
+
+    getFaqById: builder.query({
+      query: (id) => ({
+        url: `/faq/${id}`,
+      }),
+      providesTags: ["Faqs"],
+    }),
+
     postFaq: builder.mutation({
       query: (data) => ({
-        url: "/html-content/faq",
+        url: "/faq",
         method: "POST",
         body: data,
       }),
       invalidatesTags: ["Faqs"],
     }),
 
-    getFaq: builder.query({
-      query: (type: string) => ({
-        url: `/html-content/${type}`,
+    updateFaq: builder.mutation({
+      query: ({ id, ...data }) => ({
+        url: `/faq/${id}`,
+        method: "PATCH",
+        body: data,
       }),
-      providesTags: ["Faqs"],
+      invalidatesTags: ["Faqs"],
+    }),
+
+    deleteFaq: builder.mutation({
+      query: (id) => ({
+        url: `/faq/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Faqs"],
     }),
   }),
 });
 
-export const { usePostFaqMutation, useGetFaqQuery } = FaqSlice;
+export const { usePostFaqMutation, useGetFaqsQuery } = FaqSlice;

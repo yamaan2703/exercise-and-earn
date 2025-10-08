@@ -162,7 +162,7 @@ const Products = () => {
       ) : (
         <DynamicTable<ProductType>
           columns={columns}
-          data={data.products}
+          data={data?.products}
           searchValue={searchProducts}
           searchableFields={["name", "category"]}
           rowKey="id"

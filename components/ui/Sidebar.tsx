@@ -50,6 +50,7 @@ function Sidebar() {
               <button
                 onClick={() => {
                   router.push(link.to);
+                  toggleMenu(key);
                 }}
                 className={cn(
                   "flex items-center justify-between w-full text-[12px] sm:text-[15px] px-3 py-2 rounded-lg transition duration-300",
@@ -58,11 +59,11 @@ function Sidebar() {
                     : "text-gray-400 hover:bg-white hover:text-[#06211E]"
                 )}
               >
-                <p className="flex items-center space-x-3">
-                  <span className="text-xl">{link.icon}</span>
-                  <span className="font-medium">{link.label}</span>
-                </p>
-                <span onClick={() => toggleMenu(key)}>
+                <span className="flex items-center space-x-3">
+                  <span className="text-lg">{link.icon}</span>
+                  <span className="font-medium text-sm">{link.label}</span>
+                </span>
+                <span>
                   {isMenuOpen ? (
                     <MdKeyboardArrowUp className="size-6" />
                   ) : (
@@ -70,11 +71,11 @@ function Sidebar() {
                   )}
                 </span>
               </button>
-              <p className="px-4 space-y-2">
+              <div className="px-4 space-y-2">
                 {isMenuOpen &&
                   link.children &&
                   renderLinks(link.children as MenuLink[])}
-              </p>
+              </div>
             </>
           ) : (
             <Link href={link.to} onClick={() => setIsSidebarOpen(false)}>

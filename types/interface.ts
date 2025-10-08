@@ -121,6 +121,7 @@ export interface ProductType {
   updatedAt: string;
   createdAt: string;
 }
+
 export interface OrderType {
   id: number;
   address: string;
@@ -190,4 +191,10 @@ export interface CategoryItem {
   id: number;
   name: string;
   products: ProductType[];
+}
+
+export interface AuthResponse {
+  success: boolean;
+  token: string;
+  refreshToken: string;
 }

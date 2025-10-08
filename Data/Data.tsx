@@ -1,12 +1,5 @@
 import { Routes } from "@/routes/Routes";
-import {
-  Gender,
-  OrderStatus,
-  ProductDetailTab,
-  StatusUser,
-  UserDetailTab,
-} from "@/types/enums";
-import { UserType, ProductType, OrderType, FaqType } from "@/types/interface";
+import { ProductDetailTab, UserDetailTab } from "@/types/enums";
 import dynamic from "next/dynamic";
 import {
   FaUsers,
@@ -16,8 +9,8 @@ import {
   FaBoxOpen,
   FaUser,
   FaFire,
-  FaClipboardList,
   FaGift,
+  FaShoppingCart,
 } from "react-icons/fa";
 import { FaBoxArchive } from "react-icons/fa6";
 import { LuNotebookText } from "react-icons/lu";
@@ -37,10 +30,15 @@ export const sidebarMenu = [
     icon: <FaUsers />,
   },
   {
-    label: "Products",
-    to: Routes.PRODUCTS,
-    icon: <FaStore />,
+    label: "Catalog",
+    icon: <FaShoppingCart />,
+    to: "#",
     children: [
+      {
+        label: "Products",
+        to: Routes.PRODUCTS,
+        icon: <FaStore />,
+      },
       {
         label: "Brand",
         to: Routes.BRAND,
@@ -63,11 +61,6 @@ export const sidebarMenu = [
     to: Routes.ORDERS,
     icon: <FaBoxOpen />,
   },
-  // {
-  //   label: "Stock History",
-  //   to: Routes.STOCK_HISTORY,
-  //   icon: <FaClipboardList />,
-  // },
   {
     label: "Privacy Policy",
     to: Routes.PRIVACY_POLICY,

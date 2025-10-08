@@ -19,7 +19,6 @@ const UserCalories = ({ user }: { user: UserType }) => {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
-  // Full dataset with dates (replace this with actual data from your backend)
   const allCalorieData: CalorieDataPoint[] = [
     {
       date: new Date(2025, 8, 3), // July 3
@@ -73,11 +72,9 @@ const UserCalories = ({ user }: { user: UserType }) => {
     },
   ];
 
-  // Filter data based on selected date range
   const getFilteredData = () => {
     let dataToFilter = [...allCalorieData];
 
-    // If both dates are selected, filter the data
     if (startDate && endDate) {
       dataToFilter = dataToFilter.filter((item) => {
         const itemDate = new Date(item.date);
@@ -91,7 +88,6 @@ const UserCalories = ({ user }: { user: UserType }) => {
       });
     }
 
-    // If no data after filtering, return empty arrays
     if (dataToFilter.length === 0) {
       return {
         series: [
@@ -102,7 +98,6 @@ const UserCalories = ({ user }: { user: UserType }) => {
       };
     }
 
-    // Extract data for chart
     const earnedData = dataToFilter.map((item) => item.earnedCalories);
     const balanceData = dataToFilter.map((item) => item.balanceCalories);
     const categories = dataToFilter.map((item) =>
@@ -120,7 +115,6 @@ const UserCalories = ({ user }: { user: UserType }) => {
 
   const filteredData = getFilteredData();
 
-  // Calculate totals for the filtered period
   const getTotals = () => {
     if (filteredData.series[0].data.length === 0) {
       return { totalEarned: 0, totalBalance: 0, avgEarned: 0, avgBalance: 0 };
@@ -183,7 +177,6 @@ const UserCalories = ({ user }: { user: UserType }) => {
     },
   };
 
-  // Close calendar when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
@@ -201,7 +194,6 @@ const UserCalories = ({ user }: { user: UserType }) => {
     };
   }, [isCalendarOpen]);
 
-  // Clear filter function
   const clearFilter = () => {
     setStartDate(null);
     setEndDate(null);
@@ -209,22 +201,19 @@ const UserCalories = ({ user }: { user: UserType }) => {
 
   return (
     <>
-      {/* Summary section */}
       <div className="bg-[#0b2d29] rounded-xl p-3 sm:p-4 border border-teal-500/20">
         <h2 className="text-xl font-bold text-white mb-4">Calories Details</h2>
 
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
             <div className="flex flex-col gap-1">
-              <h3 className="text-white/80 text-sm">
-                {startDate && endDate ? "Average Earned" : "Earned Calories"}
-              </h3>
+              <h3 className="text-white/80 text-sm">Earned Calories</h3>
               <p className="text-teal-400 font-bold text-2xl">
-                {startDate && endDate ? totals.avgEarned : user.earnedCalories}
+                {user.earnedCalories}
               </p>
               {startDate && endDate && (
                 <p className="text-white/60 text-xs">
-                  Total: {totals.totalEarned} cal
+                  Total Earned: {totals.totalEarned} cal
                 </p>
               )}
             </div>
@@ -232,19 +221,13 @@ const UserCalories = ({ user }: { user: UserType }) => {
 
           <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
             <div className="flex flex-col gap-1">
-              <h3 className="text-white/80 text-sm">
-                {startDate && endDate
-                  ? "Average Balanced"
-                  : "Balanced Calories"}
-              </h3>
+              <h3 className="text-white/80 text-sm">Balanced Calories</h3>
               <p className="text-amber-400 font-bold text-2xl">
-                {startDate && endDate
-                  ? totals.avgBalance
-                  : user.balanceCalories}
+                {user.balanceCalories}
               </p>
               {startDate && endDate && (
                 <p className="text-white/60 text-xs">
-                  Total: {totals.totalBalance} cal
+                  Total Balanced: {totals.totalBalance} cal
                 </p>
               )}
             </div>
@@ -252,13 +235,14 @@ const UserCalories = ({ user }: { user: UserType }) => {
         </div>
       </div>
 
-      {/* Chart section */}
       <div>
         <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mx-3 mb-4 mt-8">
-          <h1 className="text-xl font-medium">Chart Analytics</h1>
+          <h1 className="text-xl font-medium">
+            Chart Analytics ({totals.avgEarned} - {totals.avgBalance})
+          </h1>
 
           <div className="relative calendar-container">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               {startDate && endDate && (
                 <button
                   onClick={clearFilter}
@@ -287,7 +271,7 @@ const UserCalories = ({ user }: { user: UserType }) => {
             </div>
 
             {isCalendarOpen && (
-              <div className="absolute top-12 right-0 z-50 bg-[#0b2d29] border border-teal-500/20 rounded-lg shadow-xl p-3">
+              <div className="absolute top-12 right-0 z-50">
                 <DatePicker
                   selectsRange
                   startDate={startDate}
@@ -296,14 +280,13 @@ const UserCalories = ({ user }: { user: UserType }) => {
                     const [start, end] = update;
                     setStartDate(start);
                     setEndDate(end);
-                    // Close calendar when both dates are selected
                     if (start && end) {
                       setIsCalendarOpen(false);
                     }
                   }}
                   inline
                   maxDate={new Date()}
-                  className="rounded-lg"
+                  className="rounded-lg bg-[#0b2d29]"
                 />
               </div>
             )}

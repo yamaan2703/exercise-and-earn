@@ -1,27 +1,14 @@
 "use client";
 import { AuthContext } from "@/context/AuthContext";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { FaEdit, FaTrash, FaArrowLeft } from "react-icons/fa";
-import {
-  ButtonVariant,
-  ButtonSize,
-  ButtonType,
-  InputVariant,
-  InputSize,
-} from "@/types/enums";
+import { FaArrowLeft } from "react-icons/fa";
+import { ButtonVariant, ButtonSize, ButtonType } from "@/types/enums";
 import Button from "@/components/ui/button";
 import Loader from "@/components/ui/loader";
 import { useParams, useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
-import {
-  useGetBrandByIdQuery,
-  useUpdateBrandMutation,
-  useDeleteBrandMutation,
-} from "@/redux/slices/brandSlice";
-import toast from "react-hot-toast";
-import Input from "@/components/ui/input";
-import ConfirmationModal from "@/components/ui/modal/confirmation-modal";
+import { useGetBrandByIdQuery } from "@/redux/slices/brandSlice";
 import { ProductType } from "@/types/interface";
 
 const BrandDetail = () => {
@@ -30,58 +17,8 @@ const BrandDetail = () => {
   const { id } = useParams();
   const brandId = Number(id);
   const { data, isLoading } = useGetBrandByIdQuery(brandId);
-  const [updateBrand, { isLoading: isUpdating }] = useUpdateBrandMutation();
-  const [deleteBrand] = useDeleteBrandMutation();
-  const [isEditing, setIsEditing] = useState(false);
-  const [brandName, setBrandName] = useState("");
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const brand = data?.brand;
-
-  useEffect(() => {
-    if (brand) {
-      console.log(data);
-      setBrandName(brand.name);
-    }
-  }, [data, brand]);
-
-  const handleUpdate = async () => {
-    if (!brandName.trim()) {
-      toast.error("Brand name cannot be empty!");
-      return;
-    }
-
-    try {
-      const response = await updateBrand({
-        id: brandId,
-        name: brandName.trim(),
-      }).unwrap();
-
-      if (response.success) {
-        toast.success("Brand updated successfully!");
-        setIsEditing(false);
-      }
-    } catch (error: unknown) {
-      const err = error as { data?: { message?: string } };
-      toast.error(err?.data?.message || "Failed to update brand");
-      console.error("Error updating brand:", error);
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      const response = await deleteBrand(brandId).unwrap();
-
-      if (response.success) {
-        toast.success("Brand deleted successfully!");
-        router.push(Routes.BRAND);
-      }
-    } catch (error: unknown) {
-      const err = error as { data?: { message?: string } };
-      toast.error(err?.data?.message || "Failed to delete brand");
-      console.error("Error deleting brand:", error);
-    }
-  };
 
   if (isLoading) {
     return (
@@ -131,70 +68,10 @@ const BrandDetail = () => {
       <div className="bg-[#0b2d29] border border-teal-500/20 rounded-xl p-4 sm:p-6">
         <div className="flex justify-between items-start mb-6">
           <div className="flex-1">
-            {isEditing ? (
-              <div className="max-w-md">
-                <Input
-                  id="brandName"
-                  type="text"
-                  placeholder="Enter brand name..."
-                  value={brandName}
-                  setValue={setBrandName}
-                  variant={InputVariant.DEFAULT}
-                  size={InputSize.MEDIUM}
-                  required
-                />
-              </div>
-            ) : (
-              <div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-teal-400 mb-2">
-                  {brand.name}
-                </h2>
-                <p className="text-gray-400 text-sm">Brand ID: #{brand.id}</p>
-              </div>
-            )}
-          </div>
-
-          <div className="flex gap-2">
-            {isEditing ? (
-              <>
-                <Button
-                  type={ButtonType.BUTTON}
-                  label="Cancel"
-                  onClick={() => {
-                    setIsEditing(false);
-                    setBrandName(brand.name);
-                  }}
-                  variant={ButtonVariant.OUTLINE}
-                  size={ButtonSize.EXTRASMALL}
-                />
-                <Button
-                  type={ButtonType.BUTTON}
-                  label={isUpdating ? "Saving..." : "Save"}
-                  onClick={handleUpdate}
-                  variant={ButtonVariant.THEME}
-                  size={ButtonSize.EXTRASMALL}
-                />
-              </>
-            ) : (
-              <>
-                <Button
-                  type={ButtonType.BUTTON}
-                  label="Edit"
-                  onClick={() => setIsEditing(true)}
-                  icon={FaEdit}
-                  variant={ButtonVariant.THEME}
-                  size={ButtonSize.EXTRASMALL}
-                />
-                <Button
-                  type={ButtonType.BUTTON}
-                  label="Delete"
-                  onClick={() => setShowDeleteConfirm(true)}
-                  icon={FaTrash}
-                  variant={ButtonVariant.OUTLINE}
-                  size={ButtonSize.EXTRASMALL}
-                />
-              </>
-            )}
+            <h2 className="text-2xl sm:text-3xl font-bold text-teal-400 mb-2">
+              {brand.name}
+            </h2>
+            <p className="text-gray-400 text-sm">Brand ID: #{brand.id}</p>
           </div>
         </div>
 
@@ -271,15 +148,6 @@ const BrandDetail = () => {
           )}
         </div>
       </div>
-
-      {showDeleteConfirm && (
-        <ConfirmationModal
-          title={`Are you sure you want to delete the brand "${brand.name}"?`}
-          description={`Warning: This brand has ${brand.products.length} associated products.`}
-          onCancel={() => setShowDeleteConfirm(false)}
-          onClick={handleDelete}
-        />
-      )}
     </div>
   );
 };

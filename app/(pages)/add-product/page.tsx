@@ -22,6 +22,7 @@ import { useGetBrandsQuery } from "@/redux/slices/brandSlice";
 import { useGetCategoryQuery } from "@/redux/slices/categorySlice";
 import { useGetGoalsQuery } from "@/redux/slices/goalSlice";
 import { BrandItem, CategoryItem, GoalItem } from "@/types/interface";
+import { FaPlus } from "react-icons/fa";
 
 type FormValues = {
   name: string;
@@ -463,7 +464,7 @@ const AddProduct = () => {
                     id="description"
                     {...field}
                     placeholder="Enter product description..."
-                    className="w-full bg-transparent text-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 rounded-lg p-2 h-24 resize-none"
+                    className="w-full bg-transparent text-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 rounded-lg p-2 h-32 resize-none"
                   />
                   {errors.description && (
                     <p className="text-red-500 text-xs mt-1">
@@ -507,11 +508,11 @@ const AddProduct = () => {
                         className="w-10 h-10 rounded cursor-pointer border border-gray-400"
                       />
                       <Button
-                        label="Add Color"
                         type={ButtonType.BUTTON}
                         variant={ButtonVariant.THEME}
-                        size={ButtonSize.SMALL}
+                        size={ButtonSize.EXTRASMALL}
                         onClick={handleAddColor}
+                        icon={FaPlus}
                       />
                     </div>
 
@@ -522,8 +523,7 @@ const AddProduct = () => {
                       setValue={field.onChange}
                       variant={InputVariant.OUTLINE}
                       size={InputSize.SMALL}
-                      placeholder="Selected colors (auto-filled)"
-                      // readOnly
+                      placeholder="Selected colors"
                     />
 
                     <div className="flex flex-wrap gap-2 mt-3">
