@@ -45,6 +45,9 @@ const AddProduct = () => {
   const [images, setImages] = useState<File[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [currentColor, setCurrentColor] = useState<string>("#000000");
+  const [currentSize, setCurrentSize] = useState("");
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+
   const [addProductApi] = useAddProductsMutation();
   const { data: brandData } = useGetBrandsQuery(null);
   const { data: categoryData } = useGetCategoryQuery(null);
@@ -146,7 +149,9 @@ const AddProduct = () => {
         featuredImage: uploadedUrls[0],
         images: uploadedUrls,
         sizes: data.sizes ? data.sizes.split(",").map((s) => s.trim()) : [],
-        colors: data.colors ? data.colors.split(",").map((c) => c.trim()) : [],
+        colors: data.colors
+          ? data.colors.split(",").map((c) => c.trim().replace("#", ""))
+          : [],
         description: data.description,
       };
 
@@ -323,12 +328,12 @@ const AddProduct = () => {
             <Controller
               name="price"
               control={control}
-              rules={{ required: "Please enter price" }}
+              rules={{ required: "Please enter product price" }}
               render={({ field }) => (
                 <Input
                   type="number"
                   id="price"
-                  label="Price"
+                  label="Price (In Euro)"
                   value={field.value}
                   setValue={field.onChange}
                   variant={InputVariant.OUTLINE}
@@ -407,20 +412,75 @@ const AddProduct = () => {
             <Controller
               name="sizes"
               control={control}
-              render={({ field }) => (
-                <Input
-                  type="text"
-                  id="sizes"
-                  label="Sizes (Optional)"
-                  value={field.value ?? ""}
-                  setValue={field.onChange}
-                  variant={InputVariant.OUTLINE}
-                  size={InputSize.SMALL}
-                  placeholder="e.g. Small, Medium, Large"
-                />
-              )}
+              render={({ field }) => {
+                const handleAddSize = () => {
+                  const trimmed = currentSize.trim();
+                  if (trimmed && !selectedSizes.includes(trimmed)) {
+                    const updated = [...selectedSizes, trimmed];
+                    setSelectedSizes(updated);
+                    field.onChange(updated.join(","));
+                    setCurrentSize("");
+                  }
+                };
+
+                const removeSize = (size: string) => {
+                  const updated = selectedSizes.filter((s) => s !== size);
+                  setSelectedSizes(updated);
+                  field.onChange(updated.join(","));
+                };
+
+                return (
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-2">
+                      Sizes (Optional)
+                    </label>
+
+                    <div className="flex items-center gap-2 w-full">
+                      <div className="flex-grow">
+                        <Input
+                          type="text"
+                          id="sizes"
+                          value={currentSize}
+                          setValue={setCurrentSize}
+                          variant={InputVariant.OUTLINE}
+                          size={InputSize.SMALL}
+                          placeholder="Add Sizes"
+                        />
+                      </div>
+                      <div className="w-[30px]">
+                        <Button
+                          type={ButtonType.BUTTON}
+                          variant={ButtonVariant.THEME}
+                          size={ButtonSize.EXTRASMALL}
+                          icon={FaPlus}
+                          onClick={handleAddSize}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      {selectedSizes.map((size, index) => (
+                        <div
+                          key={index}
+                          className="relative bg-teal-700/40 text-white text-sm px-3 py-1 rounded-lg border border-teal-500/50 cursor-pointer group"
+                        >
+                          {size}
+                          <button
+                            type="button"
+                            onClick={() => removeSize(size)}
+                            className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-4 h-4 hidden group-hover:block"
+                          >
+                            x
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              }}
             />
           </div>
+
           <div className="flex-1">
             <Controller
               name="specs"
@@ -523,7 +583,7 @@ const AddProduct = () => {
                       setValue={field.onChange}
                       variant={InputVariant.OUTLINE}
                       size={InputSize.SMALL}
-                      placeholder="Selected colors"
+                      placeholder="Select colors"
                     />
 
                     <div className="flex flex-wrap gap-2 mt-3">

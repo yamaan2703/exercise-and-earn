@@ -21,7 +21,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import Button from "@/components/ui/button";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaPlus } from "react-icons/fa";
 import { useForm, Controller } from "react-hook-form";
 import {
   useGetProductbyIdQuery,
@@ -44,8 +44,8 @@ type FormValues = {
   stock: string;
   price: string;
   specs: string;
-  size?: string;
-  color?: string;
+  sizes?: string;
+  colors?: string;
 };
 
 const EditProduct = () => {
@@ -54,6 +54,11 @@ const EditProduct = () => {
   const router = useRouter();
   const token = getCookie("token");
   const [images, setImages] = useState<(File | string)[]>([]);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [currentColor, setCurrentColor] = useState<string>("#000000");
+  const [currentSize, setCurrentSize] = useState("");
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+
   const [updateProduct] = useUpdateProductMutation();
   const { data: getData, isLoading } = useGetProductbyIdQuery(Number(id));
   const { data: brandData } = useGetBrandsQuery(null);
@@ -80,14 +85,21 @@ const EditProduct = () => {
       calories: "",
       stock: "",
       price: "",
-      size: "",
+      sizes: "",
       specs: "",
-      color: "",
+      colors: "",
     },
   });
 
   useEffect(() => {
     if (!product?.id) return;
+
+    const formattedColors =
+      product.colors?.map((color: string) =>
+        color.startsWith("#") ? color : `#${color}`
+      ) ?? [];
+
+    const formattedSizes = product.sizes ?? [];
 
     reset({
       name: product.name,
@@ -98,11 +110,14 @@ const EditProduct = () => {
       calories: product.calories,
       stock: product.stock,
       price: product.price,
-      size: product.size ?? "",
+      sizes: formattedSizes.join(", "),
       specs: product.specs,
-      color: product.color ?? "",
+      colors: formattedColors.join(", "),
     });
+
     setImages(product.images);
+    setSelectedColors(formattedColors);
+    setSelectedSizes(formattedSizes);
   }, [product, reset]);
 
   const uploadImage = async (file: File) => {
@@ -183,9 +198,25 @@ const EditProduct = () => {
         goalId: Number(data.goalId),
         stock: newStock,
         price: Number(data.price),
-        size: data.size ?? "",
+        sizes:
+          typeof data.sizes === "string"
+            ? data.sizes
+                .split(",")
+                .map((s) => s.trim())
+                .filter((s) => s !== "")
+            : Array.isArray(data.sizes)
+            ? data.sizes
+            : [],
         specs: data.specs,
-        color: data.color ?? "",
+        colors:
+          typeof data.colors === "string"
+            ? data.colors
+                .split(",")
+                .map((c) => c.trim().replace("#", ""))
+                .filter((c) => c !== "")
+            : Array.isArray(data.colors)
+            ? data.colors
+            : [],
         description: data.description,
         featuredImage: uploadedUrls[0],
         images: uploadedUrls,
@@ -395,7 +426,7 @@ const EditProduct = () => {
                 <Input
                   type="number"
                   id="price"
-                  label="Price"
+                  label="Price (In Euro)"
                   value={field.value}
                   setValue={field.onChange}
                   variant={InputVariant.OUTLINE}
@@ -472,68 +503,77 @@ const EditProduct = () => {
         <div className="flex flex-col sm:flex-row gap-6">
           <div className="flex-1">
             <Controller
-              name="size"
+              name="sizes"
               control={control}
-              render={({ field }) => (
-                <Input
-                  type="text"
-                  id="size"
-                  label="Sizes (Optional)"
-                  value={field.value ?? ""}
-                  setValue={field.onChange}
-                  variant={InputVariant.OUTLINE}
-                  size={InputSize.SMALL}
-                  placeholder="e.g. Small, Medium, Large"
-                />
-              )}
-            />
-          </div>
-          <div className="flex-1">
-            <Controller
-              name="color"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  type="text"
-                  id="color"
-                  label="Color"
-                  value={field.value ?? ""}
-                  setValue={field.onChange}
-                  variant={InputVariant.OUTLINE}
-                  size={InputSize.SMALL}
-                  placeholder="Enter product color"
-                />
-              )}
-            />
-          </div>
-        </div>
+              render={({ field }) => {
+                const handleAddSize = () => {
+                  const trimmed = currentSize.trim();
+                  if (trimmed && !selectedSizes.includes(trimmed)) {
+                    const updated = [...selectedSizes, trimmed];
+                    setSelectedSizes(updated);
+                    field.onChange(updated.join(","));
+                    setCurrentSize("");
+                  }
+                };
 
-        <div className="flex flex-col sm:flex-row gap-6">
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Description
-            </label>
-            <Controller
-              name="description"
-              control={control}
-              rules={{ required: "Please enter some description." }}
-              render={({ field }) => (
-                <textarea
-                  id="description"
-                  value={field.value}
-                  onChange={field.onChange}
-                  placeholder="Enter description"
-                  rows={3}
-                  className="bg-transparent w-full p-2 rounded-lg text-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                />
-              )}
+                const removeSize = (size: string) => {
+                  const updated = selectedSizes.filter((s) => s !== size);
+                  setSelectedSizes(updated);
+                  field.onChange(updated.join(","));
+                };
+
+                return (
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-2">
+                      Sizes (Optional)
+                    </label>
+
+                    <div className="flex items-center gap-2 w-full">
+                      <div className="flex-grow">
+                        <Input
+                          type="text"
+                          id="sizes"
+                          value={currentSize}
+                          setValue={setCurrentSize}
+                          variant={InputVariant.OUTLINE}
+                          size={InputSize.SMALL}
+                          placeholder="Add Sizes"
+                        />
+                      </div>
+                      <div className="w-[30px]">
+                        <Button
+                          type={ButtonType.BUTTON}
+                          variant={ButtonVariant.THEME}
+                          size={ButtonSize.EXTRASMALL}
+                          icon={FaPlus}
+                          onClick={handleAddSize}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      {selectedSizes?.map((size, index) => (
+                        <div
+                          key={index}
+                          className="relative bg-teal-700/40 text-white text-sm px-3 py-1 rounded-lg border border-teal-500/50 cursor-pointer group"
+                        >
+                          {size}
+                          <button
+                            type="button"
+                            onClick={() => removeSize(size)}
+                            className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-4 h-4 hidden group-hover:block"
+                          >
+                            x
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              }}
             />
-            {errors.description && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.description.message}
-              </p>
-            )}
           </div>
+
           <div className="flex-1">
             <Controller
               name="specs"
@@ -557,6 +597,111 @@ const EditProduct = () => {
                 {errors.specs.message}
               </p>
             )}
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-6">
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Description
+            </label>
+            <Controller
+              name="description"
+              control={control}
+              rules={{ required: "Please enter some description." }}
+              render={({ field }) => (
+                <textarea
+                  id="description"
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Enter description"
+                  rows={3}
+                  className="bg-transparent w-full p-2 rounded-lg text-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 h-32 resize-none"
+                />
+              )}
+            />
+            {errors.description && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.description.message}
+              </p>
+            )}
+          </div>
+          <div className="flex-1">
+            <Controller
+              name="colors"
+              control={control}
+              render={({ field }) => {
+                const handleAddColor = () => {
+                  if (!selectedColors.includes(currentColor)) {
+                    const updated = [...selectedColors, currentColor];
+                    setSelectedColors(updated);
+                    field.onChange(updated.join(","));
+                  }
+                };
+
+                const removeColor = (color: string) => {
+                  const updated = selectedColors.filter((c) => c !== color);
+                  setSelectedColors(updated);
+                  field.onChange(updated.join(","));
+                };
+
+                return (
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-2">
+                      Product Colors (Optional)
+                    </label>
+
+                    <div className="flex items-center gap-3 mb-3">
+                      <input
+                        type="color"
+                        value={currentColor}
+                        onChange={(e) => setCurrentColor(e.target.value)}
+                        className="w-10 h-10 rounded cursor-pointer border border-gray-400"
+                      />
+                      <Button
+                        type={ButtonType.BUTTON}
+                        variant={ButtonVariant.THEME}
+                        size={ButtonSize.EXTRASMALL}
+                        onClick={handleAddColor}
+                        icon={FaPlus}
+                      />
+                    </div>
+
+                    <Input
+                      type="text"
+                      id="colors"
+                      value={field.value ?? ""}
+                      setValue={field.onChange}
+                      variant={InputVariant.OUTLINE}
+                      size={InputSize.SMALL}
+                      placeholder="Selected colors"
+                    />
+
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      {selectedColors.map((color, index) => (
+                        <div
+                          key={index}
+                          className="relative w-8 h-8 rounded-full border border-gray-500 cursor-pointer group"
+                          style={{
+                            backgroundColor: color.startsWith("#")
+                              ? color
+                              : `#${color}`,
+                          }}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => removeColor(color)}
+                            className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-4 h-4 hidden group-hover:block"
+                          >
+                            x
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              }}
+            />
           </div>
         </div>
 

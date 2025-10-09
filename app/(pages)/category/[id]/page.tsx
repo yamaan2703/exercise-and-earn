@@ -1,27 +1,14 @@
 "use client";
 import { AuthContext } from "@/context/AuthContext";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { FaEdit, FaTrash, FaArrowLeft } from "react-icons/fa";
-import {
-  ButtonVariant,
-  ButtonSize,
-  ButtonType,
-  InputVariant,
-  InputSize,
-} from "@/types/enums";
+import { FaArrowLeft } from "react-icons/fa";
+import { ButtonVariant, ButtonSize, ButtonType } from "@/types/enums";
 import Button from "@/components/ui/button";
 import Loader from "@/components/ui/loader";
 import { useParams, useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
-import {
-  useGetCategoryByIdQuery,
-  useUpdateCategoryMutation,
-  useDeleteCategoryMutation,
-} from "@/redux/slices/categorySlice";
-import toast from "react-hot-toast";
-import Input from "@/components/ui/input";
-import ConfirmationModal from "@/components/ui/modal/confirmation-modal";
+import { useGetCategoryByIdQuery } from "@/redux/slices/categorySlice";
 import { ProductType } from "@/types/interface";
 
 const CategoryDetail = () => {
@@ -30,59 +17,8 @@ const CategoryDetail = () => {
   const { id } = useParams();
   const categoryId = Number(id);
   const { data, isLoading } = useGetCategoryByIdQuery(categoryId);
-  const [updateCategory, { isLoading: isUpdating }] =
-    useUpdateCategoryMutation();
-  const [deleteCategory] = useDeleteCategoryMutation();
-  const [isEditing, setIsEditing] = useState(false);
-  const [categoryName, setCategoryName] = useState("");
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const category = data?.category;
-
-  useEffect(() => {
-    if (category) {
-      console.log(data);
-      setCategoryName(category.name);
-    }
-  }, [data, category]);
-
-  const handleUpdate = async () => {
-    if (!categoryName.trim()) {
-      toast.error("Category name cannot be empty!");
-      return;
-    }
-
-    try {
-      const response = await updateCategory({
-        id: categoryId,
-        name: categoryName.trim(),
-      }).unwrap();
-
-      if (response.success) {
-        toast.success("Category updated successfully!");
-        setIsEditing(false);
-      }
-    } catch (error: unknown) {
-      const err = error as { data?: { message?: string } };
-      toast.error(err?.data?.message || "Failed to update category");
-      console.error("Error updating category:", error);
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      const response = await deleteCategory(categoryId).unwrap();
-
-      if (response.success) {
-        toast.success("Category deleted successfully!");
-        router.push(Routes.CATEGORY);
-      }
-    } catch (error: unknown) {
-      const err = error as { data?: { message?: string } };
-      toast.error(err?.data?.message || "Failed to delete category");
-      console.error("Error deleting category:", error);
-    }
-  };
 
   if (isLoading) {
     return (
@@ -132,72 +68,10 @@ const CategoryDetail = () => {
       <div className="bg-[#0b2d29] border border-teal-500/20 rounded-xl p-4 sm:p-6">
         <div className="flex justify-between items-start mb-6">
           <div className="flex-1">
-            {isEditing ? (
-              <div className="max-w-md">
-                <Input
-                  id="categoryName"
-                  type="text"
-                  placeholder="Enter category name..."
-                  value={categoryName}
-                  setValue={setCategoryName}
-                  variant={InputVariant.DEFAULT}
-                  size={InputSize.MEDIUM}
-                  required
-                />
-              </div>
-            ) : (
-              <div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-teal-400 mb-2">
-                  {category.name}
-                </h2>
-                <p className="text-gray-400 text-sm">
-                  Category ID: #{category.id}
-                </p>
-              </div>
-            )}
-          </div>
-
-          <div className="flex gap-2">
-            {isEditing ? (
-              <>
-                <Button
-                  type={ButtonType.BUTTON}
-                  label="Cancel"
-                  onClick={() => {
-                    setIsEditing(false);
-                    setCategoryName(category.name);
-                  }}
-                  variant={ButtonVariant.OUTLINE}
-                  size={ButtonSize.EXTRASMALL}
-                />
-                <Button
-                  type={ButtonType.BUTTON}
-                  label={isUpdating ? "Saving..." : "Save"}
-                  onClick={handleUpdate}
-                  variant={ButtonVariant.THEME}
-                  size={ButtonSize.EXTRASMALL}
-                />
-              </>
-            ) : (
-              <>
-                <Button
-                  type={ButtonType.BUTTON}
-                  label="Edit"
-                  onClick={() => setIsEditing(true)}
-                  icon={FaEdit}
-                  variant={ButtonVariant.THEME}
-                  size={ButtonSize.EXTRASMALL}
-                />
-                <Button
-                  type={ButtonType.BUTTON}
-                  label="Delete"
-                  onClick={() => setShowDeleteConfirm(true)}
-                  icon={FaTrash}
-                  variant={ButtonVariant.OUTLINE}
-                  size={ButtonSize.EXTRASMALL}
-                />
-              </>
-            )}
+            <h2 className="text-2xl sm:text-3xl font-bold text-teal-400 mb-2">
+              {category.name}
+            </h2>
+            <p className="text-gray-400 text-sm">Brand ID: #{category.id}</p>
           </div>
         </div>
 
@@ -274,15 +148,6 @@ const CategoryDetail = () => {
           )}
         </div>
       </div>
-
-      {showDeleteConfirm && (
-        <ConfirmationModal
-          title={`Are you sure you want to delete the category "${category.name}"?`}
-          description={`Warning: This category has ${category.products.length} associated products.`}
-          onCancel={() => setShowDeleteConfirm(false)}
-          onClick={handleDelete}
-        />
-      )}
     </div>
   );
 };

@@ -22,13 +22,6 @@ export const FaqSlice = createApi({
       providesTags: ["Faqs"],
     }),
 
-    getFaqById: builder.query({
-      query: (id) => ({
-        url: `/faq/${id}`,
-      }),
-      providesTags: ["Faqs"],
-    }),
-
     postFaq: builder.mutation({
       query: (data) => ({
         url: "/faq",
@@ -57,4 +50,9 @@ export const FaqSlice = createApi({
   }),
 });
 
-export const { usePostFaqMutation, useGetFaqsQuery } = FaqSlice;
+export const {
+  useGetFaqsQuery,
+  usePostFaqMutation,
+  useUpdateFaqMutation,
+  useDeleteFaqMutation,
+} = FaqSlice;
