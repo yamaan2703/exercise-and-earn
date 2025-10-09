@@ -118,7 +118,7 @@ const OrderDetailModal = ({
                   </p>
                   <p className="text-sm">
                     <span className="text-white">Size:</span>{" "}
-                    {product.size || "N/A"}
+                    {product.sizes || "N/A"}
                   </p>
                   <p className="text-sm">
                     <span className="text-white">Specs:</span>{" "}

@@ -53,7 +53,7 @@ const Users = () => {
   };
 
   const columns: ColumnsType<UserType> = [
-    { title: "Name", dataIndex: "name", width: "10%" },
+    { title: "Name", dataIndex: "name", sorter: true, width: "10%" },
     { title: "Email", dataIndex: "email", width: "15%" },
     { title: "Phone", dataIndex: "phone", width: "15%" },
     {

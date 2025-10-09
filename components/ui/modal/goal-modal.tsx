@@ -10,7 +10,11 @@ import {
 import Button from "../button";
 import toast from "react-hot-toast";
 import { Dispatch, SetStateAction, useState } from "react";
-import { usePostGoalsMutation } from "@/redux/slices/goalSlice";
+import {
+  useGetGoalsQuery,
+  usePostGoalsMutation,
+} from "@/redux/slices/goalSlice";
+import { GoalItem } from "@/types/interface";
 
 interface GoalModalProps {
   label: string;
@@ -20,6 +24,7 @@ interface GoalModalProps {
 const GoalModal = ({ label, setAddGoalModal }: GoalModalProps) => {
   const [calories, setCalories] = useState("");
   const [postGoal, { isLoading }] = usePostGoalsMutation();
+  const { data } = useGetGoalsQuery(null);
 
   const handleAddGoal = async () => {
     if (!calories.trim()) {
@@ -30,6 +35,16 @@ const GoalModal = ({ label, setAddGoalModal }: GoalModalProps) => {
     const calorieValue = Number(calories);
     if (isNaN(calorieValue) || calorieValue <= 0) {
       toast.error("Please enter a valid calorie value!");
+      return;
+    }
+
+    const existingGoals = data?.goals ?? [];
+    const duplicateGoal = existingGoals.find(
+      (goal: GoalItem) => goal.calories === calorieValue
+    );
+
+    if (duplicateGoal) {
+      toast.error(`A goal with ${calorieValue} calories already exists!`);
       return;
     }
 
@@ -64,6 +79,7 @@ const GoalModal = ({ label, setAddGoalModal }: GoalModalProps) => {
           <Input
             id="calories"
             type="number"
+            label="Calories"
             placeholder="Enter calories target..."
             value={calories}
             setValue={setCalories}

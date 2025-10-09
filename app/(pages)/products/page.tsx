@@ -51,7 +51,7 @@ const Products = () => {
   };
 
   const columns: ColumnsType<ProductType> = [
-    { title: "Product Name", dataIndex: "name", width: "15%" },
+    { title: "Product Name", dataIndex: "name", sorter: true, width: "15%" },
     { title: "Category", dataIndex: ["category", "name"], width: "15%" },
     { title: "Brand", dataIndex: ["brand", "name"], width: "15%" },
     {
@@ -134,7 +134,7 @@ const Products = () => {
       <div className="flex justify-between gap-2 mb-2">
         <div className="max-w-[400px] w-full">
           <Input
-            placeholder="Search products by name or category..."
+            placeholder="Search products by product name..."
             type="text"
             id="search"
             value={searchProducts}
@@ -162,7 +162,7 @@ const Products = () => {
       ) : (
         <DynamicTable<ProductType>
           columns={columns}
-          data={data.products}
+          data={data?.products}
           searchValue={searchProducts}
           searchableFields={["name", "category"]}
           rowKey="id"

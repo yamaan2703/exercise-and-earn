@@ -2,16 +2,12 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import { AiOutlineMenu } from "react-icons/ai";
 import { FaSearch } from "react-icons/fa";
 import Image from "next/image";
 import { Routes } from "@/routes/Routes";
 import {
-  ButtonSize,
-  ButtonType,
-  ButtonVariant,
   InputSize,
   InputVariant,
   OrderStatus,
@@ -43,18 +39,16 @@ const Orders = () => {
     if (data) console.log("Orders Data:", data);
   }, [data]);
 
-  const handleApprove = async (orderId: number) => {
+  const handleStatusChange = async (
+    orderId: number,
+    newStatus: OrderStatus
+  ) => {
     try {
-      const response = await updateOrderStatus({
-        id: orderId,
-        status: OrderStatus.SHIPPED,
-      }).unwrap();
-
-      toast.success("Order approved successfully!");
-      console.log("Updated Order:", response);
+      await updateOrderStatus({ id: orderId, status: newStatus }).unwrap();
+      toast.success(`Order status updated to ${newStatus}!`);
     } catch (error) {
-      console.error("Error approving order:", error);
-      toast.error("Failed to approve order!");
+      console.error("Error updating order:", error);
+      toast.error("Failed to update order status!");
     }
   };
 
@@ -273,7 +267,7 @@ const Orders = () => {
                             </p>
                             <p className="text-sm">
                               <span className="text-white">Size:</span>{" "}
-                              {product.size || "N/A"}
+                              {product.sizes || "N/A"}
                             </p>
                             <p className="text-sm">
                               <span className="text-white">Specs:</span>{" "}
@@ -300,13 +294,31 @@ const Orders = () => {
                   <div className="border-t border-teal-500/10 my-4"></div>
 
                   <div className="flex justify-between items-center gap-2">
-                    <Button
-                      type={ButtonType.BUTTON}
-                      variant={ButtonVariant.THEME}
-                      size={ButtonSize.SMALL}
-                      label="Approve Order"
-                      onClick={() => handleApprove(order.id)}
-                    />
+                    <div className="flex justify-between items-center">
+                      <label className="text-sm font-medium mr-2">
+                        Status:{" "}
+                      </label>
+                      <select
+                        value={order.status}
+                        onChange={(e) =>
+                          handleStatusChange(
+                            order.id,
+                            e.target.value as OrderStatus
+                          )
+                        }
+                        className="bg-[#12443f]/40 border border-teal-500/40 text-sm rounded-md p-1 outline-none text-white focus:border-teal-400 transition cursor-pointer"
+                      >
+                        {Object.values(OrderStatus).map((status) => (
+                          <option
+                            key={status}
+                            value={status}
+                            className="bg-[#0b2d29] text-white cursor-pointer"
+                          >
+                            {status}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                     <p className="text-sm text-gray-400">
                       {new Date(order.createdAt).toLocaleDateString()}
                     </p>

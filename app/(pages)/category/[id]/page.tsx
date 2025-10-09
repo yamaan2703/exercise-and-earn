@@ -241,11 +241,11 @@ const CategoryDetail = () => {
                       <p className="text-white font-medium">{product.stock}</p>
                     </div>
 
-                    {product.size && (
+                    {product.sizes && (
                       <div className="flex gap-2">
                         <p className="text-gray-400">Size</p>
                         <p className="text-white font-medium line-clamp-2">
-                          {product.size}
+                          {product.sizes}
                         </p>
                       </div>
                     )}

@@ -13,7 +13,8 @@ import toast from "react-hot-toast";
 import { usePostFaqMutation } from "@/redux/slices/faqSlice";
 
 const FaqModal = (props: FaqModalProps) => {
-  const { label, setFaqModal, question, setQuestion } = props;
+  const { label, setFaqModal, question, setQuestion, answer, setAnswer } =
+    props;
   const [postFaq, { isLoading }] = usePostFaqMutation();
 
   const handleSave = async () => {
@@ -30,7 +31,7 @@ const FaqModal = (props: FaqModalProps) => {
         toast.success(res.message || "FAQ added!");
         setFaqModal(false);
         setQuestion("");
-        // setAnswer("");
+        setAnswer("");
       } else {
         toast.error(res.error || "Failed to add FAQ");
       }
@@ -52,10 +53,11 @@ const FaqModal = (props: FaqModalProps) => {
             X
           </button>
         </div>
-        <div className="mt-5 space-y-3">
+        <div className="mt-4 space-y-3">
           <Input
             id="question"
             type="text"
+            label="Question"
             placeholder="Enter question..."
             value={question}
             setValue={setQuestion}
@@ -63,18 +65,18 @@ const FaqModal = (props: FaqModalProps) => {
             size={InputSize.SMALL}
             required
           />
-          {/* <Input
+          <Input
             id="answer"
             type="text"
+            label="Answer"
             placeholder="Enter answer..."
             value={answer}
             setValue={setAnswer}
             variant={InputVariant.DEFAULT}
             size={InputSize.SMALL}
-          /> */}
+          />
           <Button
             type={ButtonType.BUTTON}
-            externalStyles="mt-3"
             label={isLoading ? "Saving..." : label}
             onClick={handleSave}
             variant={ButtonVariant.THEME}

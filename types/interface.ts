@@ -109,7 +109,8 @@ export interface ProductType {
   brand: { id: number; name: string };
   description: string | null;
   calories: number;
-  size?: string;
+  sizes?: string;
+  colors?: string;
   specs: string;
   stock: number;
   featuredImage: string;
@@ -120,6 +121,7 @@ export interface ProductType {
   updatedAt: string;
   createdAt: string;
 }
+
 export interface OrderType {
   id: number;
   address: string;
@@ -149,8 +151,8 @@ export interface FaqModalProps {
   setFaqModal: Dispatch<SetStateAction<boolean>>;
   question: string;
   setQuestion: Dispatch<SetStateAction<string>>;
-  // answer: string;
-  // setAnswer: Dispatch<SetStateAction<string>>;
+  answer: string;
+  setAnswer: Dispatch<SetStateAction<string>>;
 }
 
 export interface ChartComponentProps {
@@ -175,7 +177,6 @@ export interface GoalItem {
 
 export interface StockHistoryItem {
   productId: number;
-  productName: string;
   stockChanged: number;
   createdAt: string;
 }
@@ -190,4 +191,10 @@ export interface CategoryItem {
   id: number;
   name: string;
   products: ProductType[];
+}
+
+export interface AuthResponse {
+  success: boolean;
+  token: string;
+  refreshToken: string;
 }

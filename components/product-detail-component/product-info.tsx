@@ -45,12 +45,20 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
             </p>
             <p>{product.specs}</p>
           </div>
-          {product.size && product.size.length > 0 && (
+          {product.sizes && product.sizes.length > 0 && (
             <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
               <p className="text-gray-300 font-medium flex items-center gap-2">
                 Size
               </p>
-              <p className="space-x-2">{product.size}</p>
+              <p className="space-x-2">{product.sizes}</p>
+            </div>
+          )}
+          {product.colors && product.colors.length > 0 && (
+            <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
+              <p className="text-gray-300 font-medium flex items-center gap-2">
+                Color
+              </p>
+              <p className="space-x-2">{product.colors}</p>
             </div>
           )}
 

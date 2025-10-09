@@ -9,23 +9,33 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import Loader from "@/components/ui/loader";
 import toast from "react-hot-toast";
-import { useGetFaqQuery } from "@/redux/slices/faqSlice";
+import { useGetFaqsQuery } from "@/redux/slices/faqSlice";
 
 const Faqs = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
   const [addFaqModal, setAddFaqModal] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [question, setQuestion] = useState("");
-  // const [answer, setAnswer] = useState("");
-  const { data, isLoading, isError } = useGetFaqQuery("faq");
+  const [answer, setAnswer] = useState("");
+  const { data, isLoading, isError } = useGetFaqsQuery("faq");
 
   useEffect(() => {
     if (data) console.log(data);
   }, [data]);
 
+  useEffect(() => {
+    if (isError) {
+      toast.error("Failed to fetch FAQs");
+    }
+  }, [isError]);
+
   const toggleFaq = (id: number) => {
     setOpenFaq(openFaq === id ? null : id);
   };
+
+  const faqs: FaqType[] = data?.content
+    ? [{ id: 1, question: data.content, answer: answer }]
+    : [];
 
   if (isLoading) {
     return (
@@ -34,15 +44,6 @@ const Faqs = () => {
       </div>
     );
   }
-
-  if (isError) {
-    toast.error("Failed to fetch FAQs");
-  }
-
-  const faqs: FaqType[] = data?.content
-    ? [{ id: 1, question: data.content, answer: "No answer provided yet" }]
-    : [];
-
   return (
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
@@ -62,7 +63,7 @@ const Faqs = () => {
           label="Add Faq"
           onClick={() => {
             setQuestion("");
-            // setAnswer("");
+            setAnswer("");
             setAddFaqModal(true);
           }}
           variant={ButtonVariant.THEME}
@@ -107,8 +108,8 @@ const Faqs = () => {
           setFaqModal={setAddFaqModal}
           question={question}
           setQuestion={setQuestion}
-          // answer={answer}
-          // setAnswer={setAnswer}
+          answer={answer}
+          setAnswer={setAnswer}
         />
       )}
     </div>

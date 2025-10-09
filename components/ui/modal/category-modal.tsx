@@ -58,6 +58,7 @@ const CategoryModal = ({ label, setAddCategoryModal }: CategoryModalProps) => {
           <Input
             id="name"
             type="text"
+            label="Category"
             placeholder="Enter category name..."
             value={name}
             setValue={setName}
