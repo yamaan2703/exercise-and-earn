@@ -21,52 +21,52 @@ const UserCalories = ({ user }: { user: UserType }) => {
 
   const allCalorieData: CalorieDataPoint[] = [
     {
-      date: new Date(2025, 8, 3), // July 3
+      date: new Date(2025, 8, 3),
       earnedCalories: 200,
       balanceCalories: 150,
     },
     {
-      date: new Date(2025, 8, 4), // July 4
+      date: new Date(2025, 8, 4),
       earnedCalories: 250,
       balanceCalories: 180,
     },
     {
-      date: new Date(2025, 8, 5), // July 5
+      date: new Date(2025, 8, 5),
       earnedCalories: 300,
       balanceCalories: 200,
     },
     {
-      date: new Date(2025, 8, 6), // July 6
+      date: new Date(2025, 8, 6),
       earnedCalories: 220,
       balanceCalories: 210,
     },
     {
-      date: new Date(2025, 8, 7), // July 7
+      date: new Date(2025, 8, 7),
       earnedCalories: 280,
       balanceCalories: 190,
     },
     {
-      date: new Date(2025, 8, 8), // July 8
+      date: new Date(2025, 8, 8),
       earnedCalories: 260,
       balanceCalories: 230,
     },
     {
-      date: new Date(2025, 8, 9), // July 9
+      date: new Date(2025, 8, 9),
       earnedCalories: 320,
       balanceCalories: 250,
     },
     {
-      date: new Date(2025, 8, 10), // July 10
+      date: new Date(2025, 8, 10),
       earnedCalories: 290,
       balanceCalories: 240,
     },
     {
-      date: new Date(2025, 8, 11), // July 11
+      date: new Date(2025, 8, 11),
       earnedCalories: 310,
       balanceCalories: 260,
     },
     {
-      date: new Date(2025, 8, 12), // July 12
+      date: new Date(2025, 8, 12),
       earnedCalories: user.earnedCalories,
       balanceCalories: user.balanceCalories,
     },

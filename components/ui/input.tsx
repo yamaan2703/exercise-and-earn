@@ -21,13 +21,13 @@ const Input = ({
 
   const variantStyles: Record<InputVariant, string> = {
     [InputVariant.DEFAULT]:
-      "bg-[#0b140b] border-green-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent",
+      "bg-[#0b140b] border-green-600 text-white placeholder-gray-400 focus:border-transparent focus:ring-2 focus:ring-green-500",
     [InputVariant.SUCCESS]:
-      "bg-[#0b140b] border-green-600 text-green-400 placeholder-gray-400 focus:ring-2 focus:ring-green-500",
+      "bg-[#0b140b] border-green-600 text-green-400 placeholder-gray-400 focus:border-transparent focus:ring-2 focus:ring-green-500",
     [InputVariant.ERROR]:
-      "bg-[#0b140b] border-red-600 text-red-400 placeholder-gray-400 focus:ring-2 focus:ring-red-500",
+      "bg-[#0b140b] border-red-600 text-red-400 placeholder-gray-400 focus:border-transparent focus:ring-2 focus:ring-red-500",
     [InputVariant.OUTLINE]:
-      "bg-transparent text-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500",
+      "bg-transparent text-white border border-gray-400 focus:border-transparent focus:ring-2 focus:ring-teal-500",
   };
 
   const sizeStyles: Record<InputSize, string> = {
@@ -54,7 +54,6 @@ const Input = ({
           type={type}
           required={required}
           value={value ?? ""}
-          // minLength={3}
           onChange={(e) => setValue(e.target.value)}
           placeholder={placeholder}
           className={clsx(

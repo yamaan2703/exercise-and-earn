@@ -7,9 +7,9 @@ import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
+  const token = getCookie("token");
 
   useEffect(() => {
-    const token = getCookie("token");
     setTimeout(() => {
       if (!token) {
         router.push(Routes.LOGIN);
@@ -17,7 +17,7 @@ export default function Home() {
         router.push(Routes.DASHBOARD);
       }
     }, 2000);
-  }, [router]);
+  }, [router, token]);
 
   return (
     <div className="flex justify-center items-center h-screen">

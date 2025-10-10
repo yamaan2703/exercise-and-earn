@@ -435,7 +435,7 @@ const AddProduct = () => {
                       Sizes (Optional)
                     </label>
 
-                    <div className="flex items-center gap-2 w-full">
+                    <div className="flex items-center gap-1">
                       <div className="flex-grow">
                         <Input
                           type="text"
@@ -451,7 +451,7 @@ const AddProduct = () => {
                         <Button
                           type={ButtonType.BUTTON}
                           variant={ButtonVariant.THEME}
-                          size={ButtonSize.EXTRASMALL}
+                          size={ButtonSize.CUSTOM}
                           icon={FaPlus}
                           onClick={handleAddSize}
                         />
@@ -523,8 +523,8 @@ const AddProduct = () => {
                   <textarea
                     id="description"
                     {...field}
-                    placeholder="Enter product description..."
-                    className="w-full bg-transparent text-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 rounded-lg p-2 h-32 resize-none"
+                    placeholder="Enter product description"
+                    className="w-full bg-transparent text-white border border-gray-400 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-teal-500 transition duration-200 rounded-lg p-2 h-32 resize-none"
                   />
                   {errors.description && (
                     <p className="text-red-500 text-xs mt-1">

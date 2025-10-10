@@ -29,6 +29,7 @@ const Button = ({
   };
 
   const sizeStyles: Record<ButtonSize, string> = {
+    [ButtonSize.CUSTOM]: "px-2 py-3 text-sm",
     [ButtonSize.EXTRASMALL]: "px-2 py-2 text-xs",
     [ButtonSize.SMALL]: "px-3 py-2 text-sm",
     [ButtonSize.MEDIUM]: "px-4 py-2 text-base",

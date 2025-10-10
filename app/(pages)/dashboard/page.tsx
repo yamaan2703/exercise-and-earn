@@ -191,7 +191,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5 mb-8">
         <Card
           title="Total Users"
           value={isLoading ? "..." : users?.length}
@@ -287,7 +287,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="w-full md:w-[30%] h-full min-h-[450px] flex flex-col justify-center items-center bg-[#0b2d29] p-2 rounded-lg shadow-md text-white">
+        <div className="w-full md:w-[30%] h-full min-h-[467px] flex flex-col justify-center items-center bg-[#0b2d29] p-2 rounded-lg shadow-md text-white">
           <h2 className="text-lg font-semibold mb-4 text-center">
             User Statistics
           </h2>

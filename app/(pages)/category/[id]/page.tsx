@@ -96,7 +96,7 @@ const CategoryDetail = () => {
                       onClick={() =>
                         router.push(Routes.PRODUCTS_DETAIL(product.id))
                       }
-                      className="text-white font-semibold text-base cursor-pointer hover:underline"
+                      className="text-white font-semibold text-base cursor-pointer hover:underline capitalize"
                     >
                       {product.name}
                     </h4>
@@ -107,29 +107,48 @@ const CategoryDetail = () => {
 
                   <div className="flex flex-col gap-2 text-sm">
                     <div className="flex gap-2">
-                      <p className="text-gray-400">Price</p>
-                      <p className="text-white font-medium">${product.price}</p>
+                      <p className="text-gray-400">Price:</p>
+                      <p className="text-white font-medium">
+                        € {product.price}
+                      </p>
                     </div>
                     <div className="flex gap-2">
-                      <p className="text-gray-400">Stock</p>
+                      <p className="text-gray-400">Stock:</p>
                       <p className="text-white font-medium">{product.stock}</p>
                     </div>
 
-                    {product.sizes && (
+                    {product.sizes && product.sizes.length > 0 && (
                       <div className="flex gap-2">
-                        <p className="text-gray-400">Size</p>
+                        <p className="text-gray-400">Sizes:</p>
                         <p className="text-white font-medium line-clamp-2">
-                          {product.sizes}
+                          {product.sizes.join(", ")}
                         </p>
                       </div>
                     )}
+
+                    {product.colors && product.colors.length > 0 && (
+                      <div className="flex gap-2">
+                        <p className="text-gray-400">Colors:</p>
+                        <div className="flex gap-2">
+                          {product.colors.map((color, index) => (
+                            <span
+                              key={index}
+                              className="w-4 h-4 rounded-full border border-gray-300"
+                              style={{ backgroundColor: `#${color}` }}
+                            ></span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     <div className="flex gap-2">
-                      <p className="text-gray-400">Specs</p>
+                      <p className="text-gray-400">Specs:</p>
                       <p className="text-white font-medium">{product.specs}</p>
                     </div>
+
                     {product.description && (
                       <div className="flex gap-2">
-                        <p className="text-gray-400">Description</p>
+                        <p className="text-gray-400">Description:</p>
                         <p className="text-white font-medium line-clamp-2">
                           {product.description}
                         </p>
