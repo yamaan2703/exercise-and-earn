@@ -5,13 +5,13 @@ export enum StatusUser {
 }
 
 export enum StatusProduct {
-  ACTIVE = "Active",
-  INACTIVE = "Inactive",
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
 }
 
 export enum Gender {
-  MALE = "male",
-  FEMALE = "female",
+  MALE = "Male",
+  FEMALE = "Female",
 }
 
 export enum UserDetailTab {

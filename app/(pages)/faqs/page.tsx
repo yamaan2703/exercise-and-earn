@@ -1,41 +1,86 @@
 "use client";
 import Button from "@/components/ui/button";
 import FaqModal from "@/components/ui/modal/faq-modal";
+import ConfirmationModal from "@/components/ui/modal/confirmation-modal";
 import { AuthContext } from "@/context/AuthContext";
 import { ButtonSize, ButtonType, ButtonVariant } from "@/types/enums";
 import { FaqType } from "@/types/interface";
 import { useContext, useEffect, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaTrash, FaEdit } from "react-icons/fa";
 import Loader from "@/components/ui/loader";
 import toast from "react-hot-toast";
-import { useGetFaqsQuery } from "@/redux/slices/faqSlice";
+import {
+  useGetFaqsQuery,
+  useDeleteFaqMutation,
+  useUpdateFaqMutation,
+} from "@/redux/slices/faqSlice";
 
 const Faqs = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
+
   const [addFaqModal, setAddFaqModal] = useState(false);
+  const [editFaqModal, setEditFaqModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [selectedFaq, setSelectedFaq] = useState<FaqType | null>(null);
+
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
-  const { data, isLoading, isError } = useGetFaqsQuery("faq");
+
+  const { data, isLoading, isError } = useGetFaqsQuery(null);
+  const [deleteFaq] = useDeleteFaqMutation();
+  const [updateFaq] = useUpdateFaqMutation();
 
   useEffect(() => {
-    if (data) console.log(data);
-  }, [data]);
-
-  useEffect(() => {
-    if (isError) {
-      toast.error("Failed to fetch FAQs");
-    }
+    if (isError) toast.error("Failed to fetch FAQs");
   }, [isError]);
 
   const toggleFaq = (id: number) => {
     setOpenFaq(openFaq === id ? null : id);
   };
 
-  const faqs: FaqType[] = data?.content
-    ? [{ id: 1, question: data.content, answer: answer }]
-    : [];
+  const handleEditClick = (faq: FaqType) => {
+    setSelectedFaq(faq);
+    setQuestion(faq.question);
+    setAnswer(faq.answer);
+    setEditFaqModal(true);
+  };
+
+  const handleUpdateFaq = async () => {
+    if (!question.trim() || !answer.trim()) {
+      toast.error("Both fields are required!");
+      return;
+    }
+
+    try {
+      await updateFaq({
+        id: selectedFaq?.id,
+        question: question.trim(),
+        answer: answer.trim(),
+      }).unwrap();
+
+      toast.success("FAQ updated successfully!");
+      setEditFaqModal(false);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to update FAQ");
+    }
+  };
+
+  const handleDeleteFaq = async () => {
+    if (!selectedFaq) return;
+
+    try {
+      await deleteFaq(selectedFaq.id).unwrap();
+
+      toast.success("FAQ deleted successfully!");
+      setDeleteModal(false);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to delete FAQ");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -57,6 +102,7 @@ const Faqs = () => {
           <AiOutlineMenu className="size-5 sm:size-6" />
         </div>
       </div>
+
       <div className="flex justify-end mb-2 mr-2">
         <Button
           type={ButtonType.BUTTON}
@@ -72,8 +118,8 @@ const Faqs = () => {
       </div>
 
       <div className="space-y-4">
-        {faqs.length > 0 ? (
-          faqs.map((faq) => (
+        {data?.length > 0 ? (
+          data.map((faq: FaqType) => (
             <div
               key={faq.id}
               className="bg-[#0a2c28] text-white p-4 rounded-lg shadow-md"
@@ -90,6 +136,20 @@ const Faqs = () => {
                     <FaChevronDown className="ml-2" />
                   )}
                 </p>
+                <div className="flex items-center gap-3 ml-3">
+                  <button onClick={() => handleEditClick(faq)} title="Edit FAQ">
+                    <FaEdit />
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSelectedFaq(faq);
+                      setDeleteModal(true);
+                    }}
+                    title="Delete FAQ"
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
               </div>
 
               {openFaq === faq.id && (
@@ -104,12 +164,33 @@ const Faqs = () => {
 
       {addFaqModal && (
         <FaqModal
-          label={"Add Faq"}
+          label="Add Faq"
           setFaqModal={setAddFaqModal}
           question={question}
           setQuestion={setQuestion}
           answer={answer}
           setAnswer={setAnswer}
+        />
+      )}
+
+      {editFaqModal && (
+        <FaqModal
+          label="Edit Faq"
+          setFaqModal={setEditFaqModal}
+          question={question}
+          setQuestion={setQuestion}
+          answer={answer}
+          setAnswer={setAnswer}
+          onSave={handleUpdateFaq}
+        />
+      )}
+
+      {deleteModal && selectedFaq && (
+        <ConfirmationModal
+          title="Delete FAQ"
+          description={`Are you sure you want to delete the FAQ "${selectedFaq.question}"? This action cannot be undone.`}
+          onClick={handleDeleteFaq}
+          onCancel={() => setDeleteModal(false)}
         />
       )}
     </div>

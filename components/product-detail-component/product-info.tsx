@@ -36,7 +36,7 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
             <p className="text-gray-300 font-medium flex items-center gap-2">
               Price
             </p>
-            <p>{product.price}</p>
+            <p>€ {product.price}</p>
           </div>
 
           <div className="flex justify-between gap-2 items-center py-3 border-b border-teal-500/10">
@@ -45,20 +45,30 @@ const ProductInfo = ({ product }: { product: ProductType }) => {
             </p>
             <p>{product.specs}</p>
           </div>
+
           {product.sizes && product.sizes.length > 0 && (
             <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
               <p className="text-gray-300 font-medium flex items-center gap-2">
                 Size
               </p>
-              <p className="space-x-2">{product.sizes}</p>
+              <p className="space-x-2">{product.sizes.join(", ")}</p>
             </div>
           )}
+
           {product.colors && product.colors.length > 0 && (
             <div className="flex justify-between items-center py-3 border-b border-teal-500/10">
               <p className="text-gray-300 font-medium flex items-center gap-2">
                 Color
               </p>
-              <p className="space-x-2">{product.colors}</p>
+              <div className="flex gap-2">
+                {product.colors.map((color, index) => (
+                  <span
+                    key={index}
+                    className="w-5 h-5 rounded-full border border-gray-300"
+                    style={{ backgroundColor: `#${color}` }}
+                  ></span>
+                ))}
+              </div>
             </div>
           )}
 

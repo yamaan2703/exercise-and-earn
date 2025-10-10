@@ -8,6 +8,7 @@ import {
   InputSize,
   InputVariant,
   OrderStatus,
+  StatusProduct,
   StatusUser,
 } from "./enums";
 import { IconType } from "react-icons/lib";
@@ -109,10 +110,11 @@ export interface ProductType {
   brand: { id: number; name: string };
   description: string | null;
   calories: number;
-  sizes?: string;
-  colors?: string;
+  sizes?: string[];
+  colors?: string[];
   specs: string;
   stock: number;
+  status: StatusProduct;
   featuredImage: string;
   goalId: number;
   brandId: number;
@@ -148,11 +150,12 @@ export interface FaqType {
 
 export interface FaqModalProps {
   label: string;
-  setFaqModal: Dispatch<SetStateAction<boolean>>;
+  setFaqModal: (value: boolean) => void;
   question: string;
-  setQuestion: Dispatch<SetStateAction<string>>;
+  setQuestion: (value: string) => void;
   answer: string;
-  setAnswer: Dispatch<SetStateAction<string>>;
+  setAnswer: (value: string) => void;
+  onSave?: () => void;
 }
 
 export interface ChartComponentProps {

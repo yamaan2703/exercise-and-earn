@@ -8,6 +8,7 @@ import {
   ButtonType,
   ButtonVariant,
   ProductDetailTab,
+  StatusProduct,
 } from "@/types/enums";
 import Image from "next/image";
 import { AiOutlineMenu } from "react-icons/ai";
@@ -16,21 +17,49 @@ import { AuthContext } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
 import ProductInfo from "@/components/product-detail-component/product-info";
 import ProductStock from "@/components/product-detail-component/product-stock";
-import { useGetProductbyIdQuery } from "@/redux/slices/productSlice";
+import {
+  useGetProductbyIdQuery,
+  useUpdateProductMutation,
+} from "@/redux/slices/productSlice";
 import Loader from "@/components/ui/loader";
+import ConfirmationModal from "@/components/ui/modal/confirmation-modal";
+import toast from "react-hot-toast";
+import { ProductType } from "@/types/interface";
 
 const ProductDetailPage = () => {
-  const { setIsSidebarOpen } = useContext(AuthContext)!;
-  const [activeTab, setActiveTab] = useState(ProductDetailTab.INFO);
-  const [stockNotification, setStockNotification] = useState(true);
+  const { setIsSidebarOpen, activeModal, setActiveModal } =
+    useContext(AuthContext)!;
   const { id } = useParams();
   const router = useRouter();
+
+  const [activeTab, setActiveTab] = useState(ProductDetailTab.INFO);
+  const [stockNotification, setStockNotification] = useState(true);
+
   const { data, isLoading } = useGetProductbyIdQuery(Number(id));
-  const product = data?.product;
+  const [updateProductStatus] = useUpdateProductMutation();
+
+  const product: ProductType = data?.product;
 
   useEffect(() => {
     if (data) console.log(data);
   }, [data]);
+
+  const handleToggleProductStatus = async (id: number) => {
+    try {
+      const res = await updateProductStatus({
+        id,
+        status: StatusProduct.ACTIVE,
+      }).unwrap();
+
+      if (res.success) {
+        toast.success("Product activated successfully!");
+        setActiveModal(false);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update Status");
+    }
+  };
 
   if (isLoading)
     return (
@@ -55,6 +84,7 @@ const ProductDetailPage = () => {
               </p>
             </div>
           )}
+
           <div className="flex justify-between items-center gap-2 mb-6">
             <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-500 after:rounded-full after:mt-1">
               Product Detail
@@ -90,6 +120,17 @@ const ProductDetailPage = () => {
                   <p className="text-teal-100 text-lg">Id: #{product.id}</p>
                 </div>
               </div>
+              <div className="flex flex-col gap-1">
+                <span
+                  className={`px-4 py-2 rounded-full text-center text-sm font-semibold ${
+                    product.status === StatusProduct.ACTIVE
+                      ? "bg-green-500/20 text-green-300 border border-green-500"
+                      : "bg-red-200 text-red-400 border border-red-500/50"
+                  }`}
+                >
+                  {product.status}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -114,8 +155,34 @@ const ProductDetailPage = () => {
           {activeTab === ProductDetailTab.INFO && (
             <ProductInfo product={product} />
           )}
+
           {activeTab === ProductDetailTab.STOCK && (
             <ProductStock product={product} />
+          )}
+
+          {product.status === StatusProduct.INACTIVE && (
+            <div className="mt-4 flex justify-between items-center gap-2">
+              <p className="text-red-500 text-sm">
+                This product is currently inactive. Would you like to activate
+                it?
+              </p>
+              <Button
+                type={ButtonType.BUTTON}
+                label="Activate Product"
+                variant={ButtonVariant.THEME}
+                size={ButtonSize.SMALL}
+                onClick={() => setActiveModal(true)}
+              />
+            </div>
+          )}
+
+          {activeModal && product.status === StatusProduct.INACTIVE && (
+            <ConfirmationModal
+              title="Activate Product"
+              description="Are you sure you want to activate this product?"
+              onClick={() => handleToggleProductStatus(product.id)}
+              onCancel={() => setActiveModal(false)}
+            />
           )}
         </div>
       ) : (

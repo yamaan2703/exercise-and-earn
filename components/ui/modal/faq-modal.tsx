@@ -13,31 +13,33 @@ import toast from "react-hot-toast";
 import { usePostFaqMutation } from "@/redux/slices/faqSlice";
 
 const FaqModal = (props: FaqModalProps) => {
-  const { label, setFaqModal, question, setQuestion, answer, setAnswer } =
-    props;
+  const {
+    label,
+    setFaqModal,
+    question,
+    setQuestion,
+    answer,
+    setAnswer,
+    onSave,
+  } = props;
   const [postFaq, { isLoading }] = usePostFaqMutation();
 
   const handleSave = async () => {
-    if (!question.trim()) {
-      toast.error("Question is required!");
+    if (!question.trim() || !answer.trim()) {
+      toast.error("Both fields are required!");
       return;
     }
 
     try {
-      const payload = { content: question };
-      const res = await postFaq(payload).unwrap();
+      await postFaq({ question, answer }).unwrap();
 
-      if (res.success) {
-        toast.success(res.message || "FAQ added!");
-        setFaqModal(false);
-        setQuestion("");
-        setAnswer("");
-      } else {
-        toast.error(res.error || "Failed to add FAQ");
-      }
+      toast.success("FAQ added!");
+      setFaqModal(false);
+      setQuestion("");
+      setAnswer("");
     } catch (err) {
-      console.log(err);
-      toast.error("Something went wrong!");
+      console.error(err);
+      toast.error("Failed to add FAQ");
     }
   };
 
@@ -61,24 +63,31 @@ const FaqModal = (props: FaqModalProps) => {
             placeholder="Enter question..."
             value={question}
             setValue={setQuestion}
-            variant={InputVariant.DEFAULT}
+            variant={InputVariant.OUTLINE}
             size={InputSize.SMALL}
             required
           />
-          <Input
-            id="answer"
-            type="text"
-            label="Answer"
-            placeholder="Enter answer..."
-            value={answer}
-            setValue={setAnswer}
-            variant={InputVariant.DEFAULT}
-            size={InputSize.SMALL}
-          />
+
+          <div>
+            <label
+              htmlFor="answer"
+              className="block text-sm font-medium text-gray-300 mb-1"
+            >
+              Answer
+            </label>
+            <textarea
+              id="answer"
+              placeholder="Enter answer..."
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+              className="w-full p-2 rounded-md bg-[#0b2a27] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none h-20"
+            />
+          </div>
+
           <Button
             type={ButtonType.BUTTON}
             label={isLoading ? "Saving..." : label}
-            onClick={handleSave}
+            onClick={onSave ? onSave : handleSave}
             variant={ButtonVariant.THEME}
             size={ButtonSize.SMALL}
           />

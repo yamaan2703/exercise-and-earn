@@ -2,11 +2,16 @@
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import React, { useContext, useEffect, useState } from "react";
-import { EyeOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  EyeOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  PoweroffOutlined,
+} from "@ant-design/icons";
 import { ProductType } from "@/types/interface";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
-import { ButtonType } from "@/types/enums";
+import { ButtonType, StatusProduct } from "@/types/enums";
 import { AuthContext } from "@/context/AuthContext";
 import type { ColumnsType } from "antd/es/table";
 import DynamicTable from "@/components/ui/table";
@@ -22,8 +27,11 @@ import { FaPlus, FaSearch } from "react-icons/fa";
 import {
   useDeleteProductMutation,
   useGetProductsQuery,
+  useUpdateProductMutation,
 } from "@/redux/slices/productSlice";
 import Loader from "@/components/ui/loader";
+import { cn } from "@/lib/utils";
+import toast from "react-hot-toast";
 
 const Products = () => {
   const router = useRouter();
@@ -31,10 +39,13 @@ const Products = () => {
     useContext(AuthContext)!;
   const { data, isLoading, isError } = useGetProductsQuery(null);
   const [deleteProduct] = useDeleteProductMutation();
+  const [updateProductStatus] = useUpdateProductMutation();
+
   const [searchProducts, setSearchProducts] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(
     null
   );
+  const [deleteModal, setDeleteModal] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -46,8 +57,33 @@ const Products = () => {
     router.push(Routes.PRODUCTS_DETAIL(record.id));
   };
 
-  const handleDeleteProduct = (id: number) => {
-    deleteProduct(id);
+  const handleDeleteProduct = async (id: number) => {
+    try {
+      const res = await deleteProduct(id).unwrap();
+
+      toast.success("Product deleted successfully!");
+      console.log("Deleted:", res);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete product");
+    }
+  };
+
+  const handleUpdateProductStatus = async (id: number) => {
+    try {
+      const res = await updateProductStatus({
+        id,
+        status: StatusProduct.INACTIVE,
+      }).unwrap();
+
+      if (res.success) {
+        toast.success("Product status updated to inactive");
+        console.log("Updated:", res);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update product status");
+    }
   };
 
   const columns: ColumnsType<ProductType> = [
@@ -83,6 +119,20 @@ const Products = () => {
       render: (createdAt: string) => new Date(createdAt).toLocaleDateString(),
     },
     {
+      title: "Status",
+      dataIndex: "status",
+      width: "10%",
+      filters: [
+        { text: StatusProduct.ACTIVE, value: StatusProduct.ACTIVE },
+        { text: StatusProduct.INACTIVE, value: StatusProduct.INACTIVE },
+      ],
+      render: (status: StatusProduct) => {
+        const color =
+          status === StatusProduct.ACTIVE ? "text-green-500" : "text-red-500";
+        return <p className={color}>{status}</p>;
+      },
+    },
+    {
       title: "Actions",
       key: "actions",
       width: "15%",
@@ -105,6 +155,21 @@ const Products = () => {
           <button
             onClick={() => {
               setActiveModal(true);
+              setSelectedProduct(record);
+            }}
+            title="update product status"
+            className={cn(
+              "p-1 text-white hover:text-gray-300 transition cursor-pointer",
+              record.status === StatusProduct.INACTIVE &&
+                "opacity-50 cursor-not-allowed"
+            )}
+            disabled={record.status === StatusProduct.INACTIVE}
+          >
+            <PoweroffOutlined />
+          </button>
+          <button
+            onClick={() => {
+              setDeleteModal(true);
               setSelectedProduct(record);
             }}
             title="Delete Product"
@@ -170,7 +235,21 @@ const Products = () => {
         />
       )}
 
-      {activeModal && (
+      {activeModal && selectedProduct?.status === StatusProduct.ACTIVE && (
+        <ConfirmationModal
+          title={"Confirm Inactive Product"}
+          description={"Are you sure you want to deactivate this product?"}
+          onClick={() => {
+            if (selectedProduct) {
+              handleUpdateProductStatus(selectedProduct.id);
+            }
+            setActiveModal(false);
+          }}
+          onCancel={() => setActiveModal(false)}
+        />
+      )}
+
+      {deleteModal && (
         <ConfirmationModal
           title={"Confirm Delete Product"}
           description={"Are you sure you want to delete this product?"}
@@ -178,9 +257,9 @@ const Products = () => {
             if (selectedProduct) {
               handleDeleteProduct(selectedProduct.id);
             }
-            setActiveModal(false);
+            setDeleteModal(false);
           }}
-          onCancel={() => setActiveModal(false)}
+          onCancel={() => setDeleteModal(false)}
         />
       )}
     </div>

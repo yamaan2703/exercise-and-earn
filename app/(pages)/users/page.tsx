@@ -14,7 +14,6 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { FaSearch } from "react-icons/fa";
 import DynamicTable from "@/components/ui/table";
 import {
-  useActivateUserMutation,
   useBanUserMutation,
   useDeactivateUserMutation,
   useGetUsersQuery,
@@ -27,7 +26,6 @@ const Users = () => {
   const { setIsSidebarOpen, activeModal, setActiveModal } =
     useContext(AuthContext)!;
   const { data, isLoading, isError } = useGetUsersQuery(null);
-  const [activateUser] = useActivateUserMutation();
   const [deactivateUser] = useDeactivateUserMutation();
   const [banUser] = useBanUserMutation();
   const [banModal, setBanModal] = useState(false);
@@ -45,11 +43,7 @@ const Users = () => {
   };
 
   const handleUpdateUserStatus = (user: UserType) => {
-    if (user.status === StatusUser.ACTIVE) {
-      deactivateUser(user.id);
-    } else {
-      activateUser(user.id);
-    }
+    deactivateUser(user.id);
   };
 
   const columns: ColumnsType<UserType> = [
