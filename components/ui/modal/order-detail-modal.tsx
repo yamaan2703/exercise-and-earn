@@ -110,19 +110,32 @@ const OrderDetailModal = ({
                   </h4>
                   <p className="text-sm">
                     <span className="text-white">Description:</span>{" "}
-                    {product.description || "No description available"}
+                    {product.description}
                   </p>
                   <p className="text-sm">
                     <span className="text-white">Calories:</span>{" "}
                     {product.calories}
                   </p>
+                  {product.sizes && product.sizes.length > 0 && (
+                    <p className="text-sm">
+                      <span className="text-white">Sizes:</span>{" "}
+                      {product.sizes.join(", ")}
+                    </p>
+                  )}
+                  {product.colors && product.colors.length > 0 && (
+                    <>
+                      <p className="text-white">Colors:</p>
+                      {product.colors.map((color, index) => (
+                        <span
+                          key={index}
+                          className="w-4 h-4 rounded-full border border-gray-300"
+                          style={{ backgroundColor: `#${color}` }}
+                        ></span>
+                      ))}
+                    </>
+                  )}
                   <p className="text-sm">
-                    <span className="text-white">Size:</span>{" "}
-                    {product.sizes || "N/A"}
-                  </p>
-                  <p className="text-sm">
-                    <span className="text-white">Specs:</span>{" "}
-                    {product.specs || "N/A"}
+                    <span className="text-white">Specs:</span> {product.specs}
                   </p>
                   <p className="text-sm">
                     <span className="text-white">Price:</span> €{product.price}

@@ -188,7 +188,7 @@ const Faqs = () => {
       {deleteModal && selectedFaq && (
         <ConfirmationModal
           title="Delete FAQ"
-          description={`Are you sure you want to delete the FAQ "${selectedFaq.question}"? This action cannot be undone.`}
+          description={`Are you sure you want to delete the FAQ "${selectedFaq.question}". This action cannot be undone.`}
           onClick={handleDeleteFaq}
           onCancel={() => setDeleteModal(false)}
         />

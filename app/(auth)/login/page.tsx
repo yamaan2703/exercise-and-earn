@@ -33,6 +33,15 @@ const Login = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
+      if (!email.trim() || !password.trim()) {
+        toast.error("Please fill all fields");
+        return;
+      }
+      if (!/\S+@\S+\.\S+/.test(email)) {
+        toast.error("Please enter a valid email address!");
+        return;
+      }
+
       const response = await login({ email, password }).unwrap();
 
       if (response.token) {
@@ -74,7 +83,7 @@ const Login = () => {
               value={email}
               setValue={setEmail}
               id="email"
-              type="email"
+              type="text"
               placeholder="Enter your email"
               variant={InputVariant.DEFAULT}
               size={InputSize.MEDIUM}

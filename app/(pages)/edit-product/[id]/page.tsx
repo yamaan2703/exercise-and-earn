@@ -528,7 +528,7 @@ const EditProduct = () => {
                       Sizes (Optional)
                     </label>
 
-                    <div className="flex items-center gap-2 w-full">
+                    <div className="flex items-center gap-1 w-full">
                       <div className="flex-grow">
                         <Input
                           type="text"
@@ -544,7 +544,7 @@ const EditProduct = () => {
                         <Button
                           type={ButtonType.BUTTON}
                           variant={ButtonVariant.THEME}
-                          size={ButtonSize.EXTRASMALL}
+                          size={ButtonSize.CUSTOM}
                           icon={FaPlus}
                           onClick={handleAddSize}
                         />
@@ -614,9 +614,9 @@ const EditProduct = () => {
                   id="description"
                   value={field.value}
                   onChange={field.onChange}
-                  placeholder="Enter description"
+                  placeholder="Enter product description"
                   rows={3}
-                  className="bg-transparent w-full p-2 rounded-lg text-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 h-32 resize-none"
+                  className="bg-transparent w-full p-2 rounded-lg text-white border border-gray-400 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-teal-500 transition duration-200 h-32 resize-none"
                 />
               )}
             />

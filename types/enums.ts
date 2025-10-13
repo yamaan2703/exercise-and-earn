@@ -61,6 +61,7 @@ export enum ButtonVariant {
 }
 
 export enum ButtonSize {
+  CUSTOM = "cs",
   EXTRASMALL = "xs",
   SMALL = "sm",
   MEDIUM = "md",
