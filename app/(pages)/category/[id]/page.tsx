@@ -2,7 +2,6 @@
 import { AuthContext } from "@/context/AuthContext";
 import { useContext } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { FaArrowLeft } from "react-icons/fa";
 import { ButtonVariant, ButtonSize, ButtonType } from "@/types/enums";
 import Button from "@/components/ui/button";
 import Loader from "@/components/ui/loader";
@@ -10,6 +9,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
 import { useGetCategoryByIdQuery } from "@/redux/slices/categorySlice";
 import { ProductType } from "@/types/interface";
+import Image from "next/image";
 
 const CategoryDetail = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
@@ -47,12 +47,6 @@ const CategoryDetail = () => {
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => router.push(Routes.CATEGORY)}
-            className="text-white hover:text-teal-400 transition-colors"
-          >
-            <FaArrowLeft className="size-5 sm:size-6" />
-          </button>
           <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-500 after:rounded-full after:mt-1">
             Category Details
           </h1>
@@ -66,12 +60,11 @@ const CategoryDetail = () => {
       </div>
 
       <div className="bg-[#0b2d29] border border-teal-500/20 rounded-xl p-4 sm:p-6">
-        <div className="flex justify-between items-start mb-6">
+        <div className="flex justify-between items-start mb-5">
           <div className="flex-1">
-            <h2 className="text-2xl sm:text-3xl font-bold text-teal-400 mb-2">
+            <h2 className="text-2xl sm:text-3xl font-bold text-teal-400">
               {category.name}
             </h2>
-            <p className="text-gray-400 text-sm">Brand ID: #{category.id}</p>
           </div>
         </div>
 
@@ -85,75 +78,85 @@ const CategoryDetail = () => {
           </div>
 
           {category.products && category.products.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {category.products.map((product: ProductType) => (
                 <div
                   key={product.id}
-                  className="bg-[#11413a]/40 border border-teal-500/10 rounded-lg p-4 hover:border-teal-500/30 transition-colors"
+                  className="group bg-[#0f3c36] rounded-xl border border-teal-500/20 p-4 shadow-md hover:shadow-teal-500/20 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                  onClick={() =>
+                    router.push(Routes.PRODUCTS_DETAIL(product.id))
+                  }
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <h4
-                      onClick={() =>
-                        router.push(Routes.PRODUCTS_DETAIL(product.id))
-                      }
-                      className="text-white font-semibold text-base cursor-pointer hover:underline capitalize"
-                    >
+                  <div className="flex flex-col space-y-4">
+                    <div className="relative w-20 h-20 rounded-lg overflow-hidden ring-2 ring-teal-500/30 group-hover:ring-teal-400/60 transition-all">
+                      <Image
+                        src={product.featuredImage}
+                        alt={product.name}
+                        fill
+                        className="object-cover p-2"
+                      />
+                    </div>
+
+                    <h3 className="text-lg capitalize font-semibold text-white group-hover:text-teal-400 transition-colors">
                       {product.name}
-                    </h4>
-                    <span className="text-teal-400 font-medium text-sm">
-                      {product.calories} cal
-                    </span>
-                  </div>
+                    </h3>
 
-                  <div className="flex flex-col gap-2 text-sm">
-                    <div className="flex gap-2">
-                      <p className="text-gray-400">Price:</p>
-                      <p className="text-white font-medium">
-                        € {product.price}
+                    <div className="w-full border-t border-teal-500/10 my-1"></div>
+
+                    <div className="text-sm text-gray-300 w-full space-y-1 text-left">
+                      <p>
+                        <span className="text-white font-medium">Price:</span> €
+                        {product.price}
                       </p>
-                    </div>
-                    <div className="flex gap-2">
-                      <p className="text-gray-400">Stock:</p>
-                      <p className="text-white font-medium">{product.stock}</p>
-                    </div>
+                      <p>
+                        <span className="text-white font-medium">
+                          Calories:{" "}
+                        </span>
+                        {product.calories} cal
+                      </p>
+                      <p>
+                        <span className="text-white font-medium">Stock:</span>{" "}
+                        {product.stock}
+                      </p>
 
-                    {product.sizes && product.sizes.length > 0 && (
-                      <div className="flex gap-2">
-                        <p className="text-gray-400">Sizes:</p>
-                        <p className="text-white font-medium line-clamp-2">
+                      {product.sizes && product.sizes.length > 0 && (
+                        <p>
+                          <span className="text-white font-medium">Sizes:</span>{" "}
                           {product.sizes.join(", ")}
                         </p>
-                      </div>
-                    )}
+                      )}
 
-                    {product.colors && product.colors.length > 0 && (
-                      <div className="flex gap-2">
-                        <p className="text-gray-400">Colors:</p>
-                        <div className="flex gap-2">
-                          {product.colors.map((color, index) => (
-                            <span
-                              key={index}
-                              className="w-4 h-4 rounded-full border border-gray-300"
-                              style={{ backgroundColor: `#${color}` }}
-                            ></span>
-                          ))}
+                      {product.colors && product.colors.length > 0 && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-white font-medium">
+                            Colors:
+                          </span>
+                          <div className="flex gap-1">
+                            {product.colors.map((color, index) => (
+                              <span
+                                key={index}
+                                className="w-4 h-4 rounded-full border border-gray-300"
+                                style={{ backgroundColor: `#${color}` }}
+                              ></span>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
-                    <div className="flex gap-2">
-                      <p className="text-gray-400">Specs:</p>
-                      <p className="text-white font-medium">{product.specs}</p>
-                    </div>
+                      <p>
+                        <span className="text-white font-medium">Specs:</span>{" "}
+                        {product.specs}
+                      </p>
 
-                    {product.description && (
-                      <div className="flex gap-2">
-                        <p className="text-gray-400">Description:</p>
-                        <p className="text-white font-medium line-clamp-2">
+                      {product.description && (
+                        <p className="line-clamp-2">
+                          <span className="text-white font-medium">
+                            Description:
+                          </span>{" "}
                           {product.description}
                         </p>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}

@@ -20,6 +20,7 @@ import {
 } from "@/redux/slices/userSlice";
 import { cn } from "@/lib/utils";
 import Loader from "@/components/ui/loader";
+import toast from "react-hot-toast";
 
 const Users = () => {
   const router = useRouter();
@@ -42,8 +43,16 @@ const Users = () => {
     router.push(Routes.USERS_DETAIL(record.id));
   };
 
-  const handleUpdateUserStatus = (user: UserType) => {
-    deactivateUser(user.id);
+  const handleUpdateUserStatus = async (user: UserType) => {
+    try {
+      await deactivateUser(user.id);
+
+      setActiveModal(false);
+      toast.success("User status updated successfully!");
+    } catch (error) {
+      console.error("Failed to update user status:", error);
+      toast.error("Failed to update user status");
+    }
   };
 
   const columns: ColumnsType<UserType> = [
@@ -181,12 +190,7 @@ const Users = () => {
         <ConfirmationModal
           title="Confirm Inactive User"
           description="Are you sure you want to deactivate this user?"
-          onClick={() => {
-            if (selectedUser) {
-              handleUpdateUserStatus(selectedUser);
-            }
-            setActiveModal(false);
-          }}
+          onClick={() => handleUpdateUserStatus(selectedUser)}
           onCancel={() => setActiveModal(false)}
         />
       )}
@@ -195,9 +199,10 @@ const Users = () => {
         <ConfirmationModal
           title="Confirm Ban User"
           description="Are you sure you want to ban this user? This action cannot be undone."
-          onClick={() => {
+          onClick={async () => {
             if (selectedUser) {
-              banUser(selectedUser.id);
+              await banUser(selectedUser.id);
+              toast.success("User banned successfully!");
             }
             setBanModal(false);
           }}

@@ -32,7 +32,9 @@ const Goals = () => {
   }, [data]);
 
   const filteredGoals = goals.filter((goal: GoalItem) =>
-    goal.id.toString().includes(searchGoal.trim())
+    goal.products.some((product) =>
+      product.name.toLowerCase().includes(searchGoal.trim().toLowerCase())
+    )
   );
 
   if (isLoading) {
@@ -59,8 +61,8 @@ const Goals = () => {
       <div className="mb-3 flex justify-between gap-2">
         <div className="max-w-[400px] w-full">
           <Input
-            placeholder="Search goal by their id..."
-            type="number"
+            placeholder="Search goal by product name..."
+            type="text"
             id="search"
             value={searchGoal}
             setValue={setSearchGoal}
@@ -84,51 +86,45 @@ const Goals = () => {
           Existing Goals
         </h2>
         {filteredGoals.length > 0 ? (
-          <div className="space-y-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredGoals.map((goal: GoalItem) => (
               <div
                 key={goal.id}
-                className="bg-[#11413a]/40 border border-teal-500/10 rounded-lg p-4"
+                className="bg-[#0f3a34]/60 border border-teal-500/20 
+                 rounded-xl p-5 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-teal-400 font-semibold text-base sm:text-lg">
-                    Goal #{goal.id}
-                  </h3>
-                  <span className="text-white font-medium">
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="text-xl font-semibold text-teal-400">Goal</h3>
+                  <span className="text-sm bg-teal-600/20 text-teal-300 px-3 py-1 rounded-full">
                     {goal.calories} cal
                   </span>
                 </div>
 
                 {goal.products && goal.products.length > 0 ? (
-                  <div>
-                    <h4 className="text-gray-300 text-sm mb-2">
-                      Products ({goal.products.length}):
+                  <div className="space-y-2">
+                    <h4 className="text-gray-300 text-sm mb-1">
+                      Products ({goal.products.length})
                     </h4>
-                    <div className="space-y-2">
+                    <div className="flex flex-col gap-2">
                       {goal.products.map((product) => (
                         <div
                           key={product.id}
-                          className="bg-[#06211e]/60 rounded px-3 py-2 flex justify-between items-center text-sm"
+                          onClick={() =>
+                            router.push(Routes.PRODUCTS_DETAIL(product.id))
+                          }
+                          className="bg-[#07332d]/70 border border-teal-700/30 rounded-lg px-3 py-2"
                         >
-                          <p
-                            onClick={() =>
-                              router.push(Routes.PRODUCTS_DETAIL(product.id))
-                            }
-                            className="text-white hover:underline cursor-pointer"
-                          >
+                          <p className="text-white font-medium text-sm cursor-pointer hover:underline">
                             {product.name}
                           </p>
-                          <span className="text-gray-400">
-                            {product.calories} cal
-                          </span>
                         </div>
                       ))}
                     </div>
                   </div>
                 ) : (
-                  <p className="text-gray-500 text-sm italic">
-                    No products assigned yet
-                  </p>
+                  <div className="mt-3 text-gray-500 text-sm italic text-center py-4 border border-dashed border-gray-600 rounded-lg">
+                    No products added yet
+                  </div>
                 )}
               </div>
             ))}

@@ -84,13 +84,15 @@ const FaqModal = (props: FaqModalProps) => {
             />
           </div>
 
-          <Button
-            type={ButtonType.BUTTON}
-            label={isLoading ? "Saving..." : label}
-            onClick={onSave ? onSave : handleSave}
-            variant={ButtonVariant.THEME}
-            size={ButtonSize.SMALL}
-          />
+          <div className="flex justify-end mt-4">
+            <Button
+              type={ButtonType.BUTTON}
+              label={isLoading ? "Saving..." : label}
+              onClick={onSave ? onSave : handleSave}
+              variant={ButtonVariant.THEME}
+              size={ButtonSize.SMALL}
+            />
+          </div>
         </div>
       </div>
     </div>

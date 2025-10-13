@@ -168,7 +168,7 @@ const Category = () => {
       <div className="mb-3 flex justify-between gap-2">
         <div className="max-w-[400px] w-full">
           <Input
-            placeholder="Search category by name or ID..."
+            placeholder="Search by category name..."
             type="text"
             id="search"
             value={searchCategory}
@@ -192,7 +192,7 @@ const Category = () => {
         columns={columns}
         data={category}
         searchValue={searchCategory}
-        searchableFields={["id", "name"]}
+        searchableFields={["name"]}
         rowKey="id"
         scroll={{ x: 600 }}
       />
@@ -229,15 +229,15 @@ const Category = () => {
                 size={InputSize.SMALL}
                 required
               />
-
-              <Button
-                type={ButtonType.BUTTON}
-                externalStyles="mt-3"
-                label={isUpdating ? "Saving..." : "Save Changes"}
-                onClick={handleEditSave}
-                variant={ButtonVariant.THEME}
-                size={ButtonSize.SMALL}
-              />
+              <div className="flex justify-end mt-4">
+                <Button
+                  type={ButtonType.BUTTON}
+                  label={isUpdating ? "Saving..." : "Save Changes"}
+                  onClick={handleEditSave}
+                  variant={ButtonVariant.THEME}
+                  size={ButtonSize.SMALL}
+                />
+              </div>
             </div>
           </div>
         </div>
