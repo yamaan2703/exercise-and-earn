@@ -66,14 +66,15 @@ const CategoryModal = ({ label, setAddCategoryModal }: CategoryModalProps) => {
             size={InputSize.SMALL}
             required
           />
-          <Button
-            type={ButtonType.BUTTON}
-            externalStyles="mt-3"
-            label={isLoading ? "Adding..." : "Add Category"}
-            onClick={handleAddCategory}
-            variant={ButtonVariant.THEME}
-            size={ButtonSize.SMALL}
-          />
+          <div className="flex justify-end mt-4">
+            <Button
+              type={ButtonType.BUTTON}
+              label={isLoading ? "Adding..." : "Add Category"}
+              onClick={handleAddCategory}
+              variant={ButtonVariant.THEME}
+              size={ButtonSize.SMALL}
+            />
+          </div>
         </div>
       </div>
     </div>

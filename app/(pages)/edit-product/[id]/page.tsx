@@ -33,6 +33,7 @@ import { useGetGoalsQuery } from "@/redux/slices/goalSlice";
 import { useGetCategoryQuery } from "@/redux/slices/categorySlice";
 import { useGetBrandsQuery } from "@/redux/slices/brandSlice";
 import { BrandItem, CategoryItem, GoalItem } from "@/types/interface";
+import { ColorPicker } from "antd";
 
 type FormValues = {
   name: string;
@@ -355,39 +356,6 @@ const EditProduct = () => {
 
           <div className="flex-1">
             <Controller
-              name="categoryId"
-              control={control}
-              rules={{ required: "Please select a category." }}
-              render={({ field }) => (
-                <div>
-                  <label className="block text-sm text-gray-300 mb-2">
-                    Category
-                  </label>
-                  <select
-                    {...field}
-                    className="w-full bg-[#0b2d29] text-white border border-teal-500/30 rounded-lg p-2"
-                  >
-                    <option value="">Select a category</option>
-                    {categories.map((category: CategoryItem) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.categoryId && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.categoryId.message}
-                    </p>
-                  )}
-                </div>
-              )}
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-6">
-          <div className="flex-1">
-            <Controller
               name="brandId"
               control={control}
               rules={{ required: "Please select a brand." }}
@@ -410,6 +378,39 @@ const EditProduct = () => {
                   {errors.brandId && (
                     <p className="text-red-500 text-xs mt-1">
                       {errors.brandId.message}
+                    </p>
+                  )}
+                </div>
+              )}
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-6">
+          <div className="flex-1">
+            <Controller
+              name="categoryId"
+              control={control}
+              rules={{ required: "Please select a category." }}
+              render={({ field }) => (
+                <div>
+                  <label className="block text-sm text-gray-300 mb-2">
+                    Category
+                  </label>
+                  <select
+                    {...field}
+                    className="w-full bg-[#0b2d29] text-white border border-teal-500/30 rounded-lg p-2"
+                  >
+                    <option value="">Select a category</option>
+                    {categories.map((category: CategoryItem) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.categoryId && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.categoryId.message}
                     </p>
                   )}
                 </div>
@@ -652,11 +653,11 @@ const EditProduct = () => {
                     </label>
 
                     <div className="flex items-center gap-3 mb-3">
-                      <input
-                        type="color"
+                      <ColorPicker
                         value={currentColor}
-                        onChange={(e) => setCurrentColor(e.target.value)}
-                        className="w-10 h-10 rounded cursor-pointer border border-gray-400"
+                        onChange={(color) =>
+                          setCurrentColor(color.toHexString())
+                        }
                       />
                       <Button
                         type={ButtonType.BUTTON}

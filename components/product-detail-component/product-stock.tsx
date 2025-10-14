@@ -17,6 +17,14 @@ const ProductStock = ({ product }: { product: ProductType }) => {
       dataIndex: "stockChanged",
       key: "stockChanged",
       sorter: true,
+      render: (stockChanged: number) => {
+        const isAdded = stockChanged > 0;
+        return (
+          <span>
+            {isAdded ? "Updated" : "Dispatched"} ({Math.abs(stockChanged)})
+          </span>
+        );
+      },
     },
     {
       title: "Updated At",

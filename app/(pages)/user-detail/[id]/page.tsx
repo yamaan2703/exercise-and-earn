@@ -25,6 +25,7 @@ import {
 import ConfirmationModal from "@/components/ui/modal/confirmation-modal";
 import Loader from "@/components/ui/loader";
 import UserGoals from "@/components/user-detail-component/user-goals";
+import toast from "react-hot-toast";
 
 const UserDetailPage = () => {
   const { setIsSidebarOpen, activeModal, setActiveModal } =
@@ -39,6 +40,18 @@ const UserDetailPage = () => {
   useEffect(() => {
     if (user) console.log("user", user);
   }, [user]);
+
+  const handleActiveUser = async (id: string) => {
+    try {
+      await activateUser(id).unwrap();
+
+      setActiveModal(false);
+      toast.success("User activated successfully!");
+    } catch (error) {
+      console.error("Error activating user:", error);
+      toast.error("Failed to activate user");
+    }
+  };
 
   if (isLoading)
     return (
@@ -132,9 +145,12 @@ const UserDetailPage = () => {
             {activeTab === UserDetailTab.GOALS && <UserGoals user={user} />}
 
             {user.status === StatusUser.INACTIVE && (
-              <div className="mt-4 flex justify-between items-center gap-2">
-                <p className="text-red-500 text-sm">
-                  This user is currently inactive. Would you like to procees
+              <div
+                className="fixed bottom-0 left-0 w-full bg-[#0b2d29]/95 backdrop-blur-md border-t border-teal-500/30 
+                  flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 px-4 py-3 z-50"
+              >
+                <p className="text-red-500/90 text-sm ml-0 lg:ml-[16rem]">
+                  This user is currently inactive. Would you like to proceed
                   with activation?
                 </p>
                 <Button
@@ -152,12 +168,7 @@ const UserDetailPage = () => {
             <ConfirmationModal
               title="Confirm Activate User"
               description="Are you sure you want to activate this user?"
-              onClick={async () => {
-                if (user) {
-                  await activateUser(user.id);
-                }
-                setActiveModal(false);
-              }}
+              onClick={() => handleActiveUser(user.id)}
               onCancel={() => setActiveModal(false)}
             />
           )}

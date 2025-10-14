@@ -33,7 +33,6 @@ const ProductDetailPage = () => {
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState(ProductDetailTab.INFO);
-  const [stockNotification, setStockNotification] = useState(true);
 
   const { data, isLoading } = useGetProductbyIdQuery(Number(id));
   const [updateProductStatus] = useUpdateProductMutation();
@@ -68,19 +67,13 @@ const ProductDetailPage = () => {
       </p>
     );
   return (
-    <div className="min-h-screen p-1">
+    <div className="min-h-screen">
       {product ? (
         <div className="">
-          {product.stock <= 5 && stockNotification && (
-            <div className="bg-red-600 border border-red-600/40 rounded-lg p-1 mb-4 flex items-center">
-              <p className="text-red-200 text-base font-semibold flex-1 text-center">
+          {product.stock <= 5 && (
+            <div className="bg-red-500 rounded-none p-1 mb-4 flex items-center -mx-2 lg:-mx-[4rem] mt-[-1rem]">
+              <p className="text-red-100 text-sm font-semibold flex-1 text-center">
                 Only {product.stock} left in stock! Hurry up before it runs out!
-              </p>
-              <p
-                onClick={() => setStockNotification(false)}
-                className="mr-1 text-lg text-red-100 hover:text-white font-bold cursor-pointer"
-              >
-                X
               </p>
             </div>
           )}
@@ -117,7 +110,6 @@ const ProductDetailPage = () => {
                   <h1 className="text-3xl font-bold text-white mb-1">
                     {product.name}
                   </h1>
-                  <p className="text-teal-100 text-lg">Id: #{product.id}</p>
                 </div>
               </div>
               <div className="flex flex-col gap-1">
@@ -161,8 +153,11 @@ const ProductDetailPage = () => {
           )}
 
           {product.status === StatusProduct.INACTIVE && (
-            <div className="mt-4 flex justify-between items-center gap-2">
-              <p className="text-red-500 text-sm">
+            <div
+              className="fixed bottom-0 left-0 w-full bg-[#0b2d29]/95 backdrop-blur-md border-t border-teal-500/30 
+                  flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 px-4 py-3 z-50"
+            >
+              <p className="text-red-500/90 text-sm ml-0 lg:ml-[16rem]">
                 This product is currently inactive. Would you like to activate
                 it?
               </p>

@@ -19,6 +19,10 @@ const UserCalories = ({ user }: { user: UserType }) => {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
+  useEffect(() => {
+    if (user) console.log(user.earnedCalories, user.balanceCalories);
+  }, [user]);
+
   const allCalorieData: CalorieDataPoint[] = [
     {
       date: new Date(2025, 8, 3),
@@ -65,11 +69,11 @@ const UserCalories = ({ user }: { user: UserType }) => {
       earnedCalories: 310,
       balanceCalories: 260,
     },
-    {
-      date: new Date(2025, 8, 12),
-      earnedCalories: user.earnedCalories,
-      balanceCalories: user.balanceCalories,
-    },
+    // {
+    //   date: new Date(2025, 8, 12),
+    //   earnedCalories: user.earnedCalories,
+    //   balanceCalories: user.balanceCalories,
+    // },
   ];
 
   const getFilteredData = () => {
@@ -115,30 +119,30 @@ const UserCalories = ({ user }: { user: UserType }) => {
 
   const filteredData = getFilteredData();
 
-  const getTotals = () => {
-    if (filteredData.series[0].data.length === 0) {
-      return { totalEarned: 0, totalBalance: 0, avgEarned: 0, avgBalance: 0 };
-    }
+  // const getTotals = () => {
+  //   if (filteredData.series[0].data.length === 0) {
+  //     return { totalEarned: 0, totalBalance: 0, avgEarned: 0, avgBalance: 0 };
+  //   }
 
-    const totalEarned = filteredData.series[0].data.reduce(
-      (sum, val) => sum + val,
-      0
-    );
-    const totalBalance = filteredData.series[1].data.reduce(
-      (sum, val) => sum + val,
-      0
-    );
-    const count = filteredData.series[0].data.length;
+  //   const totalEarned = filteredData.series[0].data.reduce(
+  //     (sum, val) => sum + val,
+  //     0
+  //   );
+  //   const totalBalance = filteredData.series[1].data.reduce(
+  //     (sum, val) => sum + val,
+  //     0
+  //   );
+  //   const count = filteredData.series[0].data.length;
 
-    return {
-      totalEarned,
-      totalBalance,
-      avgEarned: Math.round(totalEarned / count),
-      avgBalance: Math.round(totalBalance / count),
-    };
-  };
+  //   return {
+  //     totalEarned,
+  //     totalBalance,
+  //     avgEarned: Math.round(totalEarned / count),
+  //     avgBalance: Math.round(totalBalance / count),
+  //   };
+  // };
 
-  const totals = getTotals();
+  // const totals = getTotals();
 
   const chartOptions: ApexOptions = {
     chart: {
@@ -204,32 +208,46 @@ const UserCalories = ({ user }: { user: UserType }) => {
       <div className="bg-[#0b2d29] rounded-xl p-3 sm:p-4 border border-teal-500/20">
         <h2 className="text-xl font-bold text-white mb-4">Calories Details</h2>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
             <div className="flex flex-col gap-1">
               <h3 className="text-white/80 text-sm">Earned Calories</h3>
-              <p className="text-teal-400 font-bold text-2xl">
-                {user.earnedCalories}
+              <p className="text-white font-bold text-2xl">
+                {/* {user.earnedCalories} */} 0
               </p>
-              {startDate && endDate && (
+              {/* {startDate && endDate && (
                 <p className="text-white/60 text-xs">
                   Total Earned: {totals.totalEarned} cal
                 </p>
-              )}
+              )} */}
             </div>
           </div>
 
           <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
             <div className="flex flex-col gap-1">
               <h3 className="text-white/80 text-sm">Balanced Calories</h3>
-              <p className="text-amber-400 font-bold text-2xl">
-                {user.balanceCalories}
+              <p className="text-white font-bold text-2xl">
+                {/* {user.balanceCalories} */} 0
               </p>
-              {startDate && endDate && (
+              {/* {startDate && endDate && (
                 <p className="text-white/60 text-xs">
                   Total Balanced: {totals.totalBalance} cal
                 </p>
-              )}
+              )} */}
+            </div>
+          </div>
+
+          <div className="bg-[#11413a] p-4 rounded-lg border border-teal-500/10">
+            <div className="flex flex-col gap-1">
+              <h3 className="text-white/80 text-sm">Redeemed Calories</h3>
+              <p className="text-white font-bold text-2xl">
+                0 {/* {user.balanceCalories} */}
+              </p>
+              {/* {startDate && endDate && (
+                <p className="text-white/60 text-xs">
+                  Total Balanced: {totals.totalBalance} cal
+                </p>
+              )} */}
             </div>
           </div>
         </div>
@@ -238,7 +256,8 @@ const UserCalories = ({ user }: { user: UserType }) => {
       <div>
         <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mx-3 mb-4 mt-8">
           <h1 className="text-xl font-medium">
-            Chart Analytics ({totals.avgEarned} - {totals.avgBalance})
+            Chart Analytics (0-0){" "}
+            {/* ({totals.avgEarned} - {totals.avgBalance}) */}
           </h1>
 
           <div className="relative calendar-container">
