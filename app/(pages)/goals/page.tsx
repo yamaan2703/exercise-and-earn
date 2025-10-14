@@ -31,11 +31,13 @@ const Goals = () => {
     if (data) console.log(data);
   }, [data]);
 
-  const filteredGoals = goals.filter((goal: GoalItem) =>
-    goal.products.some((product) =>
-      product.name.toLowerCase().includes(searchGoal.trim().toLowerCase())
-    )
-  );
+  const filteredGoals = searchGoal.trim()
+    ? goals.filter((goal: GoalItem) =>
+        goal.products.some((product) =>
+          product.name.toLowerCase().includes(searchGoal.trim().toLowerCase())
+        )
+      )
+    : goals;
 
   if (isLoading) {
     return (
@@ -122,7 +124,7 @@ const Goals = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="mt-3 text-gray-500 text-sm italic text-center py-4 border border-dashed border-gray-600 rounded-lg">
+                  <div className="mt-6 text-gray-500 text-sm italic text-center py-4 border border-dashed border-gray-600 rounded-lg">
                     No products added yet
                   </div>
                 )}

@@ -25,7 +25,7 @@ const UserGoals = ({ user }: { user: UserType }) => {
                 {new Date(goal.createdAt).toLocaleDateString()}
               </span>
             </div>
-            <div className="flex justify-between ">
+            <div className="flex justify-between">
               <span className="text-gray-300">Updated At</span>
               <span className="text-white">
                 {new Date(goal.updatedAt).toLocaleDateString()}
@@ -45,11 +45,11 @@ const UserGoals = ({ user }: { user: UserType }) => {
 
         {nextGoal ? (
           <div className="space-y-5">
-            <div className="flex justify-between border-b border-gray-700/40">
+            <div className="flex justify-between border-b border-teal-500/10">
               <span className="text-gray-300">Calories</span>
               <span className="text-white">{nextGoal.calories}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between border-b border-teal-500/10">
               <span className="text-gray-300">Created At</span>
               <span className="text-white">
                 {new Date(nextGoal.createdAt).toLocaleDateString()}

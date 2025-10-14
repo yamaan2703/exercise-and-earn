@@ -1,7 +1,7 @@
 "use client";
 import Input from "@/components/ui/input";
 import React, { useContext, useEffect, useState } from "react";
-import { EyeOutlined, PoweroffOutlined, StopOutlined } from "@ant-design/icons";
+import { EyeOutlined, StopOutlined } from "@ant-design/icons";
 import { Gender, StatusUser } from "@/types/enums";
 import { UserType } from "@/types/interface";
 import { useRouter } from "next/navigation";
@@ -12,6 +12,7 @@ import ConfirmationModal from "@/components/ui/modal/confirmation-modal";
 import { InputSize, InputVariant } from "@/types/enums";
 import { AiOutlineMenu } from "react-icons/ai";
 import { FaSearch } from "react-icons/fa";
+import { MdAirplanemodeActive, MdAirplanemodeInactive } from "react-icons/md";
 import DynamicTable from "@/components/ui/table";
 import {
   useBanUserMutation,
@@ -120,7 +121,11 @@ const Users = () => {
               record.status === StatusUser.BANNED
             }
           >
-            <PoweroffOutlined />
+            {record.status === StatusUser.ACTIVE ? (
+              <MdAirplanemodeActive />
+            ) : (
+              <MdAirplanemodeInactive />
+            )}
           </button>
           <button
             onClick={() => {
@@ -189,7 +194,9 @@ const Users = () => {
       {activeModal && selectedUser?.status === StatusUser.ACTIVE && (
         <ConfirmationModal
           title="Confirm Inactive User"
-          description="Are you sure you want to deactivate this user?"
+          description={`Are you sure you want to deactivate "${
+            selectedUser?.name || "this user"
+          }"?`}
           onClick={() => handleUpdateUserStatus(selectedUser)}
           onCancel={() => setActiveModal(false)}
         />
@@ -198,7 +205,9 @@ const Users = () => {
       {banModal && (
         <ConfirmationModal
           title="Confirm Ban User"
-          description="Are you sure you want to ban this user? This action cannot be undone."
+          description={`Are you sure you want to ban "${
+            selectedUser?.name || "this user"
+          }"? This action cannot be undone.`}
           onClick={async () => {
             if (selectedUser) {
               await banUser(selectedUser.id);

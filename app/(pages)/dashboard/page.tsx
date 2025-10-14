@@ -15,6 +15,7 @@ import { useGetOrdersQuery } from "@/redux/slices/orderSlice";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaCalendarAlt } from "react-icons/fa";
+import { MdCancel } from "react-icons/md";
 
 const Dashboard = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
@@ -217,16 +218,18 @@ const Dashboard = () => {
       <div className="flex flex-col md:flex-row gap-2 items-center">
         <div className="w-full md:w-[70%] h-full min-h-[450px] bg-[#0b2d29] rounded-lg">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mx-3 mb-4 mt-8">
-            <h1 className="text-xl font-medium">User Registrations</h1>
+            <h1 className="text-xl font-medium text-[#e5e7eb]">
+              User Registrations
+            </h1>
 
             <div className="relative calendar-container">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 {startDate && endDate && (
                   <button
                     onClick={clearFilter}
-                    className="text-sm text-teal-400 hover:text-teal-300 underline"
+                    className="text-teal-400 hover:text-teal-300"
                   >
-                    Clear Filter
+                    <MdCancel className="size-5" />
                   </button>
                 )}
                 <button
@@ -288,7 +291,7 @@ const Dashboard = () => {
         </div>
 
         <div className="w-full md:w-[30%] h-full min-h-[467px] flex flex-col justify-center items-center bg-[#0b2d29] p-2 rounded-lg shadow-md text-white">
-          <h2 className="text-lg font-semibold mb-4 text-center">
+          <h2 className="text-lg font-medium mb-4 text-center text-[#e5e7eb]">
             User Statistics
           </h2>
           {isLoading ? (

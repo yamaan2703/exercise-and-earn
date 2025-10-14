@@ -658,6 +658,7 @@ const EditProduct = () => {
                         onChange={(color) =>
                           setCurrentColor(color.toHexString())
                         }
+                        disabledAlpha
                       />
                       <Button
                         type={ButtonType.BUTTON}
@@ -672,7 +673,14 @@ const EditProduct = () => {
                       type="text"
                       id="colors"
                       value={field.value ?? ""}
-                      setValue={field.onChange}
+                      setValue={(val) => {
+                        field.onChange(val);
+                        const updated = val
+                          .split(",")
+                          .map((c) => c.trim())
+                          .filter((c) => c !== "");
+                        setSelectedColors(updated);
+                      }}
                       variant={InputVariant.OUTLINE}
                       size={InputSize.SMALL}
                       placeholder="Selected colors"

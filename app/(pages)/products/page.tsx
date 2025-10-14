@@ -2,12 +2,7 @@
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import React, { useContext, useEffect, useState } from "react";
-import {
-  EyeOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  PoweroffOutlined,
-} from "@ant-design/icons";
+import { EyeOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { ProductType } from "@/types/interface";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
@@ -24,6 +19,7 @@ import {
 } from "@/types/enums";
 import { AiOutlineMenu } from "react-icons/ai";
 import { FaPlus, FaSearch } from "react-icons/fa";
+import { MdAirplanemodeActive, MdAirplanemodeInactive } from "react-icons/md";
 import {
   useDeleteProductMutation,
   useGetProductsQuery,
@@ -165,7 +161,11 @@ const Products = () => {
             )}
             disabled={record.status === StatusProduct.INACTIVE}
           >
-            <PoweroffOutlined />
+            {record.status === StatusProduct.ACTIVE ? (
+              <MdAirplanemodeActive />
+            ) : (
+              <MdAirplanemodeInactive />
+            )}
           </button>
           <button
             onClick={() => {
@@ -237,8 +237,8 @@ const Products = () => {
 
       {activeModal && selectedProduct?.status === StatusProduct.ACTIVE && (
         <ConfirmationModal
-          title={"Confirm Inactive Product"}
-          description={"Are you sure you want to deactivate this product?"}
+          title="Confirm Inactive Product"
+          description={`Are you sure you want to deactivate "${selectedProduct.name}"?`}
           onClick={() => {
             if (selectedProduct) {
               handleUpdateProductStatus(selectedProduct.id);
@@ -249,10 +249,10 @@ const Products = () => {
         />
       )}
 
-      {deleteModal && (
+      {deleteModal && selectedProduct && (
         <ConfirmationModal
-          title={"Confirm Delete Product"}
-          description={"Are you sure you want to delete this product?"}
+          title="Confirm Delete Product"
+          description={`Are you sure you want to delete "${selectedProduct.name}"?`}
           onClick={() => {
             if (selectedProduct) {
               handleDeleteProduct(selectedProduct.id);

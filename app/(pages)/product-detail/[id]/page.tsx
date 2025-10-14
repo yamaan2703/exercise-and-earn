@@ -157,7 +157,7 @@ const ProductDetailPage = () => {
               className="fixed bottom-0 left-0 w-full bg-[#0b2d29]/95 backdrop-blur-md border-t border-teal-500/30 
                   flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 px-4 py-3 z-50"
             >
-              <p className="text-red-500/90 text-sm ml-0 lg:ml-[16rem]">
+              <p className="text-red-500 text-sm ml-0 lg:ml-[16rem]">
                 This product is currently inactive. Would you like to activate
                 it?
               </p>
@@ -174,7 +174,7 @@ const ProductDetailPage = () => {
           {activeModal && product.status === StatusProduct.INACTIVE && (
             <ConfirmationModal
               title="Activate Product"
-              description="Are you sure you want to activate this product?"
+              description={`Are you sure you want to activate "${product.name}"?`}
               onClick={() => handleToggleProductStatus(product.id)}
               onCancel={() => setActiveModal(false)}
             />

@@ -4,11 +4,10 @@ import { Routes } from "@/routes/Routes";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useRefreshTokenMutation } from "@/redux/slices/loginSlice";
+import toast from "react-hot-toast";
 
 export default function Home() {
   const router = useRouter();
-  const [refreshTokenApi] = useRefreshTokenMutation();
   const token = getCookie("token");
 
   useEffect(() => {
@@ -29,23 +28,9 @@ export default function Home() {
         console.log(responseData);
 
         if (responseData.statusCode === 401) {
-          try {
-            const refreshResponse = await refreshTokenApi(token).unwrap();
-
-            if (refreshResponse?.token) {
-              setCookie("token", refreshResponse.token);
-              console.log("Token refreshed successfully");
-              router.push(Routes.DASHBOARD);
-            } else {
-              console.log("Refresh token expired");
-              setCookie("token", "");
-              router.push(Routes.LOGIN);
-            }
-          } catch (refreshError) {
-            console.log("Refresh failed:", refreshError);
-            setCookie("token", "");
-            router.push(Routes.LOGIN);
-          }
+          toast.error("Session expired, please log in again.");
+          setCookie("token", "");
+          router.push(Routes.LOGIN);
         } else {
           router.push(Routes.DASHBOARD);
         }
@@ -57,7 +42,7 @@ export default function Home() {
     };
 
     handleAuth();
-  }, [router, token, refreshTokenApi]);
+  }, [router, token]);
 
   return (
     <div className="flex justify-center items-center h-screen">

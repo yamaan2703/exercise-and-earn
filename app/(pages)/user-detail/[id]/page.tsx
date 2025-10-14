@@ -149,7 +149,7 @@ const UserDetailPage = () => {
                 className="fixed bottom-0 left-0 w-full bg-[#0b2d29]/95 backdrop-blur-md border-t border-teal-500/30 
                   flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 px-4 py-3 z-50"
               >
-                <p className="text-red-500/90 text-sm ml-0 lg:ml-[16rem]">
+                <p className="text-red-500 text-sm ml-0 lg:ml-[16rem]">
                   This user is currently inactive. Would you like to proceed
                   with activation?
                 </p>
@@ -167,7 +167,9 @@ const UserDetailPage = () => {
           {activeModal && user?.status === StatusUser.INACTIVE && (
             <ConfirmationModal
               title="Confirm Activate User"
-              description="Are you sure you want to activate this user?"
+              description={`Are you sure you want to activate "${
+                user?.name || "this user"
+              }"?`}
               onClick={() => handleActiveUser(user.id)}
               onCancel={() => setActiveModal(false)}
             />

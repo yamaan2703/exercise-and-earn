@@ -7,6 +7,7 @@ import { UserType } from "@/types/interface";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaCalendarAlt } from "react-icons/fa";
+import { MdCancel } from "react-icons/md";
 
 interface CalorieDataPoint {
   date: Date;
@@ -14,13 +15,18 @@ interface CalorieDataPoint {
   balanceCalories: number;
 }
 
+// some code is commented, will be used later when the api will be ready
+
 const UserCalories = ({ user }: { user: UserType }) => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   useEffect(() => {
-    if (user) console.log(user.earnedCalories, user.balanceCalories);
+    if (user)
+      console.log(
+        `user earnedCal: ${user.earnedCalories}, user balanceCal: ${user.balanceCalories}`
+      );
   }, [user]);
 
   const allCalorieData: CalorieDataPoint[] = [
@@ -261,13 +267,13 @@ const UserCalories = ({ user }: { user: UserType }) => {
           </h1>
 
           <div className="relative calendar-container">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               {startDate && endDate && (
                 <button
                   onClick={clearFilter}
-                  className="text-sm text-teal-400 hover:text-teal-300 underline"
+                  className="text-teal-400 hover:text-teal-300"
                 >
-                  Clear Filter
+                  <MdCancel className="size-5" />
                 </button>
               )}
               <button
