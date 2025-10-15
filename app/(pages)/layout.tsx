@@ -1,13 +1,12 @@
 "use client";
 import { PropsWithChildren, useContext, useEffect } from "react";
 // import Sidebar from "@/components/ui/sidebar";
-import Sidebar from "@/components/ui/Sidebar";
 import ConfirmationModal from "@/components/ui/modal/confirmation-modal";
 import { getCookie } from "@/lib/cookies";
 import { usePathname, useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
 import { AuthContext } from "@/context/AuthContext";
-import Sidebar from "@/components/ui/sidebar";
+import Sidebar from "@/components/ui/Sidebar";
 
 const Layout = ({ children }: PropsWithChildren) => {
   const {
