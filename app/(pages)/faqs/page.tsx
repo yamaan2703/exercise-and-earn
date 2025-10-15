@@ -136,9 +136,9 @@ const Faqs = () => {
                     <FaChevronDown className="ml-2" />
                   )}
                 </p>
-                <div className="flex items-center gap-3 ml-3">
+                <div className="flex items-center gap-2 ml-3">
                   <button onClick={() => handleEditClick(faq)} title="Edit FAQ">
-                    <FaEdit />
+                    <FaEdit className="size-3.5" />
                   </button>
                   <button
                     onClick={() => {
@@ -147,7 +147,7 @@ const Faqs = () => {
                     }}
                     title="Delete FAQ"
                   >
-                    <FaTrash />
+                    <FaTrash className="size-3.5" />
                   </button>
                 </div>
               </div>

@@ -52,8 +52,8 @@ export const sidebarMenu = [
     ],
   },
   {
-    label: "Goals",
-    to: Routes.GOALS,
+    label: "Milestone",
+    to: Routes.MILESTONE,
     icon: <TbTargetArrow />,
   },
   {
@@ -95,8 +95,8 @@ export const UserTabs = [
     icon: <FaGift />,
   },
   {
-    key: UserDetailTab.GOALS,
-    label: "Goals",
+    key: UserDetailTab.MILESTONE,
+    label: "Milestone",
     icon: <TbTargetArrow />,
   },
 ];
