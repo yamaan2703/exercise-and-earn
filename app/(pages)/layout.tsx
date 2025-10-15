@@ -5,7 +5,7 @@ import { getCookie } from "@/lib/cookies";
 import { usePathname, useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
 import { AuthContext } from "@/context/AuthContext";
-import Sidebar from "@/components/ui/Sidebar";
+import Sidebar from "@/components/ui/sidebar";
 
 const Layout = ({ children }: PropsWithChildren) => {
   const {
