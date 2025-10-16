@@ -195,3 +195,13 @@ export interface CategoryItem {
   name: string;
   products: ProductType[];
 }
+
+export interface UserCaloriesItem {
+  id: number;
+  userId: string;
+  earned: number;
+  redeemed: number;
+  date: string;
+  dateString: string;
+  isAmbiguous: boolean;
+}

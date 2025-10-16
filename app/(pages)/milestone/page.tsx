@@ -12,14 +12,14 @@ import {
 } from "@/types/enums";
 import Button from "@/components/ui/button";
 import { GoalItem } from "@/types/interface";
-import GoalModal from "@/components/ui/modal/goal-modal";
 import { useGetGoalsQuery } from "@/redux/slices/goalSlice";
 import Loader from "@/components/ui/loader";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/routes/Routes";
 import Input from "@/components/ui/input";
+import MilestoneModal from "@/components/ui/modal/goal-modal";
 
-const Goals = () => {
+const Milestone = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
   const router = useRouter();
   const { data, isLoading } = useGetGoalsQuery(null);
@@ -50,7 +50,7 @@ const Goals = () => {
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
         <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-500 after:rounded-full after:mt-1">
-          Goals
+          Milestone
         </h1>
         <div
           onClick={() => setIsSidebarOpen(true)}
@@ -63,7 +63,7 @@ const Goals = () => {
       <div className="mb-3 flex justify-between gap-2">
         <div className="max-w-[400px] w-full">
           <Input
-            placeholder="Search goal by product name..."
+            placeholder="Search milestone by product name..."
             type="text"
             id="search"
             value={searchGoal}
@@ -75,7 +75,7 @@ const Goals = () => {
         </div>
         <Button
           type={ButtonType.BUTTON}
-          label="Add Goal"
+          label="Add Milestone"
           onClick={() => setAddGoalModal(true)}
           icon={FaPlus}
           variant={ButtonVariant.THEME}
@@ -85,7 +85,7 @@ const Goals = () => {
 
       <div className="bg-[#0b2d29] border border-teal-500/20 rounded-xl p-4">
         <h2 className="text-lg font-semibold text-white mb-4">
-          Existing Goals
+          Existing Milestones
         </h2>
         {filteredGoals.length > 0 ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -96,8 +96,10 @@ const Goals = () => {
                  rounded-xl p-5 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="flex justify-between items-center mb-3">
-                  <h3 className="text-xl font-semibold text-teal-400">Goal</h3>
-                  <span className="text-sm bg-teal-600/20 text-teal-300 px-3 py-1 rounded-full">
+                  <h3 className="text-lg font-semibold text-teal-400">
+                    Milestone
+                  </h3>
+                  <span className="text-xs bg-teal-600/20 text-teal-300 px-2 py-1 rounded-full">
                     {goal.calories} cal
                   </span>
                 </div>
@@ -132,15 +134,18 @@ const Goals = () => {
             ))}
           </div>
         ) : (
-          <p className="text-gray-400">No goals set yet.</p>
+          <p className="text-gray-400">No milestones set yet.</p>
         )}
       </div>
 
       {addGoalModal && (
-        <GoalModal label="Add Goal" setAddGoalModal={setAddGoalModal} />
+        <MilestoneModal
+          label="Add Milestone"
+          setAddGoalModal={setAddGoalModal}
+        />
       )}
     </div>
   );
 };
 
-export default Goals;
+export default Milestone;

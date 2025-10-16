@@ -142,7 +142,7 @@ const UserDetailPage = () => {
               <UserClaimedProducts user={user} />
             )}
 
-            {activeTab === UserDetailTab.GOALS && <UserGoals user={user} />}
+            {activeTab === UserDetailTab.MILESTONE && <UserGoals user={user} />}
 
             {user.status === StatusUser.INACTIVE && (
               <div

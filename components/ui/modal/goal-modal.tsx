@@ -21,7 +21,7 @@ interface GoalModalProps {
   setAddGoalModal: Dispatch<SetStateAction<boolean>>;
 }
 
-const GoalModal = ({ label, setAddGoalModal }: GoalModalProps) => {
+const MilestoneModal = ({ label, setAddGoalModal }: GoalModalProps) => {
   const [calories, setCalories] = useState("");
   const [postGoal, { isLoading }] = usePostGoalsMutation();
   const { data } = useGetGoalsQuery(null);
@@ -49,13 +49,11 @@ const GoalModal = ({ label, setAddGoalModal }: GoalModalProps) => {
     }
 
     try {
-      const response = await postGoal({ calories: calorieValue }).unwrap();
+      await postGoal({ calories: calorieValue }).unwrap();
 
-      if (response.success) {
-        toast.success("Goal added successfully!");
-        setAddGoalModal(false);
-        setCalories("");
-      }
+      toast.success("Goal added successfully!");
+      setAddGoalModal(false);
+      setCalories("");
     } catch (error: unknown) {
       const err = error as { data?: { message?: string } };
       toast.error(err?.data?.message || "Something went wrong");
@@ -91,7 +89,7 @@ const GoalModal = ({ label, setAddGoalModal }: GoalModalProps) => {
           <div className="flex justify-end mt-4">
             <Button
               type={ButtonType.BUTTON}
-              label={isLoading ? "Adding..." : "Add Goal"}
+              label={isLoading ? "Adding..." : "Add Milestone"}
               onClick={handleAddGoal}
               variant={ButtonVariant.THEME}
               size={ButtonSize.SMALL}
@@ -103,4 +101,4 @@ const GoalModal = ({ label, setAddGoalModal }: GoalModalProps) => {
   );
 };
 
-export default GoalModal;
+export default MilestoneModal;

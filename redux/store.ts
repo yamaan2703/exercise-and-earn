@@ -10,6 +10,7 @@ import { orderSlice } from "./slices/orderSlice";
 import { brandSlice } from "./slices/brandSlice";
 import { categorySlice } from "./slices/categorySlice";
 import { FaqSlice } from "./slices/faqSlice";
+import { caloriesSlice } from "./slices/caloriesSlice";
 
 export const store = configureStore({
   reducer: {
@@ -23,6 +24,7 @@ export const store = configureStore({
     [brandSlice.reducerPath]: brandSlice.reducer,
     [categorySlice.reducerPath]: categorySlice.reducer,
     [FaqSlice.reducerPath]: FaqSlice.reducer,
+    [caloriesSlice.reducerPath]: caloriesSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -39,6 +41,7 @@ export const store = configureStore({
       brandSlice.middleware,
       categorySlice.middleware,
       FaqSlice.middleware,
+      caloriesSlice.middleware,
     ]),
 });
 

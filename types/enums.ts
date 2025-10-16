@@ -18,7 +18,7 @@ export enum UserDetailTab {
   PROFILE = "profile",
   CALORIES = "calories",
   REWARDS = "rewards",
-  GOALS = "goals",
+  MILESTONE = "milestone",
 }
 
 export enum ProductDetailTab {
