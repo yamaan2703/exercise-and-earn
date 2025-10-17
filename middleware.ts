@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
     Routes.USERS,
     Routes.PRODUCTS,
     Routes.ADD_PRODUCT,
-    Routes.MILESTONE,
+    Routes.MILESTONE_SLAB,
     Routes.BRAND,
     Routes.CATEGORY,
     Routes.ORDERS,

@@ -19,7 +19,7 @@ import { Routes } from "@/routes/Routes";
 import Input from "@/components/ui/input";
 import MilestoneModal from "@/components/ui/modal/goal-modal";
 
-const Milestone = () => {
+const MilestoneSlab = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
   const router = useRouter();
   const { data, isLoading } = useGetGoalsQuery(null);
@@ -54,7 +54,7 @@ const Milestone = () => {
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
         <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-500 after:rounded-full after:mt-1">
-          Milestone
+          Milestone Slab
         </h1>
         <div
           onClick={() => setIsSidebarOpen(true)}
@@ -89,7 +89,7 @@ const Milestone = () => {
 
       <div className="bg-[#0b2d29] border border-teal-500/20 rounded-xl p-4">
         <h2 className="text-lg font-semibold text-white mb-4">
-          Existing Milestones
+          Existing Milestones Slab
         </h2>
         {filteredGoals.length > 0 ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -159,7 +159,7 @@ const Milestone = () => {
             ))}
           </div>
         ) : (
-          <p className="text-gray-400">No milestones set yet.</p>
+          <p className="text-gray-400">No milestones slab set yet.</p>
         )}
       </div>
 
@@ -174,7 +174,9 @@ const Milestone = () => {
         <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/70 backdrop-blur-sm">
           <div className="bg-[#0f3a34] border border-teal-500/30 rounded-xl p-4 w-[90%] sm:w-[600px] max-h-[80vh] overflow-y-auto relative shadow-2xl">
             <div className="flex justify-between mb-3">
-              <h3 className="text-lg font-semibold text-teal-400">Milestone</h3>
+              <h3 className="text-lg font-semibold text-teal-400">
+                Milestone Slab
+              </h3>
               <button
                 onClick={() => setViewAllModal(false)}
                 className="text-gray-400 hover:text-white text-lg"
@@ -219,4 +221,4 @@ const Milestone = () => {
   );
 };
 
-export default Milestone;
+export default MilestoneSlab;

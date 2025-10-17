@@ -52,8 +52,8 @@ export const sidebarMenu = [
     ],
   },
   {
-    label: "Milestone",
-    to: Routes.MILESTONE,
+    label: "Milestone Slab",
+    to: Routes.MILESTONE_SLAB,
     icon: <TbTargetArrow />,
   },
   {
@@ -96,7 +96,7 @@ export const UserTabs = [
   },
   {
     key: UserDetailTab.MILESTONE,
-    label: "Milestone",
+    label: "Milestone Slab",
     icon: <TbTargetArrow />,
   },
 ];

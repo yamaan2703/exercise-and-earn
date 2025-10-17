@@ -380,17 +380,17 @@ const AddProduct = () => {
             <Controller
               name="goalId"
               control={control}
-              rules={{ required: "Please select a goal." }}
+              rules={{ required: "Please select a milestone." }}
               render={({ field }) => (
                 <div>
                   <label className="block text-sm text-gray-300 mb-2">
-                    Goal
+                    Milestone
                   </label>
                   <select
                     {...field}
                     className="w-full bg-[#0b2d29] text-white border border-teal-500/30 rounded-lg p-2"
                   >
-                    <option value="">Select a goal</option>
+                    <option value="">Select a milestone</option>
                     {goals.map((goal: GoalItem) => (
                       <option key={goal.id} value={goal.id}>
                         {goal.calories} cal
