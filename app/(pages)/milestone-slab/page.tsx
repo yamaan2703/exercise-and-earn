@@ -19,25 +19,29 @@ import { Routes } from "@/routes/Routes";
 import Input from "@/components/ui/input";
 import MilestoneModal from "@/components/ui/modal/goal-modal";
 
-const Milestone = () => {
+const MilestoneSlab = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
   const router = useRouter();
   const { data, isLoading } = useGetGoalsQuery(null);
   const [addGoalModal, setAddGoalModal] = useState(false);
   const [searchGoal, setSearchGoal] = useState("");
+  const [selectedGoal, setSelectedGoal] = useState<GoalItem | null>(null);
+  const [viewAllModal, setViewAllModal] = useState(false);
   const goals = data?.goals ?? [];
 
   useEffect(() => {
     if (data) console.log(data);
   }, [data]);
 
-  const filteredGoals = searchGoal.trim()
-    ? goals.filter((goal: GoalItem) =>
-        goal.products.some((product) =>
-          product.name.toLowerCase().includes(searchGoal.trim().toLowerCase())
+  const filteredGoals: GoalItem[] = [
+    ...(searchGoal.trim()
+      ? goals.filter((goal: GoalItem) =>
+          goal.products.some((product) =>
+            product.name.toLowerCase().includes(searchGoal.trim().toLowerCase())
+          )
         )
-      )
-    : goals;
+      : goals),
+  ].sort((a, b) => b.id - a.id);
 
   if (isLoading) {
     return (
@@ -50,7 +54,7 @@ const Milestone = () => {
     <div className="p-1">
       <div className="flex justify-between items-center gap-2 mb-6">
         <h1 className="inline-block text-xl sm:text-3xl font-bold text-white text-center after:block after:mx-auto after:w-1/2 after:border-b-4 after:border-b-teal-500 after:rounded-full after:mt-1">
-          Milestone
+          Milestone Slab
         </h1>
         <div
           onClick={() => setIsSidebarOpen(true)}
@@ -85,7 +89,7 @@ const Milestone = () => {
 
       <div className="bg-[#0b2d29] border border-teal-500/20 rounded-xl p-4">
         <h2 className="text-lg font-semibold text-white mb-4">
-          Existing Milestones
+          Existing Milestones Slab
         </h2>
         {filteredGoals.length > 0 ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -99,9 +103,18 @@ const Milestone = () => {
                   <h3 className="text-lg font-semibold text-teal-400">
                     Milestone
                   </h3>
-                  <span className="text-xs bg-teal-600/20 text-teal-300 px-2 py-1 rounded-full">
-                    {goal.calories} cal
-                  </span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => router.push(Routes.ADD_PRODUCT)}
+                      title="Add Product"
+                      className="bg-teal-600/20 hover:bg-teal-600/40 text-teal-300 text-xs px-3 py-1 flex items-center rounded-full transition-all"
+                    >
+                      Add Product
+                    </button>
+                    <span className="text-xs bg-teal-600/20 text-teal-300 px-2 py-1 rounded-full">
+                      {goal.calories} cal
+                    </span>
+                  </div>
                 </div>
 
                 {goal.products && goal.products.length > 0 ? (
@@ -110,7 +123,7 @@ const Milestone = () => {
                       Products ({goal.products.length})
                     </h4>
                     <div className="flex flex-col gap-2">
-                      {goal.products.map((product) => (
+                      {goal.products.slice(0, 1).map((product) => (
                         <div
                           key={product.id}
                           onClick={() =>
@@ -124,6 +137,18 @@ const Milestone = () => {
                         </div>
                       ))}
                     </div>
+
+                    {goal.products.length > 1 && (
+                      <button
+                        onClick={() => {
+                          setSelectedGoal(goal);
+                          setViewAllModal(true);
+                        }}
+                        className="text-teal-400 text-xs mt-2 ml-1 hover:text-teal-300 cursor-pointer hover:underline transition"
+                      >
+                        See all products
+                      </button>
+                    )}
                   </div>
                 ) : (
                   <div className="mt-6 text-gray-500 text-sm italic text-center py-4 border border-dashed border-gray-600 rounded-lg">
@@ -134,7 +159,7 @@ const Milestone = () => {
             ))}
           </div>
         ) : (
-          <p className="text-gray-400">No milestones set yet.</p>
+          <p className="text-gray-400">No milestones slab set yet.</p>
         )}
       </div>
 
@@ -144,8 +169,56 @@ const Milestone = () => {
           setAddGoalModal={setAddGoalModal}
         />
       )}
+
+      {viewAllModal && selectedGoal && (
+        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="bg-[#0f3a34] border border-teal-500/30 rounded-xl p-4 w-[90%] sm:w-[600px] max-h-[80vh] overflow-y-auto relative shadow-2xl">
+            <div className="flex justify-between mb-3">
+              <h3 className="text-lg font-semibold text-teal-400">
+                Milestone Slab
+              </h3>
+              <button
+                onClick={() => setViewAllModal(false)}
+                className="text-gray-400 hover:text-white text-lg"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="flex items-center gap-1 mb-3">
+              <span className="text-xs bg-teal-600/20 text-teal-300 px-2 py-1 rounded-full">
+                {selectedGoal.calories} calories
+              </span>
+            </div>
+
+            <div className="border-t border-teal-700/20 my-3" />
+
+            {selectedGoal.products && selectedGoal.products.length > 0 ? (
+              <div className="space-y-2">
+                {selectedGoal.products.map((product) => (
+                  <div
+                    key={product.id}
+                    onClick={() =>
+                      router.push(Routes.PRODUCTS_DETAIL(product.id))
+                    }
+                    className="bg-[#07332d]/70 border border-teal-700/30 rounded-lg px-4 py-2 cursor-pointer hover:bg-[#0d413b]/80 transition"
+                  >
+                    <p className="text-white font-medium text-sm hover:underline">
+                      {product.name}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-400 text-sm italic text-center mt-4">
+                No products available.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Milestone;
+export default MilestoneSlab;

@@ -473,17 +473,17 @@ const EditProduct = () => {
             <Controller
               name="goalId"
               control={control}
-              rules={{ required: "Please select a goal." }}
+              rules={{ required: "Please select a milestone." }}
               render={({ field }) => (
                 <div>
                   <label className="block text-sm text-gray-300 mb-2">
-                    Goal
+                    Milestone
                   </label>
                   <select
                     {...field}
                     className="w-full bg-[#0b2d29] text-white border border-teal-500/30 rounded-lg p-2"
                   >
-                    <option value="">Select a goal</option>
+                    <option value="">Select a milestone</option>
                     {goals.map((goal: GoalItem) => (
                       <option key={goal.id} value={goal.id}>
                         {goal.calories} cal
@@ -617,7 +617,7 @@ const EditProduct = () => {
                   onChange={field.onChange}
                   placeholder="Enter product description"
                   rows={3}
-                  className="bg-transparent w-full p-2 rounded-lg text-white border border-gray-400 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-teal-500 transition duration-200 h-32 resize-none"
+                  className="bg-transparent w-full p-2 rounded-lg text-white border border-gray-400 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-teal-500 transition duration-200 h-24 resize-none"
                 />
               )}
             />
@@ -668,23 +668,6 @@ const EditProduct = () => {
                         icon={FaPlus}
                       />
                     </div>
-
-                    <Input
-                      type="text"
-                      id="colors"
-                      value={field.value ?? ""}
-                      setValue={(val) => {
-                        field.onChange(val);
-                        const updated = val
-                          .split(",")
-                          .map((c) => c.trim())
-                          .filter((c) => c !== "");
-                        setSelectedColors(updated);
-                      }}
-                      variant={InputVariant.OUTLINE}
-                      size={InputSize.SMALL}
-                      placeholder="Selected colors"
-                    />
 
                     <div className="flex flex-wrap gap-2 mt-3">
                       {selectedColors.map((color, index) => (

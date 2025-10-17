@@ -33,7 +33,7 @@ const OrderDetailModal = ({
   if (!order) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[999] p-4">
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[999] p-4 backdrop-blur-sm">
       <div className="bg-[#0b2d29] text-white w-full max-w-2xl rounded-2xl shadow-2xl p-5 relative border border-teal-500/20 hover:border-teal-400 transition-all overflow-y-auto max-h-[90vh] scrollbar-hide">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-white">Order Details</h2>
