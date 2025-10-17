@@ -13,7 +13,7 @@ import {
   OrderStatus,
   OrderTabType,
 } from "@/types/enums";
-import { OrderType } from "@/types/interface";
+import { OrderItemType, OrderType } from "@/types/interface";
 import {
   useGetOrdersQuery,
   useUpdateOrderStatusMutation,
@@ -55,11 +55,10 @@ const Orders = () => {
   const applyFilter = (order: OrderType) => {
     const searchTerm = orderSearch.toLowerCase();
     const userMatch = order.user?.name?.toLowerCase().includes(searchTerm);
-    const productMatch = order.products?.some((product) =>
-      product.name.toLowerCase().includes(searchTerm)
+    const productMatch = order.orderItems?.some((item) =>
+      item.product.name.toLowerCase().includes(searchTerm)
     );
-    const idMatch = order.id?.toString().includes(orderSearch);
-    return userMatch || productMatch || idMatch;
+    return userMatch || productMatch;
   };
 
   const processingOrders = orders?.filter(
@@ -72,12 +71,6 @@ const Orders = () => {
 
   const columns: ColumnsType<OrderType> = [
     {
-      title: "Order ID",
-      dataIndex: "id",
-      sorter: true,
-      width: "10%",
-    },
-    {
       title: "Username",
       dataIndex: ["user", "name"],
       width: "15%",
@@ -86,12 +79,20 @@ const Orders = () => {
     {
       title: "Product Name",
       width: "20%",
-      render: (record) => record.products?.[0]?.name || "N/A",
+      render: (record) =>
+        record.orderItems && record.orderItems.length > 0
+          ? record.orderItems.map((item: OrderItemType) => item.product.name)
+          : "N/A",
     },
     {
       title: "Calories",
       width: "10%",
-      render: (record) => record.products?.[0]?.calories || "N/A",
+      render: (record) =>
+        record.orderItems && record.orderItems.length > 0
+          ? record.orderItems.map(
+              (item: OrderItemType) => item.product.calories
+            )
+          : "N/A",
     },
     {
       title: "Created At",
@@ -187,18 +188,14 @@ const Orders = () => {
 
                 <div className="space-y-2 text-sm mb-3">
                   <p>
-                    <span className="text-white font-medium">Order ID:</span>{" "}
-                    <span className="text-gray-300">#{order.id}</span>
-                  </p>
-                  <p>
-                    <span className="text-white font-medium">User ID:</span>{" "}
+                    <span className="text-white font-medium">Name:</span>{" "}
                     <span
                       className="text-gray-300 cursor-pointer hover:underline"
                       onClick={() =>
                         router.push(Routes.USERS_DETAIL(order.userId))
                       }
                     >
-                      {order.userId}
+                      {order.user.name}
                     </span>
                   </p>
                   <p>
@@ -231,68 +228,75 @@ const Orders = () => {
                 <div className="space-y-2">
                   <h3 className="font-semibold text-lg">Products</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    {order.products?.length > 0 ? (
-                      order.products.map((product) => (
+                    {order.orderItems.length > 0 ? (
+                      order.orderItems.map((item) => (
                         <div
-                          key={product.id}
+                          key={item.id}
                           className="flex flex-col items-start gap-2 bg-[#12443f]/40 border border-teal-500/20 rounded-xl p-3 hover:border-teal-400/50 transition"
                         >
                           <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-[#0d3834]">
                             <Image
-                              src={product.featuredImage}
-                              alt={product.name}
+                              src={item.product.featuredImage}
+                              alt={item.product.name}
                               width={64}
                               height={64}
                               className="w-full h-full object-cover"
                             />
                           </div>
 
-                          <div className="flex-1 space-y-1 font-medium">
-                            <h4
+                          <div className="flex-1 space-y-1">
+                            <p
                               onClick={() =>
-                                router.push(Routes.PRODUCTS_DETAIL(product.id))
+                                router.push(
+                                  Routes.PRODUCTS_DETAIL(item.product.id)
+                                )
                               }
-                              className="text-white font-semibold text-base hover:underline cursor-pointer"
+                              className="text-white text-sm"
                             >
-                              {product.name}
-                            </h4>
-                            <p className="text-sm">
+                              Name:{" "}
+                              <span className="text-gray-300 hover:underline cursor-pointer">
+                                {item.product.name}
+                              </span>
+                            </p>
+                            <p className="text-sm text-gray-300">
                               <span className="text-white">Description:</span>{" "}
-                              {product.description}
+                              {item.product.description}
                             </p>
-                            <p className="text-sm">
+                            <p className="text-sm text-gray-300">
                               <span className="text-white">Calories:</span>{" "}
-                              {product.calories}
+                              {item.product.calories}
                             </p>
-                            {product.sizes && product.sizes.length > 0 && (
-                              <p className="text-sm">
-                                <span className="text-white">Sizes:</span>{" "}
-                                {product.sizes.join(", ")}
-                              </p>
-                            )}
-                            {product.colors && product.colors.length > 0 && (
-                              <>
-                                <p className="text-sm">Colors:</p>
-                                {product.colors.map((color, index) => (
-                                  <span
-                                    key={index}
-                                    className="w-4 h-4 rounded-full border border-gray-300"
-                                    style={{ backgroundColor: `#${color}` }}
-                                  ></span>
-                                ))}
-                              </>
-                            )}
-                            <p className="text-sm">
+                            {item.product.sizes &&
+                              item.product.sizes.length > 0 && (
+                                <p className="text-sm text-gray-300">
+                                  <span className="text-white">Sizes:</span>{" "}
+                                  {item.product.sizes.join(", ")}
+                                </p>
+                              )}
+                            {item.product.colors &&
+                              item.product.colors.length > 0 && (
+                                <div className="flex items-center gap-1">
+                                  <p className="text-sm">Colors:</p>
+                                  {item.product.colors.map((color, index) => (
+                                    <span
+                                      key={index}
+                                      className="w-4 h-4 rounded-full border border-gray-300"
+                                      style={{ backgroundColor: `#${color}` }}
+                                    ></span>
+                                  ))}
+                                </div>
+                              )}
+                            <p className="text-sm text-gray-300">
                               <span className="text-white">Specs:</span>{" "}
-                              {product.specs}
+                              {item.product.specs}
                             </p>
-                            <p className="text-sm">
+                            <p className="text-sm text-gray-300">
                               <span className="text-white">Price:</span> €
-                              {product.price}
+                              {item.product.price}
                             </p>
-                            <p className="text-sm">
+                            <p className="text-sm text-gray-300">
                               <span className="text-white">Stock:</span>{" "}
-                              {product.stock}
+                              {item.product.stock}
                             </p>
                           </div>
                         </div>
@@ -351,7 +355,7 @@ const Orders = () => {
           <div className="flex justify-between items-center gap-2">
             <div className="max-w-[500px] w-full">
               <Input
-                placeholder="Search by product name, username, or order number..."
+                placeholder="Search by product name or user name..."
                 type="text"
                 id="search"
                 value={orderSearch}

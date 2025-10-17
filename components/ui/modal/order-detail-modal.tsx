@@ -45,16 +45,12 @@ const OrderDetailModal = ({
 
         <div className="space-y-2 text-sm mb-6">
           <p>
-            <span className="text-white font-medium">Order ID:</span>{" "}
-            <span className="text-gray-300">#{order.id}</span>
-          </p>
-          <p>
-            <span className="text-white font-medium">User ID:</span>{" "}
+            <span className="text-white font-medium">Name:</span>{" "}
             <span
               className="text-gray-300 cursor-pointer hover:underline"
               onClick={() => router.push(Routes.USERS_DETAIL(order.userId))}
             >
-              {order.userId}
+              {order.user.name}
             </span>
           </p>
           <p>
@@ -83,65 +79,71 @@ const OrderDetailModal = ({
         <div className="space-y-2">
           <h3 className="font-semibold text-lg">Products</h3>
 
-          {order.products?.length > 0 ? (
-            order.products.map((product) => (
+          {order.orderItems.length > 0 ? (
+            order.orderItems.map((item) => (
               <div
-                key={product.id}
+                key={item.id}
                 className="flex items-start gap-4 bg-[#12443f]/40 border border-teal-500/20 rounded-xl p-4 hover:border-teal-400/50 transition"
               >
                 <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-[#0d3834]">
                   <Image
-                    src={product.featuredImage}
-                    alt={product.name}
+                    src={item.product.featuredImage}
+                    alt={item.product.name}
                     width={64}
                     height={64}
                     className="w-full h-full object-cover"
                   />
                 </div>
 
-                <div className="flex-1 space-y-1 font-medium">
+                <div className="flex-1 space-y-1">
                   <h4
                     onClick={() =>
-                      router.push(Routes.PRODUCTS_DETAIL(product.id))
+                      router.push(Routes.PRODUCTS_DETAIL(item.product.id))
                     }
-                    className="text-white font-semibold text-base hover:underline cursor-pointer"
+                    className="text-white text-sm"
                   >
-                    {product.name}
+                    Name:{" "}
+                    <span className="text-gray-300 hover:underline cursor-pointer">
+                      {item.product.name}
+                    </span>
                   </h4>
-                  <p className="text-sm">
+                  <p className="text-sm text-gray-300">
                     <span className="text-white">Description:</span>{" "}
-                    {product.description}
+                    {item.product.description}
                   </p>
-                  <p className="text-sm">
+                  <p className="text-sm text-gray-300">
                     <span className="text-white">Calories:</span>{" "}
-                    {product.calories}
+                    {item.product.calories}
                   </p>
-                  {product.sizes && product.sizes.length > 0 && (
-                    <p className="text-sm">
+                  {item.product.sizes && item.product.sizes.length > 0 && (
+                    <p className="text-sm text-gray-300">
                       <span className="text-white">Sizes:</span>{" "}
-                      {product.sizes.join(", ")}
+                      {item.product.sizes.join(", ")}
                     </p>
                   )}
-                  {product.colors && product.colors.length > 0 && (
-                    <>
+                  {item.product.colors && item.product.colors.length > 0 && (
+                    <div className="flex items-center gap-1">
                       <p className="text-white">Colors:</p>
-                      {product.colors.map((color, index) => (
+                      {item.product.colors.map((color, index) => (
                         <span
                           key={index}
                           className="w-4 h-4 rounded-full border border-gray-300"
                           style={{ backgroundColor: `#${color}` }}
                         ></span>
                       ))}
-                    </>
+                    </div>
                   )}
-                  <p className="text-sm">
-                    <span className="text-white">Specs:</span> {product.specs}
+                  <p className="text-sm text-gray-300">
+                    <span className="text-white">Specs:</span>{" "}
+                    {item.product.specs}
                   </p>
-                  <p className="text-sm">
-                    <span className="text-white">Price:</span> €{product.price}
+                  <p className="text-sm text-gray-300">
+                    <span className="text-white">Price:</span> €
+                    {item.product.price}
                   </p>
-                  <p className="text-sm">
-                    <span className="text-white">Stock:</span> {product.stock}
+                  <p className="text-sm text-gray-300">
+                    <span className="text-white">Stock:</span>{" "}
+                    {item.product.stock}
                   </p>
                 </div>
               </div>

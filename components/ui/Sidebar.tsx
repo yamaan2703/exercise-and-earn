@@ -107,7 +107,7 @@ function Sidebar() {
     >
       <div className="flex items-center justify-center gap-3 border-b border-gray-700 py-4">
         <Image
-          src="/Icons/logo2.svg"
+          src="/Icons/logo.svg"
           width={1000}
           height={1000}
           alt="Logo"

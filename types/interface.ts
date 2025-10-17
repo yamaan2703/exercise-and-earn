@@ -124,6 +124,15 @@ export interface ProductType {
   createdAt: string;
 }
 
+export interface OrderItemType {
+  id: number;
+  orderId: number;
+  productId: number;
+  product: ProductType;
+  size?: string;
+  color?: string;
+  addedAt: string;
+}
 export interface OrderType {
   id: number;
   address: string;
@@ -131,7 +140,7 @@ export interface OrderType {
   totalAmount: number;
   status: OrderStatus;
   createdAt: string;
-  products: ProductType[];
+  orderItems: OrderItemType[];
   user: UserType;
   userId: string;
 }

@@ -49,6 +49,10 @@ const Products = () => {
     }
   }, [data]);
 
+  const sortedProducts: ProductType[] = data?.products
+    ? [...data.products].sort((a, b) => b.id - a.id)
+    : [];
+
   const handleView = (record: ProductType) => {
     router.push(Routes.PRODUCTS_DETAIL(record.id));
   };
@@ -227,7 +231,7 @@ const Products = () => {
       ) : (
         <DynamicTable<ProductType>
           columns={columns}
-          data={data?.products}
+          data={sortedProducts}
           searchValue={searchProducts}
           searchableFields={["name", "category"]}
           rowKey="id"
