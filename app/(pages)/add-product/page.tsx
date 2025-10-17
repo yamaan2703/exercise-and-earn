@@ -525,8 +525,12 @@ const AddProduct = () => {
                     id="description"
                     {...field}
                     placeholder="Enter product description"
-                    className="w-full bg-transparent text-white border border-gray-400 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-teal-500 transition duration-200 rounded-lg p-2 h-32 resize-none"
+                    maxLength={250}
+                    className="w-full bg-transparent text-white border border-gray-400 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-teal-500 transition duration-200 rounded-lg p-2 h-24 resize-none"
                   />
+                  <p className="text-xs text-gray-400">
+                    Maximum 250 characters
+                  </p>
                   {errors.description && (
                     <p className="text-red-500 text-xs mt-1">
                       {errors.description.message}
@@ -577,23 +581,6 @@ const AddProduct = () => {
                         icon={FaPlus}
                       />
                     </div>
-
-                    <Input
-                      type="text"
-                      id="colors"
-                      value={field.value ?? ""}
-                      setValue={(val) => {
-                        field.onChange(val);
-                        const updated = val
-                          .split(",")
-                          .map((c) => c.trim())
-                          .filter((c) => c !== "");
-                        setSelectedColors(updated);
-                      }}
-                      variant={InputVariant.OUTLINE}
-                      size={InputSize.SMALL}
-                      placeholder="Select colors"
-                    />
 
                     <div className="flex flex-wrap gap-2 mt-3">
                       {selectedColors.map((color, index) => (

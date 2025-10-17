@@ -617,7 +617,7 @@ const EditProduct = () => {
                   onChange={field.onChange}
                   placeholder="Enter product description"
                   rows={3}
-                  className="bg-transparent w-full p-2 rounded-lg text-white border border-gray-400 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-teal-500 transition duration-200 h-32 resize-none"
+                  className="bg-transparent w-full p-2 rounded-lg text-white border border-gray-400 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-teal-500 transition duration-200 h-24 resize-none"
                 />
               )}
             />
@@ -668,23 +668,6 @@ const EditProduct = () => {
                         icon={FaPlus}
                       />
                     </div>
-
-                    <Input
-                      type="text"
-                      id="colors"
-                      value={field.value ?? ""}
-                      setValue={(val) => {
-                        field.onChange(val);
-                        const updated = val
-                          .split(",")
-                          .map((c) => c.trim())
-                          .filter((c) => c !== "");
-                        setSelectedColors(updated);
-                      }}
-                      variant={InputVariant.OUTLINE}
-                      size={InputSize.SMALL}
-                      placeholder="Selected colors"
-                    />
 
                     <div className="flex flex-wrap gap-2 mt-3">
                       {selectedColors.map((color, index) => (

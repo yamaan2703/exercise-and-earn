@@ -44,7 +44,7 @@ const FaqModal = (props: FaqModalProps) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[999]">
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[999] backdrop-blur-sm">
       <div className="bg-[#06211e] text-white w-[90%] max-w-sm rounded-lg shadow-lg p-4">
         <div className="flex justify-between items-center gap-2 mb-3">
           <h2 className="text-lg font-semibold">{label}</h2>
