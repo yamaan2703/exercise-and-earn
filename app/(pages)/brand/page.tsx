@@ -84,12 +84,6 @@ const Brands = () => {
 
   const columns: ColumnsType<BrandItem> = [
     {
-      title: "ID",
-      dataIndex: "id",
-      sorter: true,
-      width: "15%",
-    },
-    {
       title: "Brand Name",
       dataIndex: "name",
       sorter: true,

@@ -12,7 +12,7 @@ export default function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#06211e] text-white">
       <Image
-        src="Icons/logo2.svg"
+        src="Icons/logo.svg"
         alt="Logo"
         width={100}
         height={100}

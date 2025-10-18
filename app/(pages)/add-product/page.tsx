@@ -9,8 +9,6 @@ import {
 } from "@/types/enums";
 import Input from "@/components/ui/input";
 import { AuthContext } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
-import { Routes } from "@/routes/Routes";
 import { AiOutlineMenu } from "react-icons/ai";
 import toast from "react-hot-toast";
 import Image from "next/image";
@@ -41,7 +39,6 @@ type FormValues = {
 
 const AddProduct = () => {
   const { setIsSidebarOpen } = useContext(AuthContext)!;
-  const router = useRouter();
   const token = getCookie("token");
   const [images, setImages] = useState<File[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
@@ -161,7 +158,6 @@ const AddProduct = () => {
 
       reset();
       setImages([]);
-      router.push(Routes.PRODUCTS);
       toast.success("Product added successfully!");
     } catch (error: unknown) {
       const err = error as {

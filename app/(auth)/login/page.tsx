@@ -61,7 +61,7 @@ const Login = () => {
         <div className="text-center">
           <div className="mx-auto h-12 w-12 flex items-center justify-center">
             <Image
-              src="/Icons/logo2.svg"
+              src="/Icons/logo.svg"
               alt="Logo"
               width={150}
               height={150}

@@ -88,12 +88,6 @@ const Category = () => {
 
   const columns: ColumnsType<CategoryItem> = [
     {
-      title: "ID",
-      dataIndex: "id",
-      sorter: true,
-      width: "15%",
-    },
-    {
       title: "Category Name",
       dataIndex: "name",
       sorter: true,

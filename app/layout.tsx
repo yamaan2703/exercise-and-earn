@@ -16,7 +16,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Exercise & Earn",
   description: "Track your workouts, earn rewards, and stay fit.",
-  icons: { icon: "/Icons/logo2.svg" },
+  icons: { icon: "/Icons/logo.svg" },
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {
